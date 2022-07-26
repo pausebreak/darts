@@ -1,0 +1,38 @@
+.games {
+  display: flex;
+  flex-direction: row;
+}
+
+.games button {
+  flex: 1;
+  font-size: 1.25em;
+  padding: 1em;
+}
+
+.options,
+.options button {
+  font-size: 1.5em;
+}
+
+.options {
+  padding: 0.33em 0.5em;
+}
+
+.options input,
+.options select {
+  font-size: 1.25em;
+  margin: 0.25em 0 0 0;
+}
+
+.options input {
+  text-align: center;
+  margin-right: 0.25em;
+  width: 3.65em;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}

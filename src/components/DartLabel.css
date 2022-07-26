@@ -1,0 +1,12 @@
+.dart {
+  display: inline-block;
+  padding: 0.2em;
+  border: 2px solid black;
+  margin: 2px;
+  white-space: nowrap;
+}
+
+.dart.condensed {
+  border: none;
+  padding: 0;
+}
