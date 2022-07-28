@@ -1,3 +1,4 @@
+import isBlank from "@sedan-utils/is-blank";
 import React, { ChangeEvent, useState } from "react";
 import { useStore } from "../machine";
 
@@ -21,18 +22,25 @@ export const PlayerChooser: React.FC = () => {
   };
 
   const addNewPlayer = () => {
-    if (!hasError) {
+    if (!hasError && !isBlank(getPlayer)) {
       addPlayer({ name: getPlayer, darts: [] });
       setPlayer("");
     }
   };
 
   return (
-    <div className="playerChooser" style={{ margin: "1em 0" }}>
+    <div className="playerChooser">
+      <div style={{ flex: 1 }}>
+        <input type="text" size={15} onChange={setNewPlayer} value={getPlayer} />{" "}
+        <button onClick={addNewPlayer} disabled={hasError}>
+          Add Player
+        </button>
+        {hasError && <div>name already exists</div>}
+      </div>
+
       {players.map((player, id) => (
-        <div style={{ flex: 1 }} key={`${player.name}${id}`}>
+        <div className="player" key={`${player.name}${id}`}>
           <button
-            style={{ margin: "0 0.7em 1em 0" }}
             onClick={(event) => {
               event.preventDefault();
               removePlayer(id);
@@ -43,13 +51,6 @@ export const PlayerChooser: React.FC = () => {
           {player.name}
         </div>
       ))}
-      <div style={{ flex: 1 }}>
-        <input type="text" onChange={setNewPlayer} value={getPlayer} />{" "}
-        <button onClick={addNewPlayer} disabled={hasError}>
-          Add Player
-        </button>
-        {hasError && <div>name already exists</div>}
-      </div>
     </div>
   );
 };

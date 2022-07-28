@@ -11,7 +11,7 @@ export const Players = () => {
   const currentPlayer = players[currentPlayerIndex] || null;
 
   return (
-    <>
+    <div className="players">
       {players.map((player) => {
         const total = player.darts.reduce((acc, thrw) => acc + dartValue(thrw), 0);
         const dartsThrown = player.darts.length;
@@ -23,14 +23,19 @@ export const Players = () => {
         last3Throws = player.darts.slice(lastRoundThrow - 3, lastRoundThrow);
 
         return (
-          <div key={player.name}>
-            {player.name} {total} throws: {dartsThrown} last:
-            {last3Throws.map((dart, idx) => (
-              <DartLabel key={`${idx}${dart}`} condensed={true} dart={dart} />
-            ))}
+          <div key={player.name} className="player">
+            {player.name} {total} throws: {dartsThrown}{" "}
+            {last3Throws.length > 0 && (
+              <>
+                last:
+                {last3Throws.map((dart, idx) => (
+                  <DartLabel key={`${idx}${dart}`} condensed={true} dart={dart} />
+                ))}
+              </>
+            )}
           </div>
         );
       })}
-    </>
+    </div>
   );
 };

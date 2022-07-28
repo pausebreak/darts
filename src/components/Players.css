@@ -1,3 +1,10 @@
-.current {
-   background-color: bisque;
+.players {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: stretch;
+}
+
+.player {
+  flex: 1;
 }

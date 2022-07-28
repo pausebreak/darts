@@ -4,5 +4,21 @@
   flex-direction: row;
   flex-wrap: wrap;
 
+  align-items: stretch;
   row-gap: 1em;
+}
+
+.playerChooser .player {
+  flex: 1;
+  margin-right: 1em;
+  border: 1px solid black;
+  align-items: center;
+  display: flex;
+  align-items: center;
+  min-height: 3em;
+  padding-right: 1em;
+}
+
+.playerChooser .player button {
+  margin: 0 1em;
 }
