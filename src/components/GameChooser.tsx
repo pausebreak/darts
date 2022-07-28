@@ -171,7 +171,7 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
               }
 
               if (getGame?.name === GameName.Bulls) {
-                limit = getGame.limit;
+                limit = getNumberOfBulls * 25;
               }
 
               if (getGame?.name === GameName.Cricket) {

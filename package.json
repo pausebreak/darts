@@ -3,8 +3,13 @@
   "version": "1.0.0",
   "source": "src/index.html",
   "license": "MIT",
+  "targets": {
+    "default": {
+      "distDir": "./docs"
+    }
+  },
   "scripts": {
-    "build": "parcel build",
+    "build": "git rm docs/index.* && git restore --staged docs/index.html && parcel build",
     "check": "tsc --noEmit",
     "start": "parcel",
     "test": "jest",
