@@ -78,17 +78,13 @@ export const useStore = create<GameState>()(
             });
           }
         },
-        goBack: () =>
+        goBack: () => {
           set((state) => {
-            let player = state.players[state.currentPlayerIndex];
-            const length = state.players.length;
+            const players = state.players;
+            let player = players[state.currentPlayerIndex];
+            const noThrowsYet = !players.find((player) => player.darts.length !== 0);
 
-            // no thrown darts .. bail
-            if (
-              !state.players.some((player) => {
-                player.darts.length !== 0;
-              })
-            ) {
+            if (noThrowsYet) {
               return;
             }
 
@@ -96,8 +92,8 @@ export const useStore = create<GameState>()(
             // have to set previous player
             if (player.darts.length % 3 === 0) {
               if (state.currentPlayerIndex === 0) {
-                player = state.players[length - 1];
-                state.currentPlayerIndex = length - 1;
+                player = state.players[players.length - 1];
+                state.currentPlayerIndex = players.length - 1;
               } else {
                 state.currentPlayerIndex--;
                 player = state.players[state.currentPlayerIndex];
@@ -105,7 +101,8 @@ export const useStore = create<GameState>()(
             }
 
             player.darts.pop();
-          }),
+          });
+        },
       }))
     ),
     {

@@ -54,7 +54,7 @@ describe("didWin", () => {
         [Mark.Bull, Multiple.Single],
       ],
     };
-    const result = gameOperations(b).didWin([otherPlayer, player], 0);
+    const result = gameOperations(b).didWin([player, otherPlayer], 0);
 
     expect(result).toBe(otherPlayer);
   });

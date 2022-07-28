@@ -87,7 +87,7 @@ describe("didWin", () => {
     expect(result).toBe(player);
   });
 
-  it("can tell when the last player wins", () => {
+  it.only("can tell when the last player wins", () => {
     const b = ohGames();
     b.limit = 50;
     const player: Player = {
@@ -106,7 +106,9 @@ describe("didWin", () => {
         [Mark.Bull, Multiple.Single],
       ],
     };
-    const result = gameOperations(b).didWin([otherPlayer, player], 0);
+
+    // currentIndex will always be on the next player if you hit 3 throws
+    const result = gameOperations(b).didWin([player, otherPlayer], 0);
 
     expect(result).toBe(otherPlayer);
   });

@@ -20,14 +20,14 @@ export const areMarksCleared = (game: Game, player: Player): boolean =>
   game.marks.every((mark) => 3 <= playerMarks(player)[mark]);
 
 export const findLastPlayerToThrow = (players, currentPlayerIndex) => {
-  const length = players.length;
   let player = players[currentPlayerIndex];
+  const dartsLength = player.darts.length;
 
   // player has not thrown yet this round
   // so the last player was the last to throw
-  if (length !== 0 && length % 3 === 0) {
+  if (dartsLength % 3 === 0) {
     if (currentPlayerIndex === 0) {
-      player = players[length - 1];
+      player = players[players.length - 1];
     } else {
       player = players[currentPlayerIndex - 1];
     }
