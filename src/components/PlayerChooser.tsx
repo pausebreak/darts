@@ -31,7 +31,7 @@ export const PlayerChooser: React.FC = () => {
   return (
     <div className="playerChooser">
       <div style={{ flex: 1 }}>
-        <input type="text" size={15} onChange={setNewPlayer} value={getPlayer} />{" "}
+        <input type="text" size={15} maxLength={15} onChange={setNewPlayer} value={getPlayer} />{" "}
         <button onClick={addNewPlayer} disabled={hasError}>
           Add Player
         </button>

@@ -87,7 +87,7 @@ describe("didWin", () => {
     expect(result).toBe(player);
   });
 
-  it.only("can tell when the last player wins", () => {
+  it("can tell when the last player wins", () => {
     const b = ohGames();
     b.limit = 50;
     const player: Player = {

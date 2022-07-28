@@ -12,6 +12,7 @@ export const Players = () => {
 
   return (
     <div className="players">
+      <h3>Players</h3>
       {players.map((player) => {
         const total = player.darts.reduce((acc, thrw) => acc + dartValue(thrw), 0);
         const dartsThrown = player.darts.length;
@@ -24,10 +25,10 @@ export const Players = () => {
 
         return (
           <div key={player.name} className="player">
-            {player.name} {total} throws: {dartsThrown}{" "}
+            {player.name} {total}{" "}
             {last3Throws.length > 0 && (
               <>
-                last:
+                -
                 {last3Throws.map((dart, idx) => (
                   <DartLabel key={`${idx}${dart}`} condensed={true} dart={dart} />
                 ))}

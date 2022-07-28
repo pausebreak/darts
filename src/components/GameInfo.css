@@ -1,0 +1,28 @@
+.gameInfo {
+  display: flex;
+  position: relative;
+  align-items: stretch;
+  align-content: center;
+  z-index: 10;
+  margin: 0;
+  padding: 0;
+  margin-top: 0.25em;
+}
+
+.gameInfo > div {
+  flex: 1;
+  margin: 0;
+  text-align: center;
+}
+
+.gameName {
+  position: absolute;
+  left: -35px;
+  top: -90px;
+  font-size: 2250%;
+  opacity: 0.15;
+  z-index: 1;
+  padding: 0;
+  margin: 0;
+  vertical-align: top;
+}

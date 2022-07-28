@@ -1,10 +1,16 @@
 .players {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   flex-wrap: wrap;
-  align-items: stretch;
+  position: relative;
+  z-index: 10;
+  text-align: center;
 }
 
 .player {
+  position: relative;
+  z-index: 10;
   flex: 1;
+  white-space: nowrap;
+  margin-bottom: 0.25em;
 }

@@ -1,6 +1,7 @@
 body {
   font-family: Helvetica, sans-serif;
-  margin: 1em;
+  margin: 0;
+  position: relative;
 }
 
 h1 {
@@ -11,27 +12,39 @@ h1 {
 
 h2 {
   display: inline-block;
-  margin: 0.5em 0.5em 0.5em 0;
+  margin: 0 0.5em 0.5em 0;
   padding: 1em;
-  border: 2px solid green;
+  background-color: rgba(0, 100, 0, 0.97);
+  color: rgba(255, 255, 255, 1);
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+h3 {
+  padding: 0;
+  margin: 0.35em;
+  font-weight: 500;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.root {
+  position: relative;
+}
+
+.App {
+  z-index: 100;
+  margin: 0.25em 1em;
+}
+
+.layout {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.content {
+  flex: 10;
+}
+
+.sideBar {
+  flex: 1;
+}
+
+.currentPlayer {
+  vertical-align: middle;
 }

@@ -32,17 +32,17 @@ export const CurrentPlayer = () => {
   const left = game.limit ? game.limit - total : null;
 
   return (
-    <>
+    <div className="currentPlayer">
       <h2>{currentPlayer.name}</h2>
       {left && (
         <>
-          total: <span style={{ fontSize: "3em", marginRight: "0.25em" }}>{total}</span>
-          left: <span style={{ fontSize: "3em", marginRight: "0.25em" }}>{left}</span>
+          total: <span style={{ fontSize: "4em", marginRight: "0.25em" }}>{total}</span>
+          left: <span style={{ fontSize: "4em", marginRight: "0.25em" }}>{left}</span>
         </>
       )}
       {thisRoundThrows.map((dart, idx) => (
         <DartLabel key={`${idx}${dart}`} dart={dart} />
       ))}
-    </>
+    </div>
   );
 };

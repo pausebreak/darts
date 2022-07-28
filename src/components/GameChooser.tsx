@@ -164,6 +164,8 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
               event.preventDefault();
 
               let limit = getLimit;
+              let checkIn = getIn;
+              let checkOut = getOut;
 
               if (getGame?.name === GameName.Oh1 && isBlank(limit)) {
                 setError(true);
@@ -172,6 +174,8 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
 
               if (getGame?.name === GameName.Bulls) {
                 limit = getNumberOfBulls * 25;
+                checkIn = Multiple.Single;
+                checkOut = Multiple.Single;
               }
 
               if (getGame?.name === GameName.Cricket) {
@@ -180,8 +184,8 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
 
               chooseGame({
                 name: getGame.name,
-                checkIn: getIn,
-                checkOut: getOut,
+                checkIn,
+                checkOut,
                 limit,
                 marks: getGame.marks,
                 clear: getGame.clear,
