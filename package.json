@@ -9,7 +9,7 @@
     }
   },
   "scripts": {
-    "build": "git rm docs/index.* && git restore --staged docs/index.html && parcel build",
+    "build": "git rm docs/index.* && git restore --staged docs/index.html && parcel build --public-url ./",
     "check": "tsc --noEmit",
     "start": "parcel",
     "test": "jest",
