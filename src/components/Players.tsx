@@ -12,7 +12,6 @@ export const Players = () => {
 
   return (
     <div className="players">
-      <h3>Players</h3>
       {players.map((player) => {
         const total = player.darts.reduce((acc, thrw) => acc + dartValue(thrw), 0);
         const dartsThrown = player.darts.length;
