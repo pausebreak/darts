@@ -6,8 +6,6 @@ import { PlayerChooser } from "./PlayerChooser";
 import { TouchInput } from "./TouchInput";
 import { CurrentPlayer } from "./CurrentPlayer";
 import { Players } from "./Players";
-import { GameInfo } from "./GameInfo";
-import { GameName } from "../types";
 
 export const App = () => {
   const currentGame = useStore((state) => state.game);

@@ -16,13 +16,10 @@ export const CurrentPlayer = () => {
 
   const numOfThrows = currentPlayer.darts.length;
 
-  let last3Throws = [];
   let thisRoundThrows = [];
 
   const remainder = numOfThrows % 3;
   const lastRoundThrow = numOfThrows - remainder;
-
-  last3Throws = currentPlayer.darts.slice(lastRoundThrow - 3, lastRoundThrow);
 
   if (remainder) {
     thisRoundThrows = currentPlayer.darts.slice(lastRoundThrow);

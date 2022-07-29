@@ -1,13 +1,13 @@
 import { bullsOperations } from "./games/bulls";
 import { cricketOperations } from "./games/cricket";
 import { ohGamesOperations } from "./games/oh1";
-import { Game, Dart, GameOperations, GameName, Player, Mark } from "./types";
+import { Game, Dart, GameOperations, GameName, Player } from "./types";
 
 export const dartValue = (dart: Dart): number => dart[0] * dart[1];
 
 export const playerMarks = (player: Player) =>
   player.darts.reduce((acc, dart) => {
-    if (acc.hasOwnProperty(dart[0])) {
+    if (Object.prototype.hasOwnProperty.call(acc, dart[0])) {
       acc[dart[0]] = acc[dart[0]] + dart[1];
     } else {
       acc[dart[0]] = dart[1];

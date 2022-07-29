@@ -6,9 +6,7 @@ import { dartValue } from "../games";
 import "./Players.css";
 
 export const Players = () => {
-  const currentPlayerIndex = useStore((state) => state.currentPlayerIndex);
   const players = useStore((state) => state.players);
-  const currentPlayer = players[currentPlayerIndex] || null;
 
   return (
     <div className="players">

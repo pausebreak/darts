@@ -1,13 +1,11 @@
-import { areMarksCleared, dartValue, playerMarks } from "../games";
-import { Game, Mark, Multiple, GameOperations, GameName } from "../types";
+import { areMarksCleared, playerMarks } from "../games";
+import { Game, Mark, GameOperations, GameName } from "../types";
 
 export const cricketOperations = (game: Game): GameOperations => ({
-  didWin: (players, currentPlayerIndex) => {
+  didWin: (players) => {
     // this needs to total all players scores and check if the last
     // player cleared the marks
     const player = players.slice().sort((a, b) => a.darts.length - b.darts.length)[0];
-
-    const score = player.darts.map(dartValue).reduce((acc, value) => acc + value, 0);
 
     if (areMarksCleared(game, player)) {
       return player;

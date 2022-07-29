@@ -11,7 +11,7 @@ export const ohGamesOperations = (game: Game): GameOperations => ({
     }
   },
   validThrow: (playerIndex: number, players: Player[], _throw: Dart): boolean => {
-    const { marks, checkOut, checkIn, limit } = game;
+    const { checkOut, checkIn, limit } = game;
 
     const player = players[playerIndex];
     const firstNonMiss = player.darts.find((_throw) => _throw[0] !== Mark.Miss);
