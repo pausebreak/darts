@@ -2,17 +2,19 @@
   display: flex;
   flex-wrap: wrap;
   align-items: stretch;
-  align-content: center;
+  align-content: stretch;
   row-gap: 1em;
   position: relative;
   opacity: 1;
   z-index: 10;
+  flex: 1;
+  margin-top: 0.5em;
 }
 
 .markGroup button {
   flex: 1;
   padding: 0.5em;
-  margin: 2px;
+  margin: 0;
   white-space: nowrap;
   width: 3.75em;
   cursor: pointer;
@@ -21,6 +23,7 @@
   background-color: white;
   opacity: 1;
   border: 1px solid darkgray;
+  width: 100%;
 }
 
 @media (hover: hover) {
@@ -38,5 +41,5 @@
 }
 
 .longer button {
-  width: 5.5em;
+  width: 100%;
 }

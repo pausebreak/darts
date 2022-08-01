@@ -6,6 +6,8 @@ import { PlayerChooser } from "./PlayerChooser";
 import { TouchInput } from "./TouchInput";
 import { CurrentPlayer } from "./CurrentPlayer";
 import { Players } from "./Players";
+import { GameName } from "../types";
+import { Cricket } from "./games/Cricket";
 
 export const App = () => {
   const currentGame = useStore((state) => state.game);
@@ -26,7 +28,7 @@ export const App = () => {
   return (
     <>
       <div className="App">
-        {currentGame && (
+        {currentGame && currentGame.name !== GameName.Cricket && (
           <div className="layout">
             <div className="content">
               <CurrentPlayer />
@@ -36,6 +38,9 @@ export const App = () => {
               <Players />
             </div>
           </div>
+        )}
+        {currentGame && currentGame.name === GameName.Cricket && (
+          <Cricket />
         )}
         {invalidThrow && <span style={{ color: "red" }}>Invalid Throw</span>}
         {!currentGame && (

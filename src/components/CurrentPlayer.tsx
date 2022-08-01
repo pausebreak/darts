@@ -30,11 +30,10 @@ export const CurrentPlayer = () => {
 
   return (
     <div className="currentPlayer">
-      <h2>{currentPlayer.name}</h2>
       {left && (
-        <div style={{ marginTop: "0.25em", display: "inline-block" }}>
-          total: <span style={{ fontSize: "4em", marginRight: "0.25em" }}>{total}</span>
-          left: <span style={{ fontSize: "4em", marginRight: "0.25em" }}>{left}</span>
+        <div style={{ fontSize: "1.5em" }}>
+          total: <span style={{ fontSize: "5em", marginRight: "0.25em" }}>{total}</span>
+          left: <span style={{ fontSize: "5em", marginRight: "0.25em" }}>{left}</span>
         </div>
       )}
       {thisRoundThrows.map((dart, idx) => (

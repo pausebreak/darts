@@ -1,11 +1,11 @@
 import { bullsOperations } from "./games/bulls";
 import { cricketOperations } from "./games/cricket";
 import { ohGamesOperations } from "./games/oh1";
-import { Game, Dart, GameOperations, GameName, Player } from "./types";
+import { Game, Dart, GameOperations, GameName, Player, Mark } from "./types";
 
 export const dartValue = (dart: Dart): number => dart[0] * dart[1];
 
-export const playerMarks = (player: Player) =>
+export const playerMarks = (player: Player): { [key: number]: number } =>
   player.darts.reduce((acc, dart) => {
     if (Object.prototype.hasOwnProperty.call(acc, dart[0])) {
       acc[dart[0]] = acc[dart[0]] + dart[1];
@@ -16,8 +16,10 @@ export const playerMarks = (player: Player) =>
     return acc;
   }, {});
 
+export const isMarkCleared = (player: Player, mark: Mark): boolean => 3 <= playerMarks(player)[mark];
+
 export const areMarksCleared = (game: Game, player: Player): boolean =>
-  game.marks.every((mark) => 3 <= playerMarks(player)[mark]);
+  game.marks.every((mark) => isMarkCleared(player, mark));
 
 export const findLastPlayerToThrow = (players, currentPlayerIndex) => {
   let player = players[currentPlayerIndex];

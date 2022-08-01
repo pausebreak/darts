@@ -1,0 +1,33 @@
+.scoreBoard {
+  display: flex;
+  flex-direction: row;
+  font-size: 2em;
+  flex: 1;
+}
+
+.row {
+  flex: 1;
+  flex-basis: 100%;
+  border-right: 1px solid black;
+  text-align: center;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.row > div {
+  text-align: center;
+  flex: 1;
+}
+
+.row:last-child {
+  border: none;
+}
+
+.row .playerForRow {
+  border-bottom: 1px solid black;
+}
+
+.cleared {
+  background-color: bisque;
+}

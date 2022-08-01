@@ -39,5 +39,5 @@ export const cricket = (pointing: boolean): Game => ({
   limit: 0,
   clear: true,
   pointing,
-  marks: [Mark.Fifteen, Mark.Sixteen, Mark.Seventeen, Mark.Eighteen, Mark.Nineteen, Mark.Twenty, Mark.Bull],
+  marks: [Mark.Twenty, Mark.Nineteen, Mark.Eighteen, Mark.Seventeen, Mark.Sixteen, Mark.Fifteen, Mark.Bull],
 });
