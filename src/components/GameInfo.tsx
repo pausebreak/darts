@@ -18,9 +18,9 @@ export const GameInfo = () => {
       {currentGame && (
         <>
           <div className="gameInfo">
-            <div>{Multiple[currentGame.checkIn]} In</div>
-            <div>{Multiple[currentGame.checkOut]} Out</div>
-            <div>{currentGame.limit} Limit</div>
+            {currentGame.checkIn && <div>{Multiple[currentGame.checkIn]} In</div>}
+            {currentGame.checkOut && <div>{Multiple[currentGame.checkOut]} Out</div>}
+            {currentGame.limit > 0 && <div>{currentGame.limit} Limit</div>}
             <div>
               <button onClick={stopGame}>Stop Game</button>
             </div>

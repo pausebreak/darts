@@ -10,6 +10,6 @@ test("shows when someone wins", () => {
   store.setPlayerWon(player);
 
   render(<App />);
-  const won = screen.getByText(/me Won/i);
+  const won = screen.getByText(/me is the winner/i);
   expect(won).toBeTruthy();
 });

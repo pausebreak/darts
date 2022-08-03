@@ -5,7 +5,7 @@
   flex: 1;
 }
 
-.row {
+.column {
   flex: 1;
   flex-basis: 100%;
   border-right: 1px solid black;
@@ -15,19 +15,37 @@
   flex-direction: column;
 }
 
-.row > div {
+.column.current {
+  border: 1px solid red;
+}
+
+.column > div {
   text-align: center;
   flex: 1;
 }
 
-.row:last-child {
+.column:last-child {
   border: none;
 }
 
-.row .playerForRow {
+.column .playerForRow {
   border-bottom: 1px solid black;
 }
 
 .cleared {
-  background-color: bisque;
+  background-color: lightgray;
+  color: gray;
+}
+
+.above {
+  position: relative;
+  z-index: 11;
+}
+
+.behind {
+  position: absolute;
+  z-index: 0;
+  right: 0;
+  left: 0;
+  text-align: center;
 }

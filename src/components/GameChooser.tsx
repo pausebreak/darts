@@ -14,7 +14,7 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
   const [getLimit, setLimit] = useState(301);
   const [getPointing, setPointing] = useState(false);
   const [getNumberOfBulls, setNumberOfBulls] = useState(25);
-  const [getIn, setIn] = useState(Multiple.Double);
+  const [getIn, setIn] = useState(Multiple.Single);
   const [getOut, setOut] = useState(Multiple.Single);
   const [hasError, setError] = useState(false);
 
@@ -180,6 +180,8 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
 
               if (getGame?.name === GameName.Cricket) {
                 limit = getGame.limit;
+                checkIn = null;
+                checkOut = null;
               }
 
               chooseGame({

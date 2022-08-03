@@ -18,7 +18,7 @@ export const App = () => {
   if (winner) {
     return (
       <div>
-        <div>{winner.name} Won!</div>
+        <div className="winner">{winner.name} is the winner</div>
         <PlayerChooser />
         {players.length > 0 && <GameChooser singlePlayer={players.length === 1} />}
       </div>
@@ -39,9 +39,7 @@ export const App = () => {
             </div>
           </div>
         )}
-        {currentGame && currentGame.name === GameName.Cricket && (
-          <Cricket />
-        )}
+        {currentGame && currentGame.name === GameName.Cricket && <Cricket />}
         {invalidThrow && <span style={{ color: "red" }}>Invalid Throw</span>}
         {!currentGame && (
           <>

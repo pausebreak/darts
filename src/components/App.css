@@ -48,3 +48,11 @@ h3 {
 .sideBar {
   flex: 1;
 }
+
+.winner {
+  font-size: 3em;
+  background-color: green;
+  color: whitesmoke;
+  padding: 0.5em;
+  margin: 0.15em 0 0.5em 0;
+}

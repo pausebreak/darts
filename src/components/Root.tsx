@@ -9,12 +9,13 @@ export const Root = () => {
   const players = useStore((state) => state.players);
   const game = useStore((state) => state.game);
   const CurrentPlayerIndex = useStore((state) => state.currentPlayerIndex);
+  const winner = useStore((state) => state.playerWon);
 
   const player = players[CurrentPlayerIndex];
 
   return (
     <>
-      {game && <div className="playerName">{player?.name}</div>}
+      {game && !winner && <div className="playerName">{player?.name}</div>}
       <div className="root">
         <GameInfo />
         <App />

@@ -24,9 +24,7 @@ body {
 .playerName {
   position: absolute;
   left: -35px;
-  top: -90px;
   font-size: 2250%;
-  opacity: 0.2;
   z-index: 1;
   padding: 0;
   margin: 0;
@@ -35,5 +33,10 @@ body {
 
   background: -webkit-linear-gradient(rgb(4, 4, 4), rgb(255, 255, 255));
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
+  transform: rotate3d(1, 0, 0, 70deg);
+
+  top: -165px;
+  opacity: 0.5;
 }
