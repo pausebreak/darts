@@ -4,7 +4,7 @@ on:
     branches:
       - main
 jobs:
-  date:
+  docs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
@@ -13,15 +13,14 @@ jobs:
       - name: buildIt
         run: |
           npm ci
+          git config user.name "GitHub Action Bot"
+          git config user.email "<>"
           git rm docs/index.* 
           git restore --staged docs/index.html 
           npm run build
 
       - name: commit
         run: |
-          # Stage the file, commit and push
-          git config user.name "GitHub Action Bot"
-          git config user.email "<>"
           git add docs
           git commit -m "new docs"
           git push origin master
