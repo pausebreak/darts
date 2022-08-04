@@ -10,16 +10,19 @@ jobs:
       - name: checkout
         uses: actions/checkout@v2
 
-      - name: buildIt
+      - name: prepare
         run: |
           npm ci
           git config user.name "GitHub Action Bot"
           git config user.email "<>"
           git rm docs/index.* 
-          git restore --staged docs/index.html 
+          git restore --staged docs/index.html
+
+      - name: buildIt
+        run: |
           npm run build
 
-      - name: nextStep
+      - name: commitIt
         run: |
           git add docs
           git status
