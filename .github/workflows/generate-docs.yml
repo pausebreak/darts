@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - "docs/**"
 jobs:
   docs:
     runs-on: ubuntu-latest
@@ -13,8 +15,6 @@ jobs:
       - name: prepare
         run: |
           npm ci
-          git config user.name "GitHub Action Bot"
-          git config user.email "<>"
           git rm docs/index.* 
           git restore --staged docs/index.html
 
