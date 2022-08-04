@@ -18,10 +18,7 @@ jobs:
           git rm docs/index.* 
           git restore --staged docs/index.html 
           npm run build
-          git status
-
-      - name: commit
-        run: |
           git add docs
+          git status
           git commit -m "new docs"
           git push origin master
