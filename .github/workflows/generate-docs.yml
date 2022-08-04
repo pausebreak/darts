@@ -18,6 +18,7 @@ jobs:
           git rm docs/index.* 
           git restore --staged docs/index.html 
           npm run build
+          git status
 
       - name: commit
         run: |
