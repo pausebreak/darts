@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
       - name: buildIt
         run: |
@@ -18,5 +18,8 @@ jobs:
           git rm docs/index.* 
           git restore --staged docs/index.html 
           npm run build
+
+      - name: nextStep
+        run: |
           git add docs
           git status
