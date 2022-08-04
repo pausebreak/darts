@@ -20,4 +20,3 @@ jobs:
           npm run build
           git add docs
           git status
-          git commit -m "new docs"
