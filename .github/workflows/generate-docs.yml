@@ -14,9 +14,6 @@ jobs:
       - name: prepare
         run: |
           npm ci
-          git rm docs/index.* 
-          git restore --staged docs/index.html
-      - name: buildIt
-        run: |
+          rm docs/* 
           npm run build
       - uses: stefanzweifel/git-auto-commit-action@v4
