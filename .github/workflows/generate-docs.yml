@@ -10,19 +10,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
-        uses: actions/checkout@v2
-
+        uses: actions/checkout@v3
       - name: prepare
         run: |
           npm ci
           git rm docs/index.* 
           git restore --staged docs/index.html
-
       - name: buildIt
         run: |
           npm run build
-
-      - name: commitIt
-        run: |
-          git add docs
-          git status
+      - uses: stefanzweifel/git-auto-commit-action@v4
