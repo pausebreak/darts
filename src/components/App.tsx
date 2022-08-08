@@ -5,7 +5,6 @@ import { useStore } from "../machine";
 import { PlayerChooser } from "./PlayerChooser";
 import { TouchInput } from "./TouchInput";
 import { CurrentPlayer } from "./CurrentPlayer";
-import { Players } from "./Players";
 import { GameName } from "../types";
 import { Cricket } from "./games/Cricket";
 
@@ -33,9 +32,6 @@ export const App = () => {
             <div className="content">
               <CurrentPlayer />
               <TouchInput />
-            </div>
-            <div className="sideBar">
-              <Players />
             </div>
           </div>
         )}

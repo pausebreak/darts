@@ -2,6 +2,9 @@ import React from "react";
 import { DartLabel } from "./DartLabel";
 import { useStore } from "../machine";
 import { dartValue } from "../games";
+import { Players } from "./Players";
+
+import "./CurrentPlayer.css";
 
 export const CurrentPlayer = () => {
   const currentPlayerIndex = useStore((state) => state.currentPlayerIndex);
@@ -31,14 +34,20 @@ export const CurrentPlayer = () => {
   return (
     <div className="currentPlayer">
       {left && (
-        <div style={{ fontSize: "1.5em" }}>
+        <div style={{ fontSize: "1.5em", flex: 2, whiteSpace: "nowrap" }}>
           total: <span style={{ fontSize: "5em", marginRight: "0.25em" }}>{total}</span>
           left: <span style={{ fontSize: "5em", marginRight: "0.25em" }}>{left}</span>
         </div>
       )}
-      {thisRoundThrows.map((dart, idx) => (
-        <DartLabel key={`${idx}${dart}`} dart={dart} />
-      ))}
+      <div>
+        {thisRoundThrows.map((dart, idx) => (
+          <DartLabel key={`${idx}${dart}`} dart={dart} />
+        ))}
+      </div>
+
+      <div className="sideBar">
+        <Players />
+      </div>
     </div>
   );
 };
