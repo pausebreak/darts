@@ -1,8 +1,8 @@
 import isBlank from "@sedan-utils/is-blank";
 import * as React from "react";
-import { isMarkCleared, playerMarks } from "../../games";
+import { isMarkClearedForEveryone, playerMarks, playersScoresCricket } from "../../games";
 import { useStore } from "../../machine";
-import { Mark, Player } from "../../types";
+import { Mark } from "../../types";
 
 import "./ScoreBoard.css";
 
@@ -26,45 +26,42 @@ const boardMark = (numOfMarks: number, aKey: string) => {
   );
 };
 
-const isMarkClearedForEveryone = (mark: Mark, players: Player[]) =>
-  players.reduce((acc, player) => {
-    if (!isMarkCleared(player, mark)) {
-      return false;
-    }
-
-    return acc;
-  }, true);
-
 export const ScoreBoard = () => {
   const game = useStore((state) => state.game);
   const players = useStore((state) => state.players);
 
   const numOfPlayers = players.length;
   const half = Math.floor(numOfPlayers / 2);
-  const gameMarks = game.marks;
+  const playerScores = playersScoresCricket(game, players);
 
   return (
     <div className="scoreBoard">
-      {players
-        .filter((p, i) => i < half)
-        .map((player) => {
-          const marks = playerMarks(player);
-          const score = 0;
+      {players.map((player, playerIndex) => {
+        if (playerIndex >= half) {
+          return;
+        }
 
-          return (
-            <div className="column" key={`${player.name}`}>
-              <div className="playerForRow">{player.name}</div>
+        const marks = playerMarks(player);
+        const score = playerScores[playerIndex];
+
+        return (
+          <div className="column" key={`${player.name}`}>
+            <div className="playerForRow">
+              {player.name}
               {game.pointing && <div className="score">{score}</div>}
-              {gameMarks.map((mark) => boardMark(marks[mark], mark.toString()))}
             </div>
-          );
-        })}
+            {game.marks.map((mark) => boardMark(marks[mark], mark.toString()))}
+          </div>
+        );
+      })}
 
       <div className="column">
-        <div className="playerForRow">&nbsp;</div>
-        {game.pointing && <div>&nbsp;</div>}
-        {gameMarks.map((mark) => {
-          const cls = isMarkClearedForEveryone(mark, players) ? "cleared" : "";
+        <div className="playerForRow">
+          &nbsp;
+          {game.pointing && <div>&nbsp;</div>}
+        </div>
+        {game.marks.map((mark) => {
+          const cls = isMarkClearedForEveryone(players, mark) ? "cleared" : "";
           const markLabel = mark === Mark.Bull ? "Bull" : mark;
 
           return (
@@ -75,18 +72,24 @@ export const ScoreBoard = () => {
         })}
       </div>
 
-      {players
-        .filter((p, i) => i >= half)
-        .map((player) => {
-          const marks = playerMarks(player);
+      {players.map((player, playerIndex) => {
+        if (playerIndex < half) {
+          return;
+        }
 
-          return (
-            <div className="column" key={`${player.name}`}>
-              <div className="playerForRow">{player.name}</div>
-              {gameMarks.map((mark) => boardMark(marks[mark], mark.toString()))}
+        const marks = playerMarks(player);
+        const score = playerScores[playerIndex];
+
+        return (
+          <div className="column" key={`${player.name}`}>
+            <div className="playerForRow">
+              {player.name}
+              {game.pointing && <div className="score">{score}</div>}
             </div>
-          );
-        })}
+            {game.marks.map((mark) => boardMark(marks[mark], mark.toString()))}
+          </div>
+        );
+      })}
     </div>
   );
 };
