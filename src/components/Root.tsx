@@ -1,5 +1,6 @@
 import React from "react";
 import { useStore } from "../machine";
+import { GameName } from "../types";
 import { App } from "./App";
 import { GameInfo } from "./GameInfo";
 
@@ -15,7 +16,8 @@ export const Root = () => {
 
   return (
     <>
-      {game && !winner && <div className="playerName">{player?.name}</div>}
+      {game && game.name !== GameName.Cricket && !winner && <div className="playerName">{player?.name}</div>}
+      {game && game.name === GameName.Cricket && !winner && <div className="playerName">{game.name}</div>}
       <div className="root">
         <GameInfo />
         <App />
