@@ -114,8 +114,10 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
 
           {![GameName.Bulls, GameName.Oh1].includes(getGame.name) && (
             <div>
-              <input type="checkbox" disabled={singlePlayer} checked={pointing} onChange={onPointingChange} />
-              pointing?
+              <label>
+                <input type="checkbox" disabled={singlePlayer} checked={pointing} onChange={onPointingChange} />
+                pointing?
+              </label>
               {hasError && <span>invalid value</span>}
             </div>
           )}

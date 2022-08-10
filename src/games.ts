@@ -103,7 +103,7 @@ export const isMarkClearedForEveryone = (players: Player[], mark: Mark) =>
     return acc;
   }, true);
 
-export const findLastPlayerToThrow = (players, currentPlayerIndex) => {
+export const findLastPlayerToThrow = (players: Player[], currentPlayerIndex: number): Player => {
   let player = players[currentPlayerIndex];
   const dartsLength = player.darts.length;
 

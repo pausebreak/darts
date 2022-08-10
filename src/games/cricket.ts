@@ -1,4 +1,4 @@
-import { areMarksCleared, findLastPlayerToThrow, playerMarks } from "../games";
+import { areMarksCleared, findLastPlayerToThrow, playerMarks, playersScoresCricket } from "../games";
 import { Game, Mark, GameOperations, GameName } from "../types";
 
 export const cricketOperations = (game: Game): GameOperations => ({
@@ -8,8 +8,20 @@ export const cricketOperations = (game: Game): GameOperations => ({
     // this needs to total all players scores and check if the last
     // player cleared the marks
 
-    if (!game.pointing && areMarksCleared(game, player)) {
+    const cleared = areMarksCleared(game, player);
+
+    if (!game.pointing && cleared) {
       return player;
+    }
+
+    if (cleared) {
+      const scores = playersScoresCricket(game, players);
+      const playerIndex = players.findIndex((p) => p.name === player.name);
+      const playerScore = scores[playerIndex];
+
+      if (scores.filter((s, index) => index !== playerIndex).every((score) => score < playerScore)) {
+        return player;
+      }
     }
   },
   validThrow: (playerIndex, players, dart) => {
