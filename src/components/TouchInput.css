@@ -34,6 +34,10 @@
   }
 }
 
+.markGroup button:active {
+  color: red;
+}
+
 .markGroup {
   flex: 1;
   display: flex;

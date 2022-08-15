@@ -1,6 +1,7 @@
 .players {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   position: relative;
   z-index: 10;
   text-align: center;
