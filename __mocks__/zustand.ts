@@ -12,9 +12,8 @@ const create = () => (createState) => {
   return store;
 };
 
-// Reset all stores after each test run
-afterEach(() => {
+export const resetStores = () => {
   act(() => storeResetFns.forEach((resetFn) => resetFn()));
-});
+};
 
 export default create;

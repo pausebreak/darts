@@ -2,6 +2,9 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import { App } from "./App";
 import { useStore } from "../machine";
+import { resetStores } from "../../__mocks__/zustand";
+
+afterEach(resetStores);
 
 test("shows when someone wins", () => {
   const player = { name: "me", darts: [] };
