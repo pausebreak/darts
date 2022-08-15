@@ -4,9 +4,9 @@ import { GameChooser } from "./GameChooser";
 import { useStore } from "../machine";
 import { PlayerChooser } from "./PlayerChooser";
 import { TouchInput } from "./TouchInput";
-import { CurrentPlayer } from "./CurrentPlayer";
 import { GameName } from "../types";
 import { Cricket } from "./games/Cricket";
+import { Players } from "./Players";
 
 export const App = () => {
   const currentGame = useStore((state) => state.game);
@@ -30,7 +30,7 @@ export const App = () => {
         {currentGame && currentGame.name !== GameName.Cricket && (
           <div className="layout">
             <div className="content">
-              <CurrentPlayer />
+              <Players />
               <TouchInput />
             </div>
           </div>

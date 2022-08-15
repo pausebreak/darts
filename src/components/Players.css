@@ -1,7 +1,6 @@
 .players {
   display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
+  flex-direction: row;
   position: relative;
   z-index: 10;
   text-align: center;
@@ -14,4 +13,23 @@
   flex: 1;
   white-space: nowrap;
   margin-bottom: 0.25em;
+}
+
+.player .total {
+  margin-left: 1em;
+}
+
+.player.current {
+  background-color: red;
+  padding: 0.5em 1em;
+}
+
+.player.current .name {
+  font-size: 4em;
+  color: white;
+}
+
+.player.current .total {
+  font-size: 3.5em;
+  color: white;
 }

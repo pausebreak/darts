@@ -7,10 +7,11 @@ import "./Players.css";
 
 export const Players = () => {
   const players = useStore((state) => state.players);
+  const currentPlayerIndex = useStore((state) => state.currentPlayerIndex);
 
   return (
     <div className="players">
-      {players.map((player) => {
+      {players.map((player, playerIndex) => {
         const total = player.darts.reduce((acc, thrw) => acc + dartValue(thrw), 0);
         const dartsThrown = player.darts.length;
         let last3Throws = [];
@@ -20,16 +21,18 @@ export const Players = () => {
 
         last3Throws = player.darts.slice(lastRoundThrow - 3, lastRoundThrow);
 
+        const playerClass = currentPlayerIndex === playerIndex ? "player current" : "player";
+
         return (
-          <div key={player.name} className="player">
-            {player.name} {total}{" "}
+          <div key={player.name} className={playerClass}>
+            <span className="name">{player.name}</span>
+            <span className="total">{total}</span>
             {last3Throws.length > 0 && (
-              <>
-                -
+              <div>
                 {last3Throws.map((dart, idx) => (
-                  <DartLabel key={`${idx}${dart}`} condensed={true} dart={dart} />
+                  <DartLabel key={`${idx}${dart}`} dart={dart} />
                 ))}
-              </>
+              </div>
             )}
           </div>
         );
