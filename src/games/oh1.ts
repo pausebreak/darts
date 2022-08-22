@@ -27,10 +27,6 @@ export const ohGamesOperations = (game: Game): GameOperations => ({
       return false;
     }
 
-    //    if (checkOut !== Multiple.Single && dart[1] !== checkOut && total + throwValue === limit) {
-    //      return false;
-    //    }
-
     if (total + throwValue > limit) {
       return false;
     }
