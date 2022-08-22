@@ -21,4 +21,5 @@ jobs:
           git config user.name "github-actions[bot]@users.noreply.github.com"
           git add docs
           git commit -q --no-verify --author="${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>" -m "CI push to /docs"
-          git push
+          git status
+          git push --set-upstream origin docs
