@@ -2,7 +2,7 @@ import isBlank from "@sedan-utils/is-blank";
 import * as React from "react";
 import { isMarkClearedForEveryone, playerMarks, playersScoresCricket } from "../../games";
 import { useStore } from "../../machine";
-import { Mark } from "../../types";
+import { Dart, Game, Mark, Player } from "../../types";
 import { DartLabel } from "../DartLabel";
 
 import "./ScoreBoard.css";
@@ -34,10 +34,23 @@ export const ScoreBoard = () => {
 
   const numOfPlayers = players.length;
   const half = Math.floor(numOfPlayers / 2);
+  const even = numOfPlayers % 2 === 0;
   const playerScores = playersScoresCricket(game, players);
 
   return (
     <div className="scoreBoard">
+      {!even && (
+        <div className="column" key="blank">
+          <div className="playerForRow">
+            &nbsp;
+            {game.pointing && <div className="score">&nbsp;</div>}
+            <div>&nbsp;</div>
+          </div>
+          {game.marks.map(() => (
+            <div>&nbsp;</div>
+          ))}
+        </div>
+      )}
       {players.map((player, playerIndex) => {
         if (playerIndex >= half) {
           return;
