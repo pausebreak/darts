@@ -15,7 +15,7 @@ jobs:
       - name: prepare
         run: |
           git fetch
-          git merge main --no-edit --ff-only -q
+          git merge origin/main --no-edit --ff-only -q
           npm ci > /dev/null 2>&1
           git rm docs/*
           npm run build
