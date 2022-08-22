@@ -13,7 +13,7 @@ jobs:
       - name: prepare
         run: |
           git checkout docs
-          git merge master --no-edit --ff-only -q
+          git merge main --no-edit --ff-only -q
           npm ci
           rm docs/* 
           npm run build
