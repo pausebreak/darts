@@ -16,34 +16,32 @@ export const App = () => {
 
   if (winner) {
     return (
-      <div>
+      <>
         <div className="winner">{winner.name} is the winner</div>
         <PlayerChooser />
         {players.length > 0 && <GameChooser singlePlayer={players.length === 1} />}
-      </div>
+      </>
     );
   }
 
   return (
-    <>
-      <div className="App">
-        {currentGame && currentGame.name !== GameName.Cricket && (
-          <div className="layout">
-            <div className="content">
-              <Players />
-              <TouchInput />
-            </div>
+    <div className="App">
+      {currentGame && currentGame.name !== GameName.Cricket && (
+        <div className="layout">
+          <div className="content">
+            <Players />
+            <TouchInput />
           </div>
-        )}
-        {currentGame && currentGame.name === GameName.Cricket && <Cricket />}
-        {invalidThrow && <span style={{ color: "red" }}>Invalid Throw</span>}
-        {!currentGame && (
-          <>
-            <PlayerChooser />
-            {players.length > 0 && <GameChooser singlePlayer={players.length === 1} />}
-          </>
-        )}
-      </div>
-    </>
+        </div>
+      )}
+      {currentGame && currentGame.name === GameName.Cricket && <Cricket />}
+      {invalidThrow && <span style={{ color: "red" }}>Invalid Throw</span>}
+      {!currentGame && (
+        <>
+          <PlayerChooser />
+          {players.length > 0 && <GameChooser singlePlayer={players.length === 1} />}
+        </>
+      )}
+    </div>
   );
 };

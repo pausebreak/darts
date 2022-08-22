@@ -1,4 +1,3 @@
-import { DartLabel } from "../components/DartLabel";
 import { dartValue, findLastPlayerToThrow } from "../games";
 import { Game, Mark, Multiple, Player, Dart, GameOperations, GameName } from "../types";
 
@@ -17,7 +16,6 @@ export const ohGamesOperations = (game: Game): GameOperations => ({
     }
 
     const { checkOut, checkIn, limit } = game;
-
     const player = players[playerIndex];
     const firstNonMiss = player.darts.find((_throw) => _throw[0] !== Mark.Miss);
     const total = player.darts.reduce((acc, _throw) => acc + dartValue(_throw), 0);
@@ -31,14 +29,14 @@ export const ohGamesOperations = (game: Game): GameOperations => ({
       return false;
     }
 
-    if (game.checkOut !== Multiple.Single) {
+    if (checkOut !== Multiple.Single) {
       const leftOver = limit - total - throwValue;
 
-      if (leftOver === 0 && dart[1] === game.checkOut) {
+      if (leftOver === 0 && dart[1] === checkOut) {
         return true;
       }
 
-      return leftOver >= game.checkOut;
+      return leftOver >= checkOut;
     }
 
     return true;

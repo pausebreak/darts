@@ -5,6 +5,7 @@ import { Multiple } from "../types";
 
 export const GameInfo = () => {
   const currentGame = useStore((state) => state.game);
+  const winner = useStore((state) => state.playerWon);
   const setGame = useStore((state) => state.setGame);
   const setPlayerWon = useStore((state) => state.setPlayerWon);
 
@@ -15,7 +16,7 @@ export const GameInfo = () => {
 
   return (
     <>
-      {currentGame && (
+      {currentGame && !winner && (
         <>
           <div className="gameInfo">
             {currentGame.checkIn && <div>{Multiple[currentGame.checkIn]} In</div>}
