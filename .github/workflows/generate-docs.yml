@@ -11,11 +11,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: docs
+          ref: main
       - name: prepare
         run: |
           git fetch
-          git merge origin/main --no-edit --ff-only -q
+          git checkout docs
+          git merge main --no-edit --ff-only -q
           npm ci > /dev/null 2>&1
           git rm docs/*
           npm run build
