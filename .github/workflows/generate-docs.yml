@@ -14,9 +14,9 @@ jobs:
           ref: main
       - name: prepare
         run: |
-          git fetch
+          git pull
           git switch docs
-          git merge main --no-edit --ff-only -q
+          git merge main --no-edit -q
           npm ci > /dev/null 2>&1
           git rm docs/*
           npm run build
