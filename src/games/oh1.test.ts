@@ -1,14 +1,33 @@
 import { gameOperations, ohGames } from "../games";
 import { Mark, Multiple, Player } from "../types";
-import { ohGamesOperations } from "./oh1";
 
 describe("validThrow", () => {
   const game = ohGames(201);
 
+  it("honers missing", () => {
+    const ops = gameOperations({ ...game, checkIn: Multiple.Double });
+    const result = ops.validThrow(
+      0,
+      [{ name: "me", darts: [[Mark.Miss, Multiple.Single]] }],
+      [Mark.Miss, Multiple.Single]
+    );
+
+    expect(result).toBe(true);
+  });
+
+  it("honers Single out", () => {
+    const ops = gameOperations({ ...game, checkOut: Multiple.Single, limit: 10 });
+    const result = ops.validThrow(
+      0,
+      [{ name: "me", darts: [[Mark.Two, Multiple.Double]] }],
+      [Mark.Six, Multiple.Single]
+    );
+
+    expect(result).toBe(true);
+  });
+
   it("honers double in", () => {
-    const thisGame = { ...game };
-    thisGame.checkIn = Multiple.Double;
-    const ops = ohGamesOperations(thisGame);
+    const ops = gameOperations({ ...game, checkIn: Multiple.Double });
     const result = ops.validThrow(
       0,
       [{ name: "me", darts: [[Mark.Miss, Multiple.Single]] }],
@@ -22,10 +41,7 @@ describe("validThrow", () => {
   });
 
   it("does not allow going over", () => {
-    const thisGame = { ...game };
-    thisGame.checkIn = Multiple.Double;
-    thisGame.limit = 10;
-    const ops = gameOperations(thisGame);
+    const ops = gameOperations({ ...game, checkIn: Multiple.Double, limit: 10 });
     const result = ops.validThrow(
       0,
       [{ name: "me", darts: [[Mark.Miss, Multiple.Single]] }],
@@ -40,11 +56,7 @@ describe("validThrow", () => {
   });
 
   it("does not allow missing check out", () => {
-    const thisGame = { ...game };
-    thisGame.checkIn = Multiple.Double;
-    thisGame.checkOut = Multiple.Double;
-    thisGame.limit = 10;
-    const ops = gameOperations(thisGame);
+    const ops = gameOperations({ ...game, checkIn: Multiple.Double, checkOut: Multiple.Double, limit: 10 });
     const result = ops.validThrow(
       0,
       [{ name: "me", darts: [[Mark.Four, Multiple.Double]] }],
@@ -61,12 +73,25 @@ describe("validThrow", () => {
 
     expect(otherResult).toBe(true);
   });
+
+  it("does not allow mathematically impossible last throw for double out", () => {
+    const ops = gameOperations({ ...game, checkIn: Multiple.Double, checkOut: Multiple.Double, limit: 9 });
+    const result = ops.validThrow(0, [{ name: "me", darts: [] }], [Mark.Four, Multiple.Double]);
+
+    expect(result).toBe(false);
+  });
+
+  it("does not allow mathematically impossible last throw for triple out", () => {
+    const ops = gameOperations({ ...game, checkIn: Multiple.Single, checkOut: Multiple.Triple, limit: 7 });
+    const result = ops.validThrow(0, [{ name: "me", darts: [] }], [Mark.Five, Multiple.Single]);
+
+    expect(result).toBe(false);
+  });
 });
 
 describe("didWin", () => {
-  const ops = gameOperations(ohGames(301));
-
   it("does not allow no throws", () => {
+    const ops = gameOperations(ohGames(301));
     const result = ops.didWin(
       [
         { name: "me", darts: [] },
@@ -79,17 +104,15 @@ describe("didWin", () => {
   });
 
   it("can tell when current player wins", () => {
-    const b = ohGames();
-    b.limit = 50;
+    const ops = gameOperations(ohGames(50));
     const player: Player = { name: "me", darts: [[Mark.Bull, Multiple.Double]] };
-    const result = gameOperations(b).didWin([player], 0);
+    const result = ops.didWin([player], 0);
 
     expect(result).toBe(player);
   });
 
   it("can tell when the last player wins", () => {
-    const b = ohGames();
-    b.limit = 50;
+    const ops = gameOperations(ohGames(50));
     const player: Player = {
       name: "me",
       darts: [
@@ -108,7 +131,7 @@ describe("didWin", () => {
     };
 
     // currentIndex will always be on the next player if you hit 3 throws
-    const result = gameOperations(b).didWin([player, otherPlayer], 0);
+    const result = ops.didWin([player, otherPlayer], 0);
 
     expect(result).toBe(otherPlayer);
   });

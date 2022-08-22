@@ -38,7 +38,7 @@ body {
   background-clip: text;
   -webkit-text-fill-color: transparent;
   transform: rotate3d(1, 0, 0, 70deg);
-
+  transform: rotate3d(1, 0, 0, 55deg);
   top: -165px;
   opacity: 0.5;
 }

@@ -1,3 +1,4 @@
+import { DartLabel } from "../components/DartLabel";
 import { dartValue, findLastPlayerToThrow } from "../games";
 import { Game, Mark, Multiple, Player, Dart, GameOperations, GameName } from "../types";
 
@@ -10,34 +11,38 @@ export const ohGamesOperations = (game: Game): GameOperations => ({
       return player;
     }
   },
-  validThrow: (playerIndex: number, players: Player[], _throw: Dart): boolean => {
+  validThrow: (playerIndex: number, players: Player[], dart: Dart): boolean => {
+    if (dart[0] === Mark.Miss) {
+      return true;
+    }
+
     const { checkOut, checkIn, limit } = game;
 
     const player = players[playerIndex];
     const firstNonMiss = player.darts.find((_throw) => _throw[0] !== Mark.Miss);
     const total = player.darts.reduce((acc, _throw) => acc + dartValue(_throw), 0);
-    const throwValue = dartValue(_throw);
+    const throwValue = dartValue(dart);
 
-    if (
-      _throw[0] !== Mark.Miss &&
-      (player.darts.length === 0 || !firstNonMiss) &&
-      checkIn !== Multiple.Single &&
-      _throw[1] !== checkIn
-    ) {
+    if ((player.darts.length === 0 || !firstNonMiss) && checkIn !== Multiple.Single && dart[1] !== checkIn) {
       return false;
     }
 
-    if (
-      _throw[0] !== Mark.Miss &&
-      checkOut !== Multiple.Single &&
-      _throw[1] !== checkOut &&
-      total + throwValue === limit
-    ) {
+    //    if (checkOut !== Multiple.Single && dart[1] !== checkOut && total + throwValue === limit) {
+    //      return false;
+    //    }
+
+    if (total + throwValue > limit) {
       return false;
     }
 
-    if (limit && total + throwValue > limit) {
-      return false;
+    if (game.checkOut !== Multiple.Single) {
+      const leftOver = limit - total - throwValue;
+
+      if (leftOver === 0 && dart[1] === game.checkOut) {
+        return true;
+      }
+
+      return leftOver >= game.checkOut;
     }
 
     return true;
