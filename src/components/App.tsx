@@ -10,7 +10,6 @@ import { Players } from "./Players";
 
 export const App = () => {
   const currentGame = useStore((state) => state.game);
-  const invalidThrow = useStore((state) => state.invalidThrow);
   const players = useStore((state) => state.players);
   const winner = useStore((state) => state.playerWon);
 
@@ -35,7 +34,6 @@ export const App = () => {
         </div>
       )}
       {currentGame && currentGame.name === GameName.Cricket && <Cricket />}
-      {invalidThrow && <span style={{ color: "red" }}>Invalid Throw</span>}
       {!currentGame && (
         <>
           <PlayerChooser />

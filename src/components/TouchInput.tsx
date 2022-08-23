@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useStore } from "../machine";
 import { Mark, Multiple, Dart } from "../types";
 import "./TouchInput.css";
@@ -7,14 +7,24 @@ export const TouchInput = () => {
   const addThrowToCurrentPlayer = useStore((state) => state.addThrowToCurrentPlayer);
   const goBack = useStore((state) => state.goBack);
   const marks = useStore((state) => state.game)?.marks;
+  const invalidThrow = useStore((state) => state.invalidThrow);
+  const setInvalidThrow = useStore((state) => state.setInvalidThrow);
 
   const onClick = (_throw: Dart) => (event) => {
     event.preventDefault();
     addThrowToCurrentPlayer(_throw);
   };
 
+  const className = invalidThrow ? "marks invalid" : "marks";
+
+  useEffect(() => {
+    new Promise((r) => setTimeout(r, 500)).then(() => {
+      setInvalidThrow(false);
+    });
+  }, [invalidThrow]);
+
   return (
-    <div className="marks">
+    <div className={className}>
       {marks.includes(Mark.One) && (
         <div className="markGroup">
           <button onClick={onClick([Mark.One, Multiple.Single])}>1</button>

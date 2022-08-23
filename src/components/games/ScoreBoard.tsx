@@ -2,7 +2,7 @@ import isBlank from "@sedan-utils/is-blank";
 import * as React from "react";
 import { isMarkClearedForEveryone, playerMarks, playersScoresCricket } from "../../games";
 import { useStore } from "../../machine";
-import { Dart, Game, Mark, Player } from "../../types";
+import { Mark } from "../../types";
 import { DartLabel } from "../DartLabel";
 
 import "./ScoreBoard.css";
