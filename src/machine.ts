@@ -14,6 +14,7 @@ export type GameState = {
   setGame(game: Game): void;
   currentPlayerIndex: number;
   invalidThrow: boolean;
+  setInvalidThrow(valid: boolean): void;
   addThrowToCurrentPlayer(_throw: Dart): void;
   goBack(): void;
   playerWon: Player;
@@ -41,6 +42,10 @@ export const useStore = create<GameState>()(
         removePlayer: (playerId) =>
           set((state) => {
             state.players.splice(playerId, 1);
+          }),
+        setInvalidThrow: (valid) =>
+          set((state) => {
+            state.invalidThrow = valid;
           }),
         setGame: (game) =>
           set((state) => {
