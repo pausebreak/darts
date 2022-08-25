@@ -1,7 +1,17 @@
+html,
 body {
-  font-family: Helvetica, sans-serif;
+  height: 100%;
+  width: 100%;
   margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100%;
+  font-family: Helvetica, sans-serif;
   position: relative;
+  background-color: black;
+  color: azure;
 }
 
 h1 {
