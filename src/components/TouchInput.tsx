@@ -18,7 +18,7 @@ export const TouchInput = () => {
   const className = invalidThrow ? "marks invalid" : "marks";
 
   useEffect(() => {
-    new Promise((r) => setTimeout(r, 500)).then(() => {
+    new Promise((r) => setTimeout(r, 250)).then(() => {
       setInvalidThrow(false);
     });
   }, [invalidThrow]);

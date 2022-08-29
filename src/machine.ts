@@ -1,10 +1,11 @@
 import create from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
-import { Game, Player, Dart } from "./types";
+import { Game, Player, Dart, Mark } from "./types";
 
 import { subscribeWithSelector } from "zustand/middleware";
 import { gameOperations } from "./games";
+import { dartSound, errorSound } from "./sound";
 
 export type GameState = {
   players: Player[];
@@ -72,6 +73,10 @@ export const useStore = create<GameState>()(
               const player = draft.players[currentPlayerIndex];
               player.darts.push(dart);
 
+              if (dart[0] !== Mark.Miss) {
+                dartSound.play();
+              }
+
               // end of the round for the current player
               if (player.darts.length % 3 === 0) {
                 if (currentPlayerIndex + 1 === players.length) {
@@ -126,6 +131,15 @@ useStore.subscribe(
     if (winner) {
       // last person to throw won
       useStore.getState().setPlayerWon(winner);
+    }
+  }
+);
+
+useStore.subscribe(
+  (state) => state.invalidThrow,
+  (invalidThrow) => {
+    if (invalidThrow) {
+      errorSound.play();
     }
   }
 );
