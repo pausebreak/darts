@@ -105,7 +105,11 @@ export const isMarkClearedForEveryone = (players: Player[], mark: Mark) =>
 
 export const findLastPlayerToThrow = (players: Player[], currentPlayerIndex: number): Player => {
   let player = players[currentPlayerIndex];
-  const dartsLength = player.darts.length;
+  const dartsLength = player?.darts.length;
+
+  if (!dartsLength) {
+    return;
+  }
 
   // player has not thrown yet this round
   // so the last player was the last to throw
