@@ -4,7 +4,7 @@ import { Game, Mark, Multiple, Player, Dart, GameOperations, GameName } from "..
 export const ohGamesOperations = (game: Game): GameOperations => ({
   didWin: (players: Player[], currentPlayerIndex: number) => {
     const player = findLastPlayerToThrow(players, currentPlayerIndex);
-    const score = player.darts.map(dartValue).reduce((acc, value) => acc + value, 0);
+    const score = player?.darts.map(dartValue).reduce((acc, value) => acc + value, 0);
 
     if (score === game.limit) {
       return player;

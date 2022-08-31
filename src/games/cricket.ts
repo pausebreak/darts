@@ -10,6 +10,11 @@ import { Game, Mark, GameOperations, GameName } from "../types";
 export const cricketOperations = (game: Game): GameOperations => ({
   didWin: (players, currentPlayerIndex: number) => {
     const player = findLastPlayerToThrow(players, currentPlayerIndex);
+
+    if (!player) {
+      return;
+    }
+
     const cleared = areMarksCleared(game, player);
 
     if (!game.pointing && cleared) {

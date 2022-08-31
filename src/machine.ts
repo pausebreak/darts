@@ -1,11 +1,10 @@
 import create from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
-import { Game, Player, Dart, Mark } from "./types";
+import { Game, Player, Dart } from "./types";
 
 import { subscribeWithSelector } from "zustand/middleware";
 import { gameOperations } from "./games";
-import { dartSound, errorSound } from "./sound";
 
 export type GameState = {
   players: Player[];
@@ -51,7 +50,7 @@ export const useStore = create<GameState>()(
         setGame: (game) =>
           set((state) => {
             state.game = game;
-            state.currentPlayerIndex = 0;
+            state.currentPlayerIndex = game ? 0 : null;
             state.playerWon = null;
             state.invalidThrow = false;
 
@@ -72,10 +71,6 @@ export const useStore = create<GameState>()(
               draft.invalidThrow = false;
               const player = draft.players[currentPlayerIndex];
               player.darts.push(dart);
-
-              if (dart[0] !== Mark.Miss) {
-                dartSound.play();
-              }
 
               // end of the round for the current player
               if (player.darts.length % 3 === 0) {
@@ -119,27 +114,4 @@ export const useStore = create<GameState>()(
       name: "dart-game-state", // name of item in the storage (must be unique)
     }
   )
-);
-
-useStore.subscribe(
-  (state) => state.players,
-  (players) => {
-    const game = useStore.getState().game;
-    const currentPlayerIndex = useStore.getState().currentPlayerIndex;
-    const winner = gameOperations(game).didWin(players, currentPlayerIndex);
-
-    if (winner) {
-      // last person to throw won
-      useStore.getState().setPlayerWon(winner);
-    }
-  }
-);
-
-useStore.subscribe(
-  (state) => state.invalidThrow,
-  (invalidThrow) => {
-    if (invalidThrow) {
-      errorSound.play();
-    }
-  }
 );

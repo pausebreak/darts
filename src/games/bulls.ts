@@ -4,7 +4,7 @@ import { Game, Mark, Multiple, Player, GameOperations, GameName } from "../types
 export const bullsOperations = (game: Game): GameOperations => ({
   didWin: (players: Player[], currentPlayerIndex) => {
     const player = findLastPlayerToThrow(players, currentPlayerIndex);
-    const score = player.darts.map(dartValue).reduce((acc, value) => acc + value, 0);
+    const score = player?.darts.map(dartValue).reduce((acc, value) => acc + value, 0);
 
     if (score >= game.limit) {
       return player;
