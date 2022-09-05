@@ -15,31 +15,36 @@ export const ohGamesOperations = (game: Game): GameOperations => ({
       return true;
     }
 
-    const { checkOut, checkIn, limit } = game;
+    const { checkIn } = game;
     const player = players[playerIndex];
     const firstNonMiss = player.darts.find((_throw) => _throw[0] !== Mark.Miss);
-    const total = player.darts.reduce((acc, _throw) => acc + dartValue(_throw), 0);
-    const throwValue = dartValue(dart);
 
     if ((player.darts.length === 0 || !firstNonMiss) && checkIn !== Multiple.Single && dart[1] !== checkIn) {
       return false;
     }
 
-    if (total + throwValue > limit) {
-      return false;
+    return true;
+  },
+  didBust: (playerIndex: number, players: Player[], dart: Dart): boolean => {
+    const { checkOut, limit } = game;
+    const throwValue = dartValue(dart);
+    const player = players[playerIndex];
+    const total = player.darts.reduce((acc, _throw) => acc + dartValue(_throw), 0);
+    const leftOver = limit - total - throwValue;
+
+    if (leftOver < 0) {
+      return true;
     }
 
     if (checkOut !== Multiple.Single) {
-      const leftOver = limit - total - throwValue;
-
       if (leftOver === 0 && dart[1] === checkOut) {
-        return true;
+        return false;
       }
 
-      return leftOver >= checkOut;
+      return leftOver < checkOut;
     }
 
-    return true;
+    return false;
   },
 });
 

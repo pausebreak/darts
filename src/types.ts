@@ -56,5 +56,6 @@ export type Game = {
 
 export type GameOperations = {
   validThrow(playerIndex: number, players: Player[], dart: Dart): boolean;
+  didBust?(playerIndex: number, players: Player[], dart: Dart): boolean;
   didWin(players: Player[], currentPlayerIndex: number): Player;
 };

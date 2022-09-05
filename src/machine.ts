@@ -1,7 +1,7 @@
 import create from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
-import { Game, Player, Dart } from "./types";
+import { Game, Player, Dart, GameName, Multiple, Mark } from "./types";
 
 import { subscribeWithSelector } from "zustand/middleware";
 import { gameOperations } from "./games";
@@ -19,6 +19,29 @@ export type GameState = {
   goBack(): void;
   playerWon: Player;
   setPlayerWon(player: Player): void;
+  playerBusted: Player;
+  setPlayerBusted(player: Player): void;
+};
+
+// this is mutating
+const applyNextPlayer = (currentPlayerIndex: number, draft: GameState) => {
+  if (currentPlayerIndex + 1 === draft.players.length) {
+    draft.currentPlayerIndex = 0;
+  } else {
+    draft.currentPlayerIndex++;
+  }
+};
+
+// this is mutating
+const applyDart = (draft: GameState, currentPlayerIndex: number, dart: Dart) => {
+  draft.invalidThrow = false;
+  const player = draft.players[currentPlayerIndex];
+  player.darts.push(dart);
+
+  // end of the round for the current player
+  if (player.darts.length % 3 === 0) {
+    applyNextPlayer(currentPlayerIndex, draft);
+  }
 };
 
 export const useStore = create<GameState>()(
@@ -30,6 +53,7 @@ export const useStore = create<GameState>()(
         currentPlayerIndex: null,
         game: null,
         invalidThrow: false,
+        playerBusted: null,
         setPlayerWon: (player) => {
           set((state) => {
             state.playerWon = player;
@@ -62,27 +86,40 @@ export const useStore = create<GameState>()(
           }),
         addThrowToCurrentPlayer: (dart) => {
           const { game, players, currentPlayerIndex } = get();
+
           if (!gameOperations(game).validThrow(currentPlayerIndex, players, dart)) {
             set((draft) => {
               draft.invalidThrow = true;
             });
           } else {
-            set((draft) => {
-              draft.invalidThrow = false;
-              const player = draft.players[currentPlayerIndex];
-              player.darts.push(dart);
+            if (game.name === GameName.Oh1 && gameOperations(game).didBust(currentPlayerIndex, players, dart)) {
+              set((draft) => {
+                const player = draft.players[currentPlayerIndex];
+                const brokenThrows = player.darts.length % 3;
 
-              // end of the round for the current player
-              if (player.darts.length % 3 === 0) {
-                if (currentPlayerIndex + 1 === players.length) {
-                  draft.currentPlayerIndex = 0;
-                } else {
-                  draft.currentPlayerIndex++;
-                }
-              }
-            });
+                player.darts.splice(-brokenThrows);
+
+                player.darts.push(
+                  [Mark.Miss, Multiple.Single],
+                  [Mark.Miss, Multiple.Single],
+                  [Mark.Miss, Multiple.Single]
+                );
+
+                draft.playerBusted = player;
+
+                applyNextPlayer(currentPlayerIndex, draft);
+              });
+            } else {
+              set((draft) => {
+                applyDart(draft, currentPlayerIndex, dart);
+              });
+            }
           }
         },
+        setPlayerBusted: (player) =>
+          set((draft) => {
+            draft.playerBusted = player;
+          }),
         goBack: () => {
           set((state) => {
             const players = state.players;
