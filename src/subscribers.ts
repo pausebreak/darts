@@ -1,6 +1,6 @@
 import { findLastPlayerToThrow, gameOperations } from "./games";
 import { useStore as machineUseStore } from "./machine";
-import { dartSound, errorSound } from "./sound";
+import { brokenSound, dartSound, errorSound } from "./sound";
 import { Mark, Player } from "./types";
 
 export const initializeSubscribers = (useStore: typeof machineUseStore) => {
@@ -23,6 +23,16 @@ export const initializeSubscribers = (useStore: typeof machineUseStore) => {
     (invalidThrow) => {
       if (invalidThrow) {
         errorSound.play();
+      }
+    }
+  );
+
+  useStore.subscribe(
+    (state) => state.playerBusted,
+    (playerBusted) => {
+      if (playerBusted) {
+        brokenSound.play("start");
+        useStore.getState().setPlayerBusted(null);
       }
     }
   );

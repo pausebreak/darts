@@ -39,54 +39,6 @@ describe("validThrow", () => {
     const otherResult = ops.validThrow(0, [{ name: "me", darts: [] }], [Mark.Bull, Multiple.Double]);
     expect(otherResult).toBe(true);
   });
-
-  it("does not allow going over", () => {
-    const ops = gameOperations({ ...game, checkIn: Multiple.Double, limit: 10 });
-    const result = ops.validThrow(
-      0,
-      [{ name: "me", darts: [[Mark.Miss, Multiple.Single]] }],
-      [Mark.Bull, Multiple.Single]
-    );
-
-    expect(result).toBe(false);
-
-    const otherResult = ops.validThrow(0, [{ name: "me", darts: [] }], [Mark.Six, Multiple.Double]);
-
-    expect(otherResult).toBe(false);
-  });
-
-  it("does not allow missing check out", () => {
-    const ops = gameOperations({ ...game, checkIn: Multiple.Double, checkOut: Multiple.Double, limit: 10 });
-    const result = ops.validThrow(
-      0,
-      [{ name: "me", darts: [[Mark.Four, Multiple.Double]] }],
-      [Mark.Two, Multiple.Single]
-    );
-
-    expect(result).toBe(false);
-
-    const otherResult = ops.validThrow(
-      0,
-      [{ name: "me", darts: [[Mark.Four, Multiple.Double]] }],
-      [Mark.One, Multiple.Double]
-    );
-
-    expect(otherResult).toBe(true);
-  });
-
-  it("does not allow mathematically impossible last throw for double out", () => {
-    const ops = gameOperations({ ...game, checkIn: Multiple.Double, checkOut: Multiple.Double, limit: 9 });
-    const result = ops.validThrow(0, [{ name: "me", darts: [] }], [Mark.Four, Multiple.Double]);
-
-    expect(result).toBe(false);
-  });
-
-  it("does not allow mathematically impossible last throw for triple out", () => {
-    const ops = gameOperations({ ...game, checkIn: Multiple.Single, checkOut: Multiple.Triple, limit: 7 });
-    const result = ops.validThrow(0, [{ name: "me", darts: [] }], [Mark.Five, Multiple.Single]);
-
-    expect(result).toBe(false);
-  });
 });
 
 describe("didWin", () => {
@@ -134,5 +86,59 @@ describe("didWin", () => {
     const result = ops.didWin([player, otherPlayer], 0);
 
     expect(result).toBe(otherPlayer);
+  });
+});
+
+describe("didBust", () => {
+  const game = ohGames(201);
+
+  it("honers Single out", () => {
+    const ops = gameOperations({ ...game, checkOut: Multiple.Single, limit: 10 });
+    const result = ops.didBust(0, [{ name: "me", darts: [[Mark.Two, Multiple.Double]] }], [Mark.Six, Multiple.Single]);
+
+    expect(result).toBe(false);
+  });
+
+  it("does not allow going over", () => {
+    const ops = gameOperations({ ...game, checkIn: Multiple.Double, limit: 10 });
+    const result = ops.didBust(
+      0,
+      [{ name: "me", darts: [[Mark.Miss, Multiple.Single]] }],
+      [Mark.Bull, Multiple.Single]
+    );
+
+    expect(result).toBe(true);
+
+    const otherResult = ops.didBust(0, [{ name: "me", darts: [] }], [Mark.Six, Multiple.Double]);
+
+    expect(otherResult).toBe(true);
+  });
+
+  it("does not allow mathematically impossible last throw for triple out", () => {
+    const ops = gameOperations({ ...game, checkIn: Multiple.Single, checkOut: Multiple.Triple, limit: 7 });
+    const result = ops.didBust(0, [{ name: "me", darts: [] }], [Mark.Five, Multiple.Single]);
+
+    expect(result).toBe(true);
+  });
+  it("does not allow mathematically impossible last throw for double out", () => {
+    const ops = gameOperations({ ...game, checkIn: Multiple.Double, checkOut: Multiple.Double, limit: 9 });
+    const result = ops.didBust(0, [{ name: "me", darts: [] }], [Mark.Four, Multiple.Double]);
+
+    expect(result).toBe(true);
+  });
+
+  it("does not allow missing check out", () => {
+    const ops = gameOperations({ ...game, checkIn: Multiple.Double, checkOut: Multiple.Double, limit: 10 });
+    const result = ops.didBust(0, [{ name: "me", darts: [[Mark.Four, Multiple.Double]] }], [Mark.Two, Multiple.Single]);
+
+    expect(result).toBe(true);
+
+    const otherResult = ops.didBust(
+      0,
+      [{ name: "me", darts: [[Mark.Four, Multiple.Double]] }],
+      [Mark.One, Multiple.Double]
+    );
+
+    expect(otherResult).toBe(false);
   });
 });
