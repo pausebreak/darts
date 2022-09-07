@@ -8,6 +8,8 @@ export const PlayerChooser: React.FC = () => {
   const players = useStore((state) => state.players);
   const addPlayer = useStore((state) => state.addPlayer);
   const removePlayer = useStore((state) => state.removePlayer);
+  const movePlayerLeft = useStore((state) => state.movePlayerLeft);
+  const movePlayerRight = useStore((state) => state.movePlayerRight);
   const [getPlayer, setPlayer] = useState("");
   const [hasError, setError] = useState(false);
 
@@ -49,6 +51,23 @@ export const PlayerChooser: React.FC = () => {
             remove
           </button>
           {player.name}
+          <button
+            style={{ marginLeft: "0.5em" }}
+            onClick={(event) => {
+              event.preventDefault();
+              movePlayerLeft(id);
+            }}
+          >
+            &lt;
+          </button>
+          <button
+            onClick={(event) => {
+              event.preventDefault();
+              movePlayerRight(id);
+            }}
+          >
+            &gt;
+          </button>
         </div>
       ))}
     </div>

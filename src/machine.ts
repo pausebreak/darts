@@ -21,6 +21,8 @@ export type GameState = {
   setPlayerWon(player: Player): void;
   playerBusted: Player;
   setPlayerBusted(player: Player): void;
+  movePlayerLeft(playerIndex: number): void;
+  movePlayerRight(playerIndex: number): void;
 };
 
 // this is mutating
@@ -143,6 +145,18 @@ export const useStore = create<GameState>()(
             }
 
             player.darts.pop();
+          });
+        },
+        movePlayerLeft: (index) => {
+          set((state) => {
+            const newIndex = index === 0 ? state.players.length - 1 : index - 1;
+            state.players.splice(newIndex, 0, state.players.splice(index, 1)[0]);
+          });
+        },
+        movePlayerRight: (index) => {
+          set((state) => {
+            const newIndex = index === state.players.length - 1 ? 0 : index + 1;
+            state.players.splice(newIndex, 0, state.players.splice(index, 1)[0]);
           });
         },
       }))
