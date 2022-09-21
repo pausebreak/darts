@@ -3,14 +3,12 @@
   flex-direction: row;
   flex-wrap: wrap;
   position: relative;
-  z-index: 10;
   text-align: center;
   margin-top: 0.35em;
 }
 
 .player {
   position: relative;
-  z-index: 10;
   flex: 1;
   white-space: nowrap;
   margin-bottom: 0.25em;
@@ -26,11 +24,15 @@
 }
 
 .player.current .name {
-  font-size: 4em;
+  font-size: 3em;
   color: white;
 }
 
 .player.current .total {
-  font-size: 5.5em;
+  font-size: 3.5em;
   color: white;
+}
+
+.dart.placeholder {
+  border-color: transparent;
 }
