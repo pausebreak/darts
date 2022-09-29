@@ -61,7 +61,7 @@ export const initializeSubscribers = (useStore: typeof machineUseStore) => {
 
       if (dartsLength) {
         const dart = lastPlayer.darts[dartsLength - 1];
-        if (newLength !== oldLength && dart[0] !== Mark.Miss) {
+        if (newLength > oldLength && dart[0] !== Mark.Miss) {
           sound().dart.play();
         }
       }

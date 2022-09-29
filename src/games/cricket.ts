@@ -5,7 +5,7 @@ import {
   isMarkClearedForEveryone,
   playersScoresCricket,
 } from "../games";
-import { Game, Mark, GameOperations, GameName } from "../types";
+import { Game, Mark, GameOperations, GameName, Multiple } from "../types";
 
 export const cricketOperations = (game: Game): GameOperations => ({
   didWin: (players, currentPlayerIndex: number) => {
@@ -58,4 +58,5 @@ export const cricket = (pointing: boolean): Game => ({
   clear: true,
   pointing,
   marks: [Mark.Twenty, Mark.Nineteen, Mark.Eighteen, Mark.Seventeen, Mark.Sixteen, Mark.Fifteen, Mark.Bull],
+  multiples: [Multiple.Single, Multiple.Double, Multiple.Triple],
 });

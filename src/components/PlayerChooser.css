@@ -4,7 +4,7 @@
   flex-direction: row;
   flex-wrap: wrap;
   align-items: center;
-  row-gap: 1em;
+  row-gap: 0.35em;
   padding: 0 1em;
   font-size: 2em;
 }

@@ -23,12 +23,12 @@ export const Players = () => {
 
         return (
           <div key={player.name} className={playerClass}>
-            <span className="name">{player.name}</span>
-            <span className="total">{total}</span>
+            <div className="name">{player.name}</div>
+            <div className="total">{total}</div>
             {!isCurrentPlayer && lastRoundThrows.length > 0 && (
               <div>
                 {lastRoundThrows.map((dart, idx) => (
-                  <DartLabel key={`${idx}${dart}`} dart={dart} />
+                  <DartLabel key={`${idx}${dart}`} condensed={true} dart={dart} />
                 ))}
               </div>
             )}

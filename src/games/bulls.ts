@@ -10,9 +10,9 @@ export const bullsOperations = (game: Game): GameOperations => ({
       return player;
     }
   },
-  validThrow: (playerIndex, players, _throw) => {
+  validThrow: (playerIndex, players, dart) => {
     const validMarks = game.marks.concat([Mark.Miss]);
-    if (!validMarks.includes(_throw[0])) {
+    if (!validMarks.includes(dart[0])) {
       return false;
     }
 
@@ -28,4 +28,5 @@ export const bulls = (): Game => ({
   limit: Mark.Bull * 21,
   marks: [Mark.Bull],
   pointing: false,
+  multiples: [Multiple.Single, Multiple.Double],
 });

@@ -1,37 +1,42 @@
+.controls {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 0.5em;
+}
+
 .marks {
   display: flex;
   flex-wrap: wrap;
-  align-items: stretch;
-  align-content: stretch;
-  row-gap: 1em;
-  position: relative;
-  opacity: 1;
-  z-index: 10;
   flex: 1;
   margin-top: 0.5em;
 }
 
-.marks .markGroup button {
+.marks.long::after {
+  content: "";
+  flex-grow: 2; /** 2 seems to be the best while resizing the viewport **/
+}
+
+.marks button {
   transition: background-color 0.5s ease-in;
 }
 
-.marks.invalid .markGroup button {
+.marks.invalid button {
   background-color: red;
   transition: background-color 0.5s ease-out;
 }
 
-.markGroup button {
+.marks button,
+.controls button {
+  aspect-ratio: 1/1;
   flex: 1;
+  min-width: 2.1em;
   margin: 0;
   white-space: nowrap;
-  width: 3.75em;
   cursor: pointer;
   font-weight: 600;
   background-color: white;
-  opacity: 1;
   border: 1px solid darkgray;
-  width: 100%;
-  padding: 5px;
+  padding: 0;
   font-size: 2.5em;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -39,30 +44,42 @@
   user-select: none;
 }
 
-@media only screen and (max-width: 600px) {
-  .markGroup button {
-    font-size: 1.5em;
+.controls button {
+  justify-content: space-between;
+  flex: none;
+  aspect-ratio: 1/1;
+  padding: 0 0.5em;
+  font-size: 1.5em;
+}
+
+.controls button:active {
+  color: red;
+}
+
+.controls button.engaged {
+  background: black;
+  color: white;
+}
+
+@media only screen and (max-width: 600px) and (min-width: 500px) {
+  .marks button {
+    font-size: 1.75em;
+  }
+
+  .controls button {
+    font-size: 1em;
+  }
+
+  .marks.long::after {
+    content: "";
+    flex-grow: 0;
   }
 }
 
 @media (hover: hover) {
-  .markGroup button:hover {
+  .marks button:hover {
     background-color: darkgray;
     color: white;
     border: 1px solid darkgray;
   }
-}
-
-.markGroup button:active {
-  color: red;
-}
-
-.markGroup {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.longer button {
-  width: 100%;
 }

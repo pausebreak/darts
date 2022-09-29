@@ -192,6 +192,7 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
                 checkOut,
                 limit,
                 marks: getGame.marks,
+                multiples: getGame.multiples,
                 clear: getGame.clear,
                 pointing: getPointing,
               });
