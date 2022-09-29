@@ -50,6 +50,7 @@ export type Game = {
   checkOut?: Multiple;
   limit: number;
   marks: Mark[];
+  multiples: Multiple[];
   clear: boolean;
   pointing: boolean;
 };

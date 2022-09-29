@@ -25,6 +25,7 @@ describe("areMarksCleared", () => {
       checkOut: Multiple.Single,
       limit: 50,
       marks: [Mark.Bull],
+      multiples: [Multiple.Single, Multiple.Double, Multiple.Triple],
       clear: false,
       pointing: false,
     };

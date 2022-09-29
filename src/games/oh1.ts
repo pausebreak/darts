@@ -77,5 +77,6 @@ export const ohGames = (limit?: number): Game => ({
     Mark.Twenty,
     Mark.Bull,
   ],
+  multiples: [Multiple.Single, Multiple.Double, Multiple.Triple],
   pointing: false,
 });

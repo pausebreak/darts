@@ -1,26 +1,22 @@
 .players {
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
-  position: relative;
   text-align: center;
   margin-top: 0.35em;
 }
 
 .player {
-  position: relative;
   flex: 1;
   white-space: nowrap;
   margin-bottom: 0.25em;
-}
-
-.player .total {
-  margin-left: 1em;
+  padding-top: 2.7em;
 }
 
 .player.current {
+  padding-top: 0;
+  flex: 1.2;
   background-color: red;
-  padding: 0.5em 1em;
+  overflow-y: auto;
 }
 
 .player.current .name {
