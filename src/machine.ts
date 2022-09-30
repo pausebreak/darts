@@ -12,6 +12,8 @@ export type GameState = {
   removePlayer(playerId: number): void;
   game: Game;
   setGame(game: Game): void;
+  useSound: boolean;
+  setUseSound(sound: boolean): void;
   currentPlayerIndex: number;
   invalidThrow: boolean;
   setInvalidThrow(valid: boolean): void;
@@ -72,6 +74,11 @@ export const useStore = create<GameState>()(
         setInvalidThrow: (valid) =>
           set((state) => {
             state.invalidThrow = valid;
+          }),
+        useSound: true,
+        setUseSound: (sound) =>
+          set((state) => {
+            state.useSound = sound;
           }),
         setGame: (game) =>
           set((state) => {

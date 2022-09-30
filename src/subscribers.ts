@@ -19,19 +19,23 @@ export const initializeSubscribers = (useStore: typeof machineUseStore) => {
   );
 
   useStore.subscribe(
-    (state) => state.invalidThrow,
-    (invalidThrow) => {
+    (state) => [state.invalidThrow, state.useSound],
+    ([invalidThrow, useSound]) => {
       if (invalidThrow) {
-        sound().error.play();
+        if (useSound) {
+          sound().error.play();
+        }
       }
     }
   );
 
   useStore.subscribe(
-    (state) => state.playerBusted,
-    (playerBusted) => {
+    (state) => [state.playerBusted, state.useSound],
+    ([playerBusted, useSound]) => {
       if (playerBusted) {
-        sound().broken.play("start");
+        if (useSound) {
+          sound().broken.play("start");
+        }
         useStore.getState().setPlayerBusted(null);
       }
     }
@@ -39,9 +43,9 @@ export const initializeSubscribers = (useStore: typeof machineUseStore) => {
 
   if ("speechSynthesis" in window) {
     useStore.subscribe(
-      (state) => [state.currentPlayerIndex, state.players, state.game],
-      ([currentPlayerIndex, players, game], [previousPlayerIndex]) => {
-        if (currentPlayerIndex !== previousPlayerIndex && game !== null) {
+      (state) => [state.currentPlayerIndex, state.players, state.game, state.useSound],
+      ([currentPlayerIndex, players, game, useSound], [previousPlayerIndex]) => {
+        if (useSound && currentPlayerIndex !== previousPlayerIndex && game !== null) {
           const name = players[currentPlayerIndex as number].name;
           const utterance = new SpeechSynthesisUtterance(name);
 
@@ -52,8 +56,8 @@ export const initializeSubscribers = (useStore: typeof machineUseStore) => {
   }
 
   useStore.subscribe(
-    (state) => [state.players, state.currentPlayerIndex],
-    ([players, currentPlayerIndex], [oldPlayers]) => {
+    (state) => [state.players, state.currentPlayerIndex, state.useSound],
+    ([players, currentPlayerIndex, useSound], [oldPlayers]) => {
       const newLength = (players as Player[]).reduce((acc, player) => acc + player.darts.length, 0);
       const oldLength = (oldPlayers as Player[]).reduce((acc, player) => acc + player.darts.length, 0);
       const lastPlayer = findLastPlayerToThrow(players as Player[], currentPlayerIndex as number);
@@ -62,7 +66,9 @@ export const initializeSubscribers = (useStore: typeof machineUseStore) => {
       if (dartsLength) {
         const dart = lastPlayer.darts[dartsLength - 1];
         if (newLength > oldLength && dart[0] !== Mark.Miss) {
-          sound().dart.play();
+          if (useSound) {
+            sound().dart.play();
+          }
         }
       }
     }
