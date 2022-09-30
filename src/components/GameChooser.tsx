@@ -9,6 +9,8 @@ import isBlank from "@sedan-utils/is-blank";
 
 export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer }) => {
   const chooseGame = useStore((state) => state.setGame);
+  const setUseSound = useStore((state) => state.setUseSound);
+  const useSound = useStore((state) => state.useSound);
 
   const [getGame, setGame] = useState<Game>(null);
   const [getLimit, setLimit] = useState(301);
@@ -40,7 +42,6 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
     }
 
     setNumberOfBulls(value);
-
     setLimit(value * 25);
   };
 
@@ -60,8 +61,16 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
 
   const pointing = singlePlayer ? false : getPointing;
 
+  const toggleUseSound = () => setUseSound(!useSound);
+
   return (
     <>
+      <div className="options">
+        <label>
+          <input type="checkbox" checked={useSound} onChange={toggleUseSound} />
+          Speech and Sounds ?
+        </label>
+      </div>
       <div className="games">
         <button
           onClick={(event) => {
@@ -89,19 +98,16 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
           Oh {getGame?.name === GameName.Oh1 && <span>!!</span>}
         </button>
       </div>
-
       {getGame && getGame.name === GameName.Cricket && (
         <a target={"_blank"} href="https://en.wikipedia.org/wiki/Cricket_(darts)">
           The game of Cricket
         </a>
       )}
-
       {getGame && getGame.name === GameName.Oh1 && (
         <a target={"_blank"} href="https://en.wikipedia.org/wiki/Darts#Games">
           The game of Darts
         </a>
       )}
-
       {getGame && (
         <div className="options">
           {getGame?.limit !== 0 && getGame.name !== GameName.Bulls && (
@@ -116,7 +122,7 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
             <div>
               <label>
                 <input type="checkbox" disabled={singlePlayer} checked={pointing} onChange={onPointingChange} />
-                pointing?
+                pointing ?
               </label>
               {hasError && <span>invalid value</span>}
             </div>
