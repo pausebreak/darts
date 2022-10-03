@@ -6,6 +6,7 @@ import { ohGames } from "../games/oh1";
 import { useStore } from "../machine";
 import { Game, Multiple, GameName } from "../types";
 import isBlank from "@sedan-utils/is-blank";
+import { cutThroat } from "../games";
 
 export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer }) => {
   const chooseGame = useStore((state) => state.setGame);
@@ -97,6 +98,14 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
         >
           Oh {getGame?.name === GameName.Oh1 && <span>!!</span>}
         </button>
+        <button
+          onClick={(event) => {
+            event.preventDefault();
+            setGame(cutThroat());
+          }}
+        >
+          Cut Throat {getGame?.name === GameName.CutThroat && <span>!!</span>}
+        </button>
       </div>
       {getGame && getGame.name === GameName.Cricket && (
         <a target={"_blank"} href="https://en.wikipedia.org/wiki/Cricket_(darts)">
@@ -118,7 +127,7 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
             </div>
           )}
 
-          {![GameName.Bulls, GameName.Oh1].includes(getGame.name) && (
+          {![GameName.Bulls, GameName.Oh1, GameName.CutThroat].includes(getGame.name) && (
             <div>
               <label>
                 <input type="checkbox" disabled={singlePlayer} checked={pointing} onChange={onPointingChange} />
@@ -143,7 +152,7 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
             </div>
           )}
 
-          {![GameName.Bulls, GameName.Cricket].includes(getGame.name) && (
+          {![GameName.Bulls, GameName.Cricket, GameName.CutThroat].includes(getGame.name) && (
             <>
               <div>
                 <select onChange={onInChange} value={getIn}>
@@ -192,6 +201,16 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
                 checkOut = null;
               }
 
+              let arePointing = getPointing;
+
+              if (getGame?.name === GameName.CutThroat) {
+                limit = 0;
+                checkIn = null;
+                checkOut = null;
+
+                arePointing = true;
+              }
+
               chooseGame({
                 name: getGame.name,
                 checkIn,
@@ -200,7 +219,7 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
                 marks: getGame.marks,
                 multiples: getGame.multiples,
                 clear: getGame.clear,
-                pointing: getPointing,
+                pointing: arePointing,
               });
             }}
           >

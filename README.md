@@ -1,6 +1,6 @@
 # darts
 
-This is an experiment with using [zustand](https://zustand-demo.pmnd.rs/) and [parcel](https://parceljs.org/) for app development. It's also meant to be a platform independent way to track dart games.
+This is an experiment with using [zustand](https://zustand-demo.pmnd.rs/) and [parcel](https://parceljs.org/) for app development. It's also meant to be a platform independent way to track dart games on whatever device you have handy.
 
 See: https://pausebreak.github.io/darts/ for a live demonstration.
 
@@ -18,5 +18,4 @@ Cricket game logic is complete minus the cut throat variant.
 
 - color pallette
 - visual design
-- cut throat
 - stats

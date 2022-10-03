@@ -42,6 +42,7 @@ export enum GameName {
   Bulls = "Bulls",
   Oh1 = "Oh1",
   Cricket = "Cricket",
+  CutThroat = "CutThroat",
 }
 
 export type Game = {

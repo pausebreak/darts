@@ -1,8 +1,8 @@
 import isBlank from "@sedan-utils/is-blank";
 import * as React from "react";
-import { isMarkClearedForEveryone, playerMarks, playersScoresCricket } from "../../games";
+import { isMarkClearedForEveryone, playerMarks, playersScoresCricket, playersScoresCutThroat } from "../../games";
 import { useStore } from "../../machine";
-import { Mark } from "../../types";
+import { GameName, Mark } from "../../types";
 
 import "./ScoreBoard.css";
 
@@ -42,7 +42,9 @@ export const ScoreBoard = () => {
   const numOfPlayers = players.length;
   const half = Math.floor(numOfPlayers / 2);
   const even = numOfPlayers % 2 === 0;
-  const playerScores = playersScoresCricket(game, players);
+
+  const playerScores =
+    GameName.Cricket === game?.name ? playersScoresCricket(game, players) : playersScoresCutThroat(game, players);
 
   return (
     <div className="scoreBoard">
