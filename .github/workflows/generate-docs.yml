@@ -3,8 +3,11 @@ on:
   push:
     branches:
       - main
-    paths-ignore:
-      - "docs/**"
+    paths:
+      - "src/**"
+      - "package.json"
+      - "package-lock.json"
+      - "tsconfig.json"
 jobs:
   docs:
     runs-on: ubuntu-latest
