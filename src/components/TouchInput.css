@@ -61,7 +61,7 @@
   color: white;
 }
 
-@media only screen and (max-width: 600px) and (min-width: 500px) {
+@media only screen and (max-width: 600px) and (min-width: 1px) {
   .marks button {
     font-size: 1.75em;
   }
@@ -69,7 +69,16 @@
   .controls button {
     font-size: 1em;
   }
+}
 
+@media only screen and (max-width: 600px) and (min-width: 500px) {
+  .marks.long::after {
+    content: "";
+    flex-grow: 0;
+  }
+}
+
+@media only screen and (min-width: 1000px) {
   .marks.long::after {
     content: "";
     flex-grow: 0;

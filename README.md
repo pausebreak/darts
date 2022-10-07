@@ -8,14 +8,22 @@ See: https://pausebreak.github.io/darts/ for a live demonstration.
 
 # Current Progress
 
-Cricket game logic is complete minus the cut throat variant.
-
 - heavily using `zustand` subscribers
 - sounds are in place including saying the next player's name if the browser supports `speechSynthesis`
-- game logic is 100% covered
+- game logic has 100% test coverage
 
 # Things Need Done
 
+in somewhat of an order:
+
+- react tests ( held off on these until the interface settled )
+- stats
+- add technical cricket variant
 - color pallette
 - visual design
-- stats
+
+# Evaluation
+
+If you are going to use hooks then zustand + immer is wonderful to work with.
+
+Parcel has for the most part just worked as advertized. So far the project has not thrown anything hard at it though. For instance the css is just plain css.
