@@ -64,6 +64,16 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
 
   const toggleUseSound = () => setUseSound(!useSound);
 
+  const buttonClass = (game: GameName) => {
+    if (!getGame?.name) {
+      return null;
+    }
+    if (getGame?.name === game) {
+      return 'selected-button'
+    }
+    return 'unselected-button';
+  }
+
   return (
     <>
       <div className="options">
@@ -78,8 +88,9 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
             event.preventDefault();
             setGame(bulls());
           }}
+          className={buttonClass(GameName.Bulls)}
         >
-          Bulls {getGame?.name === GameName.Bulls && <span>!!</span>}
+          Bulls
         </button>
 
         <button
@@ -87,24 +98,27 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
             event.preventDefault();
             setGame(cricket(getPointing));
           }}
+          className={buttonClass(GameName.Cricket)}
         >
-          Cricket {getGame?.name === GameName.Cricket && <span>!!</span>}
+          Cricket
         </button>
         <button
           onClick={(event) => {
             event.preventDefault();
             setGame(ohGames(Number(getLimit)));
           }}
+          className={buttonClass(GameName.Oh1)}
         >
-          Oh {getGame?.name === GameName.Oh1 && <span>!!</span>}
+          Oh
         </button>
         <button
           onClick={(event) => {
             event.preventDefault();
             setGame(cutThroat());
           }}
+          className={buttonClass(GameName.CutThroat)}
         >
-          Cut Throat {getGame?.name === GameName.CutThroat && <span>!!</span>}
+          Cut Throat
         </button>
       </div>
       {getGame && getGame.name === GameName.Cricket && (
