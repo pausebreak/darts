@@ -5,6 +5,8 @@ import "./TouchInput.css";
 
 export const TouchInput = () => {
   const addThrowToCurrentPlayer = useStore((state) => state.addThrowToCurrentPlayer);
+  const currentPlayerIndex = useStore((state) => state.currentPlayerIndex);
+  const players = useStore((state) => state.players);
   const goBack = useStore((state) => state.goBack);
   const marks = useStore((state) => state.game)?.marks;
   const multiples = useStore((state) => state.game)?.multiples;
@@ -44,6 +46,15 @@ export const TouchInput = () => {
       setTriple(true);
     }
   };
+
+  const onFinishTurn = () => {
+    const numberThrown = players[currentPlayerIndex].darts.length;
+    console.log(numberThrown)
+    for (let i = (numberThrown % 3); i<3; i++){
+      console.log("throw")
+      addThrowToCurrentPlayer([Mark.Miss, Multiple.Single]);
+    }
+  }
 
   let className = invalidThrow ? "marks invalid" : "marks";
   if (marks.length > 6) {
@@ -85,6 +96,7 @@ export const TouchInput = () => {
         {marks.includes(Mark.Bull) && <button onClick={onClick([Mark.Bull, Multiple.Single])} disabled={triple}>Bull</button>}
 
         <button onClick={onClick([Mark.Miss, Multiple.Single])}>Miss</button>
+        <button onClick={onFinishTurn}>End</button>
       </div>
       <div className="controls">
         <button onClick={goBack}>Back</button>
