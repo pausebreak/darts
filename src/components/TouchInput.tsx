@@ -82,7 +82,7 @@ export const TouchInput = () => {
         {marks.includes(Mark.Eighteen) && <button onClick={onClick([Mark.Eighteen, Multiple.Single])}>18</button>}
         {marks.includes(Mark.Nineteen) && <button onClick={onClick([Mark.Nineteen, Multiple.Single])}>19</button>}
         {marks.includes(Mark.Twenty) && <button onClick={onClick([Mark.Twenty, Multiple.Single])}>20</button>}
-        {marks.includes(Mark.Bull) && <button onClick={onClick([Mark.Bull, Multiple.Single])}>Bull</button>}
+        {marks.includes(Mark.Bull) && <button onClick={onClick([Mark.Bull, Multiple.Single])} disabled={triple}>Bull</button>}
 
         <button onClick={onClick([Mark.Miss, Multiple.Single])}>Miss</button>
       </div>
