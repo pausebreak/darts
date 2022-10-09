@@ -96,7 +96,7 @@ export const TouchInput = () => {
         {marks.includes(Mark.Bull) && <button onClick={onClick([Mark.Bull, Multiple.Single])} disabled={triple}>Bull</button>}
 
         <button onClick={onClick([Mark.Miss, Multiple.Single])}>Miss</button>
-        <button onClick={onFinishTurn}>End</button>
+        <button onClick={onFinishTurn}>Next</button>
       </div>
       <div className="controls">
         <button onClick={goBack}>Back</button>
