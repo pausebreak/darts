@@ -1,0 +1,12 @@
+name: Coverage Tests 
+on:
+  pull_request
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: prepare
+        run: |
+          npm ci > /dev/null 2>&1
+          npm run coverage
