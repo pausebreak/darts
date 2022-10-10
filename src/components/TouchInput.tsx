@@ -49,9 +49,7 @@ export const TouchInput = () => {
 
   const onFinishTurn = () => {
     const numberThrown = players[currentPlayerIndex].darts.length;
-    console.log(numberThrown)
     for (let i = (numberThrown % 3); i<3; i++){
-      console.log("throw")
       addThrowToCurrentPlayer([Mark.Miss, Multiple.Single]);
     }
   }
