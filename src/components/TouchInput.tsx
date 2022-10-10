@@ -5,6 +5,8 @@ import "./TouchInput.css";
 
 export const TouchInput = () => {
   const addThrowToCurrentPlayer = useStore((state) => state.addThrowToCurrentPlayer);
+  const currentPlayerIndex = useStore((state) => state.currentPlayerIndex);
+  const players = useStore((state) => state.players);
   const goBack = useStore((state) => state.goBack);
   const marks = useStore((state) => state.game)?.marks;
   const multiples = useStore((state) => state.game)?.multiples;
@@ -45,6 +47,13 @@ export const TouchInput = () => {
     }
   };
 
+  const onFinishTurn = () => {
+    const numberThrown = players[currentPlayerIndex].darts.length;
+    for (let i = (numberThrown % 3); i<3; i++){
+      addThrowToCurrentPlayer([Mark.Miss, Multiple.Single]);
+    }
+  }
+
   let className = invalidThrow ? "marks invalid" : "marks";
   if (marks.length > 6) {
     className = `${className} long`;
@@ -82,9 +91,10 @@ export const TouchInput = () => {
         {marks.includes(Mark.Eighteen) && <button onClick={onClick([Mark.Eighteen, Multiple.Single])}>18</button>}
         {marks.includes(Mark.Nineteen) && <button onClick={onClick([Mark.Nineteen, Multiple.Single])}>19</button>}
         {marks.includes(Mark.Twenty) && <button onClick={onClick([Mark.Twenty, Multiple.Single])}>20</button>}
-        {marks.includes(Mark.Bull) && <button onClick={onClick([Mark.Bull, Multiple.Single])}>Bull</button>}
+        {marks.includes(Mark.Bull) && <button onClick={onClick([Mark.Bull, Multiple.Single])} disabled={triple}>Bull</button>}
 
         <button onClick={onClick([Mark.Miss, Multiple.Single])}>Miss</button>
+        <button onClick={onFinishTurn}>Next</button>
       </div>
       <div className="controls">
         <button onClick={goBack}>Back</button>
