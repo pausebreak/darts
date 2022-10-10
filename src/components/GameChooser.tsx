@@ -78,9 +78,8 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
             event.preventDefault();
             setGame(bulls());
           }}
-          className={getGame?.name && getGame?.name !== GameName.Bulls && 'unselected-button' }
         >
-          Bulls
+          Bulls {getGame?.name === GameName.Bulls && <span>!!</span>}
         </button>
 
         <button
@@ -88,27 +87,24 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
             event.preventDefault();
             setGame(cricket(getPointing));
           }}
-          className={getGame?.name && getGame?.name !== GameName.Cricket && 'unselected-button' }
         >
-          Cricket
+          Cricket {getGame?.name === GameName.Cricket && <span>!!</span>}
         </button>
         <button
           onClick={(event) => {
             event.preventDefault();
             setGame(ohGames(Number(getLimit)));
           }}
-          className={getGame?.name && getGame?.name !== GameName.Oh1 && 'unselected-button' }
         >
-          Oh
+          Oh {getGame?.name === GameName.Oh1 && <span>!!</span>}
         </button>
         <button
           onClick={(event) => {
             event.preventDefault();
             setGame(cutThroat());
           }}
-          className={getGame?.name && getGame?.name !== GameName.CutThroat && 'unselected-button' }
         >
-          Cut Throat
+          Cut Throat {getGame?.name === GameName.CutThroat && <span>!!</span>}
         </button>
       </div>
       {getGame && getGame.name === GameName.Cricket && (
