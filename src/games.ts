@@ -6,6 +6,18 @@ import { Game, Dart, GameOperations, GameName, Player, Mark } from "./types";
 
 export const dartValue = (dart: Dart): number => dart[0] * dart[1];
 
+export const currentRound = (players: Player[]) => {
+  const highestDart = players.reduce((acc, player) => {
+    if (acc > player.darts.length) {
+      return acc;
+    }
+
+    return player.darts.length;
+  }, 0);
+
+  return Math.floor(highestDart / 3);
+};
+
 export const playerMarks = (player: Player): { [key: number]: number } =>
   player.darts.reduce((acc, dart) => {
     if (Object.prototype.hasOwnProperty.call(acc, dart[0])) {
@@ -26,14 +38,7 @@ export const playersScoresCutThroat = (game: Game, players: Player[]): number[] 
     .fill({})
     .map(() => JSON.parse(JSON.stringify(emptyMarks)));
   const playersToScore: number[] = new Array(players.length).fill(0);
-  const highestDart = players.reduce((acc, player) => {
-    if (acc > player.darts.length) {
-      return acc;
-    }
-
-    return player.darts.length;
-  }, 0);
-  const highestRound = Math.floor(highestDart / 3);
+  const highestRound = currentRound(players);
   const dartsInOrderThrown: [dart: Dart, playerIndex: number][] = [];
 
   for (let round = 0; round <= highestRound; round++) {

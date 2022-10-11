@@ -36,6 +36,11 @@ button {
   cursor: pointer;
 }
 
+p {
+  margin: 0.5em;
+  padding: 0.5em;
+}
+
 .App {
   margin: 5px;
   flex: 1;
@@ -52,5 +57,5 @@ button {
   background-color: green;
   color: whitesmoke;
   padding: 0.5em;
-  margin: 0.15em 0 0.5em 0;
+  margin: 0.15em 0 0 0;
 }
