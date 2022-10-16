@@ -60,7 +60,7 @@ describe("validThrow", () => {
 describe("didWin", () => {
   const ops = gameOperations(cricket(false));
 
-  it("does not allow no throws", () => {
+  it("is false with no throws", () => {
     const result = ops.didWin([{ name: "me", darts: [] }], 0);
 
     expect(result).toBeFalsy();
@@ -132,5 +132,70 @@ describe("didWin", () => {
     const result = gameOperations(b).didWin([player, otherPlayer], 0);
 
     expect(result).toBe(player);
+  });
+});
+
+describe("stats", () => {
+  const ops = gameOperations(cricket(false));
+
+  it("shows 0 for no throws", () => {
+    const result = ops.stats([{ name: "me", darts: [] }]);
+
+    expect(result).toStrictEqual({ marks: [0], scores: [0] });
+  });
+
+  it("handles a win with no score", () => {
+    const b = cricket(false);
+    const player: Player = {
+      name: "me",
+      darts: [
+        [Mark.Fifteen, Multiple.Triple],
+        [Mark.Sixteen, Multiple.Triple],
+        [Mark.Seventeen, Multiple.Triple],
+        [Mark.Eighteen, Multiple.Triple],
+        [Mark.Nineteen, Multiple.Triple],
+        [Mark.Twenty, Multiple.Triple],
+        [Mark.Bull, Multiple.Double],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Bull, Multiple.Single],
+      ],
+    };
+    const result = gameOperations(b).stats([player]);
+
+    expect(result).toStrictEqual({ marks: [21], scores: [0] });
+  });
+
+  it("can score a pointing game", () => {
+    const b = cricket(true);
+    const player: Player = {
+      name: "me",
+      darts: [
+        [Mark.Fifteen, Multiple.Triple],
+        [Mark.Sixteen, Multiple.Triple],
+        [Mark.Seventeen, Multiple.Triple],
+        [Mark.Eighteen, Multiple.Triple],
+        [Mark.Nineteen, Multiple.Triple],
+        [Mark.Twenty, Multiple.Triple],
+        [Mark.Bull, Multiple.Double],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Fifteen, Multiple.Triple],
+      ],
+    };
+    const otherPlayer: Player = {
+      name: "they",
+      darts: [
+        [Mark.Fifteen, Multiple.Double],
+        [Mark.Sixteen, Multiple.Triple],
+        [Mark.Seventeen, Multiple.Triple],
+        [Mark.Eighteen, Multiple.Triple],
+        [Mark.Nineteen, Multiple.Triple],
+        [Mark.Twenty, Multiple.Triple],
+        [Mark.Miss, Multiple.Single],
+      ],
+    };
+
+    const result = gameOperations(b).stats([player, otherPlayer]);
+
+    expect(result).toStrictEqual({ marks: [23, 17], scores: [45, 0] });
   });
 });

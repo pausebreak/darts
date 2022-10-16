@@ -1,5 +1,19 @@
-import { areMarksCleared, dartValue, ohGames } from "./games";
+import { areMarksCleared, dartValue, findLastPlayerToThrow, ohGames } from "./games";
 import { Game, GameName, Mark, Multiple, Player } from "./types";
+
+describe("findLastPlayerToThrow", () => {
+  it("handles the start of a game ( no darts thrown yet ) one player", () => {
+    const player = { name: "me", darts: [] };
+    const result = findLastPlayerToThrow([player], 0);
+    expect(result).toBe(player);
+  });
+
+  it("handles the start of a game ( no darts thrown yet ) more than one player", () => {
+    const player = { name: "me", darts: [] };
+    const result = findLastPlayerToThrow([player, { name: "them", darts: [] }], 0);
+    expect(result).toBe(player);
+  });
+});
 
 describe("dartValue", () => {
   it("adds", () => {

@@ -15,7 +15,7 @@ export const currentRound = (players: Player[]) => {
     return player.darts.length;
   }, 0);
 
-  return Math.floor(highestDart / 3);
+  return Math.ceil(highestDart / 3);
 };
 
 export const playerMarks = (player: Player): { [key: number]: number } =>
@@ -29,7 +29,10 @@ export const playerMarks = (player: Player): { [key: number]: number } =>
     return acc;
   }, {});
 
-export const playersScoresCutThroat = (game: Game, players: Player[]): number[] => {
+export const playersScoresCutThroat = (
+  game: Game,
+  players: Player[]
+): { playersToScore: number[]; playersToMarkTotal: number[] } => {
   const emptyMarks = game.marks.reduce((acc, mark) => {
     acc[mark] = 0;
     return acc;
@@ -37,6 +40,7 @@ export const playersScoresCutThroat = (game: Game, players: Player[]): number[] 
   const playersToMarks: { [mark: number]: number }[] = new Array(players.length)
     .fill({})
     .map(() => JSON.parse(JSON.stringify(emptyMarks)));
+  const playersToMarkTotal: number[] = new Array(players.length).fill(0);
   const playersToScore: number[] = new Array(players.length).fill(0);
   const highestRound = currentRound(players);
   const dartsInOrderThrown: [dart: Dart, playerIndex: number][] = [];
@@ -97,84 +101,12 @@ export const playersScoresCutThroat = (game: Game, players: Player[]): number[] 
       });
     }
 
-    // finally add to player marks
+    playersToMarkTotal[playerIndex] = playersToMarkTotal[playerIndex] + dart[1];
+
     playersToMarks[playerIndex][dart[0]] = playersToMarks[playerIndex][dart[0]] + dart[1];
   });
 
-  return playersToScore;
-};
-
-export const playersScoresCricket = (game: Game, players: Player[]): number[] => {
-  const emptyMarks = game.marks.reduce((acc, mark) => {
-    acc[mark] = 0;
-
-    return acc;
-  }, {});
-  const playerToMarks: { [mark: number]: number }[] = new Array(players.length)
-    .fill({})
-    .map(() => JSON.parse(JSON.stringify(emptyMarks)));
-  const playerToScore: number[] = new Array(players.length).fill(0);
-  const highestDart = players.reduce((acc, player) => {
-    if (acc > player.darts.length) {
-      return acc;
-    }
-
-    return player.darts.length;
-  }, 0);
-  const highestRound = Math.floor(highestDart / 3);
-  const dartsInOrderThrown: [dart: Dart, playerIndex: number][] = [];
-
-  for (let round = 0; round <= highestRound; round++) {
-    players.forEach((player, playerIndex) => {
-      const first = player.darts[round * 3];
-      const second = player.darts[round * 3 + 1];
-      const third = player.darts[round * 3 + 2];
-
-      if (first) {
-        dartsInOrderThrown.push([first, playerIndex]);
-      }
-
-      if (second) {
-        dartsInOrderThrown.push([second, playerIndex]);
-      }
-
-      if (third) {
-        dartsInOrderThrown.push([third, playerIndex]);
-      }
-    });
-  }
-
-  dartsInOrderThrown.forEach((dartTuple) => {
-    const playerIndex = dartTuple[1];
-    const dart = dartTuple[0];
-
-    if (dart[0] === Mark.Miss) {
-      return;
-    }
-
-    const otherPlayersHaveNotClosedMark = playerToMarks
-      .filter((p, index) => index !== playerIndex)
-      .some((p) => p[dart[0]] < 3);
-
-    if (otherPlayersHaveNotClosedMark) {
-      const playerMarksSoFar = playerToMarks[playerIndex][dart[0]];
-      const marksWithCurrentDart = playerMarksSoFar + dart[1];
-
-      if (marksWithCurrentDart > 3) {
-        if (playerMarksSoFar >= 3) {
-          playerToScore[playerIndex] = playerToScore[playerIndex] + dartValue(dart);
-        } else {
-          const diff = playerMarksSoFar - 3 + dart[1];
-          playerToScore[playerIndex] = playerToScore[playerIndex] + dartValue([dart[0], diff]);
-        }
-      }
-    }
-
-    // finally add to player marks
-    playerToMarks[playerIndex][dart[0]] = playerToMarks[playerIndex][dart[0]] + dart[1];
-  });
-
-  return playerToScore;
+  return { playersToScore, playersToMarkTotal };
 };
 
 export const isMarkCleared = (player: Player, mark: Mark): boolean => 3 <= playerMarks(player)[mark];
@@ -195,13 +127,11 @@ export const findLastPlayerToThrow = (players: Player[], currentPlayerIndex: num
   let player = players[currentPlayerIndex];
   const dartsLength = player?.darts.length;
 
-  if (!dartsLength) {
-    return;
-  }
+  const anyoneThrownYet = players.reduce((acc, player) => (player.darts.length ? true : acc), false);
 
   // player has not thrown yet this round
   // so the last player was the last to throw
-  if (dartsLength % 3 === 0) {
+  if (anyoneThrownYet && dartsLength % 3 === 0) {
     if (currentPlayerIndex === 0) {
       player = players[players.length - 1];
     } else {
