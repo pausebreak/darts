@@ -1,4 +1,11 @@
-import { areMarksCleared, dartValue, findLastPlayerToThrow, isMarkCleared, isMarkClearedForEveryone } from "../games";
+import {
+  areMarksCleared,
+  currentRound,
+  dartValue,
+  findLastPlayerToThrow,
+  isMarkCleared,
+  isMarkClearedForEveryone,
+} from "../games";
 import { Game, Mark, GameOperations, GameName, Multiple, Player, Dart } from "../types";
 
 const calculateStats = (game: Game, players: Player[]): { scores: number[]; marks: number[] } => {
@@ -12,14 +19,7 @@ const calculateStats = (game: Game, players: Player[]): { scores: number[]; mark
     .map(() => JSON.parse(JSON.stringify(emptyMarks)));
   const playersToMarkTotal: number[] = new Array(players.length).fill(0);
   const playersToScore: number[] = new Array(players.length).fill(0);
-  const highestDart = players.reduce((acc, player) => {
-    if (acc > player.darts.length) {
-      return acc;
-    }
-
-    return player.darts.length;
-  }, 0);
-  const highestRound = Math.floor(highestDart / 3);
+  const highestRound = currentRound(players);
   const dartsInOrderThrown: [dart: Dart, playerIndex: number][] = [];
 
   for (let round = 0; round <= highestRound; round++) {

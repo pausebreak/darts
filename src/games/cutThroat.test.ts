@@ -126,3 +126,66 @@ describe("didWin", () => {
     expect(result).toBe(player);
   });
 });
+
+describe("stats", () => {
+  const ops = gameOperations(cutThroat());
+
+  it("shows 0 for no throws", () => {
+    const result = ops.stats([{ name: "me", darts: [] }]);
+
+    expect(result).toStrictEqual({ marks: [0], scores: [0] });
+  });
+
+  it("handles a win with no score", () => {
+    const player: Player = {
+      name: "me",
+      darts: [
+        [Mark.Fifteen, Multiple.Triple],
+        [Mark.Sixteen, Multiple.Triple],
+        [Mark.Seventeen, Multiple.Triple],
+        [Mark.Eighteen, Multiple.Triple],
+        [Mark.Nineteen, Multiple.Triple],
+        [Mark.Twenty, Multiple.Triple],
+        [Mark.Bull, Multiple.Double],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Bull, Multiple.Single],
+      ],
+    };
+    const result = ops.stats([player]);
+
+    expect(result).toStrictEqual({ marks: [21], scores: [0] });
+  });
+
+  it("can score a pointing game", () => {
+    const player: Player = {
+      name: "me",
+      darts: [
+        [Mark.Fifteen, Multiple.Triple],
+        [Mark.Sixteen, Multiple.Triple],
+        [Mark.Seventeen, Multiple.Triple],
+        [Mark.Eighteen, Multiple.Triple],
+        [Mark.Nineteen, Multiple.Triple],
+        [Mark.Twenty, Multiple.Triple],
+        [Mark.Bull, Multiple.Double],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Fifteen, Multiple.Triple],
+      ],
+    };
+    const otherPlayer: Player = {
+      name: "they",
+      darts: [
+        [Mark.Fifteen, Multiple.Double],
+        [Mark.Sixteen, Multiple.Triple],
+        [Mark.Seventeen, Multiple.Triple],
+        [Mark.Eighteen, Multiple.Triple],
+        [Mark.Nineteen, Multiple.Triple],
+        [Mark.Twenty, Multiple.Triple],
+        [Mark.Miss, Multiple.Single],
+      ],
+    };
+
+    const result = ops.stats([player, otherPlayer]);
+
+    expect(result).toStrictEqual({ marks: [23, 17], scores: [0, 45] });
+  });
+});
