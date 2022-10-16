@@ -53,8 +53,8 @@ export const ScoreBoard = () => {
             <div>&nbsp;</div>
             {game.pointing && <div className="score">&nbsp;</div>}
           </div>
-          {game.marks.map(() => (
-            <div>&nbsp;</div>
+          {game.marks.map((mark, index) => (
+            <div key={index}>&nbsp;</div>
           ))}
         </div>
       )}

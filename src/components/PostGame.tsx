@@ -17,12 +17,13 @@ export const PostGame = () => {
 
   const totalRounds = currentRound(players);
   const stats = gameOperations(game).stats?.(players);
+  const roundsText = totalRounds > 1 ? "rounds" : "round";
 
   return (
     <>
       <div className="winner">{winner.name} is the winner</div>
       <p>
-        In {totalRounds} rounds {winner.name} wins the game of {game.name}.
+        In {totalRounds} {roundsText} {winner.name} won the game of {game.name}.
       </p>
       <div className="stats">
         {getPlayers.map((player, index) => {
