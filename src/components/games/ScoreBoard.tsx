@@ -1,8 +1,8 @@
 import isBlank from "@sedan-utils/is-blank";
 import * as React from "react";
-import { isMarkClearedForEveryone, playerMarks, playersScoresCricket, playersScoresCutThroat } from "../../games";
+import { gameOperations, isMarkClearedForEveryone, playerMarks } from "../../games";
 import { useStore } from "../../machine";
-import { GameName, Mark } from "../../types";
+import { Mark } from "../../types";
 
 import "./ScoreBoard.css";
 
@@ -43,8 +43,7 @@ export const ScoreBoard = () => {
   const half = Math.floor(numOfPlayers / 2);
   const even = numOfPlayers % 2 === 0;
 
-  const playerScores =
-    GameName.Cricket === game?.name ? playersScoresCricket(game, players) : playersScoresCutThroat(game, players);
+  const playerScores = gameOperations(game)?.stats(players);
 
   return (
     <div className="scoreBoard">
@@ -65,7 +64,7 @@ export const ScoreBoard = () => {
         }
 
         const marks = playerMarks(player);
-        const score = playerScores[playerIndex];
+        const score = playerScores.scores[playerIndex];
         const currentPlayer = playerIndex === currentPlayerIndex ? "playerForRow current" : "playerForRow";
 
         return (
@@ -102,7 +101,7 @@ export const ScoreBoard = () => {
         }
 
         const marks = playerMarks(player);
-        const score = playerScores[playerIndex];
+        const score = playerScores.scores[playerIndex];
         const currentPlayer = playerIndex === currentPlayerIndex ? "playerForRow current" : "playerForRow";
 
         return (

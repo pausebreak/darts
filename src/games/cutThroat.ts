@@ -4,15 +4,10 @@ import { Game, Mark, GameOperations, GameName, Multiple } from "../types";
 export const cutThroatOperations = (game: Game): GameOperations => ({
   didWin: (players, currentPlayerIndex: number) => {
     const player = findLastPlayerToThrow(players, currentPlayerIndex);
-
-    if (!player) {
-      return;
-    }
-
     const cleared = areMarksCleared(game, player);
 
     if (cleared) {
-      const scores = playersScoresCutThroat(game, players);
+      const scores = playersScoresCutThroat(game, players).playersToScore;
       const playerIndex = players.findIndex((p) => p.name === player.name);
       const playerScore = scores[playerIndex];
 

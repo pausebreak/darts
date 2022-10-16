@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useStore } from "../machine";
 import { Mark, Multiple } from "../types";
-import { currentRound } from "../games";
+import { currentRound, gameOperations } from "../games";
 
 import "./PostGame.css";
 
 export const PostGame = () => {
-  const currentGame = useStore((state) => state.game);
+  const game = useStore((state) => state.game);
   const players = useStore((state) => state.players);
   const winner = useStore((state) => state.playerWon);
 
@@ -16,17 +16,16 @@ export const PostGame = () => {
   const [getPlayers] = useState(players);
 
   const totalRounds = currentRound(players);
+  const stats = gameOperations(game).stats?.(players);
 
   return (
     <>
       <div className="winner">{winner.name} is the winner</div>
-      <div>
-        <p>
-          In {totalRounds} rounds {winner.name} wins the game of {currentGame.name}.
-        </p>
-      </div>
+      <p>
+        In {totalRounds} rounds {winner.name} wins the game of {game.name}.
+      </p>
       <div className="stats">
-        {getPlayers.map((player) => {
+        {getPlayers.map((player, index) => {
           let singles = 0;
           let doubles = 0;
           let triples = 0;
@@ -55,6 +54,7 @@ export const PostGame = () => {
           return (
             <div className={cName} key={player.name}>
               <div className="centered">{player.name}</div>
+              {game.pointing && stats && <div className="centered">{stats.scores[index]}</div>}
               <table>
                 <tbody>
                   <tr>
@@ -77,6 +77,18 @@ export const PostGame = () => {
                     <td className="right">total</td>
                     <td className="centered">{player.darts.length}</td>
                   </tr>
+                  {stats && (
+                    <>
+                      <tr>
+                        <td className="right">marks</td>
+                        <td className="centered">{stats.marks[index]}</td>
+                      </tr>
+                      <tr>
+                        <td className="right">MPR</td>
+                        <td className="centered">{stats.marks[index] ? stats.marks[index] / totalRounds : 0}</td>
+                      </tr>
+                    </>
+                  )}
                 </tbody>
               </table>
             </div>
