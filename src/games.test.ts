@@ -1,4 +1,4 @@
-import { areMarksCleared, dartValue, findLastPlayerToThrow, ohGames } from "./games";
+import { areMarksCleared, bulls, cutThroat, dartValue, findLastPlayerToThrow, gameOperations, ohGames } from "./games";
 import { Game, GameName, Mark, Multiple, Player } from "./types";
 
 describe("findLastPlayerToThrow", () => {
@@ -11,6 +11,19 @@ describe("findLastPlayerToThrow", () => {
   it("handles the start of a game ( no darts thrown yet ) more than one player", () => {
     const player = { name: "me", darts: [] };
     const result = findLastPlayerToThrow([player, { name: "them", darts: [] }], 0);
+    expect(result).toBe(player);
+  });
+
+  it("handles the start of a game ( no darts thrown yet ) more than one player", () => {
+    const player: Player = {
+      name: "me",
+      darts: [
+        [Mark.Miss, Multiple.Single],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Miss, Multiple.Single],
+      ],
+    };
+    const result = findLastPlayerToThrow([player, { name: "them", darts: [] }], 1);
     expect(result).toBe(player);
   });
 });
@@ -55,5 +68,31 @@ describe("areMarksCleared", () => {
     const result = areMarksCleared(smallGame, aPlayer);
 
     expect(result).toBe(true);
+  });
+});
+
+describe("gameOperations", () => {
+  it("returns a bulls ops", () => {
+    const game = bulls();
+    const result = gameOperations(game);
+
+    expect(result).toBeDefined();
+    expect(result.stats).not.toBeDefined();
+  });
+
+  it("returns a cutThroat ops", () => {
+    const game = cutThroat();
+    const result = gameOperations(game);
+
+    expect(result).toBeDefined();
+    expect(result.stats).toBeDefined();
+  });
+
+  it("returns defaults ops before a game is chosen", () => {
+    const result = gameOperations(null);
+
+    expect(result).toBeDefined();
+    expect(result.didWin([], 0)).toBeFalsy();
+    expect(result.validThrow(0, [{ name: "me", darts: [] }], [Mark.Bull, Multiple.Single])).toBeFalsy();
   });
 });
