@@ -86,7 +86,9 @@ export const PostGame = () => {
                       </tr>
                       <tr>
                         <td className="right">MPR</td>
-                        <td className="centered">{stats.marks[index] ? stats.marks[index] / totalRounds : 0}</td>
+                        <td className="centered">
+                          {stats.marks[index] ? (stats.marks[index] / totalRounds).toFixed(2) : 0}
+                        </td>
                       </tr>
                     </>
                   )}

@@ -42,8 +42,7 @@ export const ScoreBoard = () => {
   const numOfPlayers = players.length;
   const half = Math.floor(numOfPlayers / 2);
   const even = numOfPlayers % 2 === 0;
-
-  const playerScores = gameOperations(game)?.stats(players);
+  const playerScores = gameOperations(game).stats?.(players);
 
   return (
     <div className="scoreBoard">
@@ -51,7 +50,7 @@ export const ScoreBoard = () => {
         <div className="column" key="blank">
           <div className="playerForRow">
             <div>&nbsp;</div>
-            {game.pointing && <div className="score">&nbsp;</div>}
+            {playerScores && <div className="score">&nbsp;</div>}
           </div>
           {game.marks.map((mark, index) => (
             <div key={index}>&nbsp;</div>
@@ -64,14 +63,14 @@ export const ScoreBoard = () => {
         }
 
         const marks = playerMarks(player);
-        const score = playerScores.scores[playerIndex];
+        const score = playerScores?.scores[playerIndex];
         const currentPlayer = playerIndex === currentPlayerIndex ? "playerForRow current" : "playerForRow";
 
         return (
           <div className="column" key={`${player.name}`}>
             <div className={currentPlayer}>
               <div>{player.name}</div>
-              {game.pointing && <div className="score">{score}</div>}
+              {playerScores && <div className="score">{score}</div>}
             </div>
             {game.marks.map((mark) => boardMark(marks[mark], mark.toString()))}
           </div>
@@ -81,7 +80,7 @@ export const ScoreBoard = () => {
       <div className="column">
         <div className="playerForRow">
           <div>&nbsp;</div>
-          {game.pointing && <div className="score">&nbsp;</div>}
+          {playerScores && <div className="score">&nbsp;</div>}
         </div>
         {game.marks.map((mark) => {
           const cls = isMarkClearedForEveryone(players, mark) ? "cleared" : "";
@@ -101,14 +100,14 @@ export const ScoreBoard = () => {
         }
 
         const marks = playerMarks(player);
-        const score = playerScores.scores[playerIndex];
+        const score = playerScores?.scores[playerIndex];
         const currentPlayer = playerIndex === currentPlayerIndex ? "playerForRow current" : "playerForRow";
 
         return (
           <div className="column" key={`${player.name}`}>
             <div className={currentPlayer}>
               <div>{player.name}</div>
-              {game.pointing && <div className="score">{score}</div>}
+              {playerScores && <div className="score">{score}</div>}
             </div>
             {game.marks.map((mark) => boardMark(marks[mark], mark.toString()))}
           </div>
