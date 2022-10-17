@@ -49,10 +49,10 @@ export const TouchInput = () => {
 
   const onFinishTurn = () => {
     const numberThrown = players[currentPlayerIndex].darts.length;
-    for (let i = (numberThrown % 3); i<3; i++){
+    for (let i = numberThrown % 3; i < 3; i++) {
       addThrowToCurrentPlayer([Mark.Miss, Multiple.Single]);
     }
-  }
+  };
 
   let className = invalidThrow ? "marks invalid" : "marks";
   if (marks.length > 6) {
@@ -91,10 +91,13 @@ export const TouchInput = () => {
         {marks.includes(Mark.Eighteen) && <button onClick={onClick([Mark.Eighteen, Multiple.Single])}>18</button>}
         {marks.includes(Mark.Nineteen) && <button onClick={onClick([Mark.Nineteen, Multiple.Single])}>19</button>}
         {marks.includes(Mark.Twenty) && <button onClick={onClick([Mark.Twenty, Multiple.Single])}>20</button>}
-        {marks.includes(Mark.Bull) && <button onClick={onClick([Mark.Bull, Multiple.Single])} disabled={triple}>Bull</button>}
+        {marks.includes(Mark.Bull) && (
+          <button onClick={onClick([Mark.Bull, Multiple.Single])} disabled={triple}>
+            Bull
+          </button>
+        )}
 
         <button onClick={onClick([Mark.Miss, Multiple.Single])}>Miss</button>
-        <button onClick={onFinishTurn}>Next</button>
       </div>
       <div className="controls">
         <button onClick={goBack}>Back</button>
@@ -106,6 +109,7 @@ export const TouchInput = () => {
             Triple
           </button>
         )}
+        <button onClick={onFinishTurn}>Next</button>
       </div>
     </>
   );

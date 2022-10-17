@@ -13,17 +13,6 @@ import { PostGame } from "./PostGame";
 const Content = () => {
   const currentGame = useStore((state) => state.game);
   const players = useStore((state) => state.players);
-  const winner = useStore((state) => state.playerWon);
-
-  if (winner) {
-    return (
-      <>
-        <PostGame />
-        <PlayerChooser />
-        {players.length > 0 && <GameChooser singlePlayer={players.length === 1} />}
-      </>
-    );
-  }
 
   switch (currentGame?.name) {
     case GameName.Cricket:
@@ -40,6 +29,7 @@ const Content = () => {
     default:
       return (
         <>
+          <h1>Darts</h1>
           <PlayerChooser />
           {players.length > 0 && <GameChooser singlePlayer={players.length === 1} />}
         </>
@@ -48,11 +38,14 @@ const Content = () => {
 };
 
 export const App = () => {
+  const winner = useStore((state) => state.winner);
+
   return (
     <>
       <GameInfo />
       <div className="App">
-        <Content />
+        {winner && <PostGame />}
+        {!winner && <Content />}
       </div>
     </>
   );

@@ -19,8 +19,8 @@ export type GameState = {
   setInvalidThrow(valid: boolean): void;
   addThrowToCurrentPlayer(_throw: Dart): void;
   goBack(): void;
-  playerWon: Player;
-  setPlayerWon(player: Player): void;
+  winner: Player;
+  setWinner(player: Player): void;
   playerBusted: Player;
   setPlayerBusted(player: Player): void;
   movePlayerLeft(playerIndex: number): void;
@@ -53,14 +53,14 @@ export const useStore = create<GameState>()(
     immer(
       subscribeWithSelector((set, get) => ({
         players: [],
-        playerWon: null,
+        winner: null,
         currentPlayerIndex: null,
         game: null,
         invalidThrow: false,
         playerBusted: null,
-        setPlayerWon: (player) => {
+        setWinner: (player) => {
           set((state) => {
-            state.playerWon = player;
+            state.winner = player;
           });
         },
         addPlayer: (player) =>
@@ -84,7 +84,7 @@ export const useStore = create<GameState>()(
           set((state) => {
             state.game = game;
             state.currentPlayerIndex = game ? 0 : null;
-            state.playerWon = null;
+            state.winner = null;
             state.invalidThrow = false;
 
             // clear throws

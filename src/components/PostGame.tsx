@@ -8,7 +8,10 @@ import "./PostGame.css";
 export const PostGame = () => {
   const game = useStore((state) => state.game);
   const players = useStore((state) => state.players);
-  const winner = useStore((state) => state.playerWon);
+  const winner = useStore((state) => state.winner);
+
+  const setGame = useStore((state) => state.setGame);
+  const setWinner = useStore((state) => state.setWinner);
 
   // specifically do not want this updating from the store
   // or else adding players after a finished game would be
@@ -74,7 +77,7 @@ export const PostGame = () => {
                     <td className="right">triples</td>
                     <td className="centered">{triples}</td>
                   </tr>
-                  <tr>
+                  <tr className="total">
                     <td className="right">total</td>
                     <td className="centered">{player.darts.length}</td>
                   </tr>
@@ -97,6 +100,16 @@ export const PostGame = () => {
             </div>
           );
         })}
+      </div>
+      <div className="backAgain">
+        <button
+          onClick={() => {
+            setWinner(null);
+            setGame(null);
+          }}
+        >
+          Play Again
+        </button>
       </div>
     </>
   );

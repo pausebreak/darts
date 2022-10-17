@@ -5,13 +5,13 @@ import { GameName, Multiple } from "../types";
 
 export const GameInfo = () => {
   const game = useStore((state) => state.game);
-  const winner = useStore((state) => state.playerWon);
+  const winner = useStore((state) => state.winner);
   const setGame = useStore((state) => state.setGame);
-  const setPlayerWon = useStore((state) => state.setPlayerWon);
+  const setWinner = useStore((state) => state.setWinner);
 
   const stopGame = () => {
     setGame(null);
-    setPlayerWon(null);
+    setWinner(null);
   };
 
   return (

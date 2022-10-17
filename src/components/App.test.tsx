@@ -12,7 +12,7 @@ test("shows when someone wins", () => {
   const store = useStore.getState();
   store.addPlayer(player);
   store.setGame(ohGames());
-  store.setPlayerWon(player);
+  store.setWinner(player);
 
   render(<App />);
   const won = screen.getByText(/me is the winner/i);
