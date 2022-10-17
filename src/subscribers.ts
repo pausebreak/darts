@@ -13,7 +13,7 @@ export const initializeSubscribers = (useStore: typeof machineUseStore) => {
 
       if (winner) {
         // last person to throw won
-        useStore.getState().setPlayerWon(winner);
+        useStore.getState().setWinner(winner);
       }
     }
   );

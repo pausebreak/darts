@@ -27,14 +27,13 @@
 
 .marks button,
 .controls button {
-  aspect-ratio: 1/1;
   flex: 1;
   min-width: 2.1em;
   margin: 0;
   white-space: nowrap;
   cursor: pointer;
   font-weight: 600;
-  background-color: white;
+  background-color: ghostwhite;
   border: 1px solid darkgray;
   padding: 0;
   font-size: 2.5em;

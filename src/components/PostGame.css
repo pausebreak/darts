@@ -27,3 +27,22 @@ table .right {
   text-align: right;
   padding-right: 0.75em;
 }
+
+tr.total td {
+  border-top: 0.5px solid lightgray;
+}
+
+.backAgain {
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.backAgain button {
+  flex: 0.25;
+  font-size: 2em;
+  padding: 0.5em;
+  background-color: ghostwhite;
+}
