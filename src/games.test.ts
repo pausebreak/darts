@@ -36,7 +36,7 @@ describe("dartValue", () => {
 });
 
 describe("areMarksCleared", () => {
-  const game = ohGames();
+  const game = ohGames(101);
   const player: Player = { name: "me", darts: [] };
 
   it("handles no darts", () => {

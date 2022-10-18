@@ -26,7 +26,7 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
   const [hasError, setError] = useState(false);
 
   // this does not work until the user clicks a button
-  const voices = window.speechSynthesis.getVoices();
+  const voices = window.speechSynthesis?.getVoices();
 
   const onLimitChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = Number(event.target.value);
@@ -81,8 +81,6 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
 
   const toggleUseSound = () => setUseSound(!useSound);
 
-  const allDefaults = false; // voices.every((voice) => voice.default);
-
   return (
     <>
       <div className="options">
@@ -90,7 +88,7 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
           Sounds ?
           <input type="checkbox" checked={useSound} onChange={toggleUseSound} />
         </label>
-        {voices?.length !== 0 && !allDefaults && (
+        {voices && voices.length !== 0 && (
           <div>
             <label>
               Voice:&nbsp;
