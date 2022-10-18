@@ -8,10 +8,14 @@ import { Game, Multiple, GameName } from "../types";
 import isBlank from "@sedan-utils/is-blank";
 import { cutThroat } from "../games";
 
+const voiceSortCompare = (a: SpeechSynthesisVoice, b: SpeechSynthesisVoice) => a.lang.localeCompare(b.lang);
+
 export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer }) => {
   const chooseGame = useStore((state) => state.setGame);
   const setUseSound = useStore((state) => state.setUseSound);
   const useSound = useStore((state) => state.useSound);
+  const voiceIndex = useStore((state) => state.voiceIndex);
+  const setVoiceIndex = useStore((state) => state.setVoiceIndex);
 
   const [getGame, setGame] = useState<Game>(null);
   const [getLimit, setLimit] = useState(301);
@@ -20,6 +24,9 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
   const [getIn, setIn] = useState(Multiple.Single);
   const [getOut, setOut] = useState(Multiple.Single);
   const [hasError, setError] = useState(false);
+
+  // this does not work until the user clicks a button
+  const voices = window.speechSynthesis.getVoices();
 
   const onLimitChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = Number(event.target.value);
@@ -60,17 +67,50 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
     setPointing(event.target.checked);
   };
 
+  const onVoiceChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    const index = Number(event.target.value);
+    const voice = voices[index];
+    const utterance = new SpeechSynthesisUtterance(voice.name);
+    utterance.voice = voice;
+
+    setVoiceIndex(index);
+    window.speechSynthesis.speak(utterance);
+  };
+
   const pointing = singlePlayer ? false : getPointing;
 
   const toggleUseSound = () => setUseSound(!useSound);
+
+  const allDefaults = false; // voices.every((voice) => voice.default);
 
   return (
     <>
       <div className="options">
         <label>
+          Sounds ?
           <input type="checkbox" checked={useSound} onChange={toggleUseSound} />
-          Speech and Sounds ?
         </label>
+        {voices?.length !== 0 && !allDefaults && (
+          <div>
+            <label>
+              Voice:&nbsp;
+              <select className="voice" onChange={onVoiceChange} value={isBlank(voiceIndex) ? "" : voiceIndex}>
+                {voices
+                  .slice()
+                  .sort(voiceSortCompare)
+                  .map((v) => {
+                    const voiceIdx = voices.findIndex((vo) => vo.lang === v.lang && vo.name === v.name);
+                    return (
+                      <option key={v.name} value={voiceIdx}>
+                        {v.default && "default"}
+                        {v.lang} - {v.name}
+                      </option>
+                    );
+                  })}
+              </select>
+            </label>
+          </div>
+        )}
       </div>
       <div className="games">
         <button

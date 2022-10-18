@@ -10,7 +10,7 @@ import { TouchInput } from "./TouchInput";
 import { GameInfo } from "./GameInfo";
 import { PostGame } from "./PostGame";
 
-const Content = () => {
+const GameLayout = () => {
   const currentGame = useStore((state) => state.game);
   const players = useStore((state) => state.players);
 
@@ -45,7 +45,7 @@ export const App = () => {
       <GameInfo />
       <div className="App">
         {winner && <PostGame />}
-        {!winner && <Content />}
+        {!winner && <GameLayout />}
       </div>
     </>
   );
