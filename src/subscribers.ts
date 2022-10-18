@@ -1,3 +1,4 @@
+import isBlank from "@sedan-utils/is-blank";
 import { findLastPlayerToThrow, gameOperations } from "./games";
 import { useStore as machineUseStore } from "./machine";
 import { sound } from "./sound";
@@ -12,7 +13,6 @@ export const initializeSubscribers = (useStore: typeof machineUseStore) => {
       const winner = gameOperations(game).didWin(players, currentPlayerIndex);
 
       if (winner) {
-        // last person to throw won
         useStore.getState().setWinner(winner);
       }
     }
@@ -21,10 +21,8 @@ export const initializeSubscribers = (useStore: typeof machineUseStore) => {
   useStore.subscribe(
     (state) => [state.invalidThrow, state.useSound],
     ([invalidThrow, useSound]) => {
-      if (invalidThrow) {
-        if (useSound) {
-          sound().error.play();
-        }
+      if (invalidThrow && useSound) {
+        sound().error.play();
       }
     }
   );
@@ -43,11 +41,18 @@ export const initializeSubscribers = (useStore: typeof machineUseStore) => {
 
   if ("speechSynthesis" in window) {
     useStore.subscribe(
-      (state) => [state.currentPlayerIndex, state.players, state.game, state.useSound],
-      ([currentPlayerIndex, players, game, useSound], [previousPlayerIndex]) => {
+      (state) => [state.currentPlayerIndex, state.players, state.game, state.useSound, state.voiceIndex],
+      ([currentPlayerIndex, players, game, useSound, voiceIndex], [previousPlayerIndex]) => {
         if (useSound && currentPlayerIndex !== previousPlayerIndex && game !== null) {
           const name = players[currentPlayerIndex as number].name;
           const utterance = new SpeechSynthesisUtterance(name);
+
+          if (!isBlank(voiceIndex)) {
+            const voices = window.speechSynthesis.getVoices();
+            if (voices?.length) {
+              utterance.voice = voices[voiceIndex as number];
+            }
+          }
 
           window.speechSynthesis.speak(utterance);
         }

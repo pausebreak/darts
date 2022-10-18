@@ -25,6 +25,8 @@ export type GameState = {
   setPlayerBusted(player: Player): void;
   movePlayerLeft(playerIndex: number): void;
   movePlayerRight(playerIndex: number): void;
+  voiceIndex: number;
+  setVoiceIndex(index: number): void;
 };
 
 // this is mutating
@@ -53,6 +55,12 @@ export const useStore = create<GameState>()(
     immer(
       subscribeWithSelector((set, get) => ({
         players: [],
+        voiceIndex: null,
+        setVoiceIndex: (index) => {
+          set((state) => {
+            state.voiceIndex = index;
+          });
+        },
         winner: null,
         currentPlayerIndex: null,
         game: null,

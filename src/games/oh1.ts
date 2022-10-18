@@ -48,7 +48,7 @@ export const ohGamesOperations = (game: Game): GameOperations => ({
   },
 });
 
-export const ohGames = (limit?: number): Game => ({
+export const ohGames = (limit: number): Game => ({
   name: GameName.Oh1,
   checkIn: Multiple.Double,
   checkOut: Multiple.Double,
