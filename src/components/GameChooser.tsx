@@ -100,7 +100,6 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
                     const voiceIdx = voices.findIndex((vo) => vo.lang === v.lang && vo.name === v.name);
                     return (
                       <option key={v.name} value={voiceIdx}>
-                        {v.default && "default"}
                         {v.lang} - {v.name}
                       </option>
                     );
