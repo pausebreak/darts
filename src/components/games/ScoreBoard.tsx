@@ -69,7 +69,7 @@ export const ScoreBoard = () => {
         return (
           <div className="column" key={`${player.name}`}>
             <div className={currentPlayer}>
-              <div>{player.name}</div>
+              <div className="name">{player.name}</div>
               {playerScores && <div className="score">{score}</div>}
             </div>
             {game.marks.map((mark) => boardMark(marks[mark], mark.toString()))}
@@ -83,7 +83,7 @@ export const ScoreBoard = () => {
           {playerScores && <div className="score">&nbsp;</div>}
         </div>
         {game.marks.map((mark) => {
-          const cls = isMarkClearedForEveryone(players, mark) ? "cleared" : "";
+          const cls = isMarkClearedForEveryone(players, mark) ? "markLabel cleared" : "markLabel";
           const markLabel = mark === Mark.Bull ? "Bull" : mark;
 
           return (
@@ -106,7 +106,7 @@ export const ScoreBoard = () => {
         return (
           <div className="column" key={`${player.name}`}>
             <div className={currentPlayer}>
-              <div>{player.name}</div>
+              <div className="name">{player.name}</div>
               {playerScores && <div className="score">{score}</div>}
             </div>
             {game.marks.map((mark) => boardMark(marks[mark], mark.toString()))}

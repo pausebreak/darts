@@ -10,6 +10,7 @@ export const PlayerChooser: React.FC = () => {
   const removePlayer = useStore((state) => state.removePlayer);
   const movePlayerLeft = useStore((state) => state.movePlayerLeft);
   const movePlayerRight = useStore((state) => state.movePlayerRight);
+
   const [getPlayer, setPlayer] = useState("");
   const [hasError, setError] = useState(false);
 

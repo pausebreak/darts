@@ -1,21 +1,32 @@
 .scoreBoard {
   display: flex;
   flex-direction: row;
-  flex: 3;
+  flex: 2.5;
+}
+
+@media only screen and (max-height: 475px) and (min-height: 1px) {
+  .scoreBoard {
+    flex-grow: 2;
+  }
 }
 
 .column {
   flex: 1;
-  flex-basis: 100%;
   border-right: 1px solid azure;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  font-size: 0.75em;
 }
 
-.score {
+.scoreBoard .score {
   font-family: Helvetica, sans-serif;
-  font-size: 2em;
+  font-size: 2.25em;
+}
+
+.scoreBoard .name {
+  white-space: nowrap;
+  overflow: scroll;
 }
 
 @media only screen and (max-width: 600px) and (min-width: 1px) {
@@ -62,6 +73,10 @@
 
 .column .playerForRow.current {
   background-color: red;
+}
+
+.column .markLabel {
+  font-family: Helvetica, sans-serif;
 }
 
 .cleared {
