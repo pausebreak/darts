@@ -50,7 +50,7 @@ export const ScoreBoard = () => {
         <div className="column" key="blank">
           <div className="playerForRow">
             <div>&nbsp;</div>
-            {playerScores && <div className="score">&nbsp;</div>}
+            {game.pointing && playerScores && <div className="score">&nbsp;</div>}
           </div>
           {game.marks.map((mark, index) => (
             <div key={index}>&nbsp;</div>
@@ -70,7 +70,7 @@ export const ScoreBoard = () => {
           <div className="column" key={`${player.name}`}>
             <div className={currentPlayer}>
               <div className="name">{player.name}</div>
-              {playerScores && <div className="score">{score}</div>}
+              {game.pointing && playerScores && <div className="score">{score}</div>}
             </div>
             {game.marks.map((mark) => boardMark(marks[mark], mark.toString()))}
           </div>
@@ -80,7 +80,7 @@ export const ScoreBoard = () => {
       <div className="column">
         <div className="playerForRow">
           <div>&nbsp;</div>
-          {playerScores && <div className="score">&nbsp;</div>}
+          {game.pointing && playerScores && <div className="score">&nbsp;</div>}
         </div>
         {game.marks.map((mark) => {
           const cls = isMarkClearedForEveryone(players, mark) ? "markLabel cleared" : "markLabel";
@@ -107,7 +107,7 @@ export const ScoreBoard = () => {
           <div className="column" key={`${player.name}`}>
             <div className={currentPlayer}>
               <div className="name">{player.name}</div>
-              {playerScores && <div className="score">{score}</div>}
+              {game.pointing && playerScores && <div className="score">{score}</div>}
             </div>
             {game.marks.map((mark) => boardMark(marks[mark], mark.toString()))}
           </div>
