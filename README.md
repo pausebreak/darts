@@ -22,6 +22,14 @@ in somewhat of an order:
 - color pallette
 - visual design
 
+# Design Criteria
+
+The interface should maximize click/finger target areas for small screens.
+
+Contextually relevant UI elements should be legible from a short distance. For instance the current player needs to be able to stand at the throwing line and see their score on the phone from ~1 meter away.
+
+Avoid having the interface move or jump during a game.
+
 # Evaluation
 
 If you are going to use hooks then zustand + immer is wonderful to work with.
