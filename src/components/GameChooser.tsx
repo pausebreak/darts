@@ -1,5 +1,4 @@
 import React, { ChangeEvent, useState } from "react";
-import "./GameChooser.css";
 import { bulls } from "../games/bulls";
 import { cricket } from "../games/cricket";
 import { ohGames } from "../games/oh1";
@@ -8,7 +7,11 @@ import { Game, Multiple, GameName } from "../types";
 import isBlank from "@sedan-utils/is-blank";
 import { cutThroat } from "../games";
 
+import "./GameChooser.css";
+
 const voiceSortCompare = (a: SpeechSynthesisVoice, b: SpeechSynthesisVoice) => a.lang.localeCompare(b.lang);
+
+const isAndroid = window?.navigator?.userAgent?.indexOf("Android") !== -1;
 
 export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer }) => {
   const chooseGame = useStore((state) => state.setGame);
@@ -88,10 +91,10 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
           Sounds ?
           <input type="checkbox" checked={useSound} onChange={toggleUseSound} />
         </label>
-        {voices && voices.length !== 0 && (
+        {useSound && !isAndroid && voices && voices.length !== 0 && (
           <div>
             <label>
-              Voice:&nbsp;
+              Voice{" "}
               <select className="voice" onChange={onVoiceChange} value={isBlank(voiceIndex) ? "" : voiceIndex}>
                 {voices
                   .slice()
@@ -133,7 +136,7 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
             setGame(ohGames(Number(getLimit)));
           }}
         >
-          Oh {getGame?.name === GameName.Oh1 && <span>!!</span>}
+          Oh 1 {getGame?.name === GameName.Oh1 && <span>!!</span>}
         </button>
         <button
           onClick={(event) => {
