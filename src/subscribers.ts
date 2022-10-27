@@ -54,6 +54,9 @@ export const initializeSubscribers = (useStore: typeof machineUseStore) => {
             }
           }
 
+          // these can stack up if you hit 'next' real fast like
+          // cancelling cuts that off
+          window.speechSynthesis.cancel();
           window.speechSynthesis.speak(utterance);
         }
       }
