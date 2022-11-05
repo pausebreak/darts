@@ -114,7 +114,9 @@ export const useStore = create<GameState>()(
                 const player = draft.players[currentPlayerIndex];
                 const brokenThrows = player.darts.length % 3;
 
-                player.darts.splice(-brokenThrows);
+                if (brokenThrows > 0) {
+                  player.darts.splice(-brokenThrows);
+                }
 
                 player.darts.push(
                   [Mark.Miss, Multiple.Single],
