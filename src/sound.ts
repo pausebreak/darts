@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
+import isBlank from "@sedan-utils/is-blank";
 import { Howl } from "howler";
 
 // https://freesound.org/people/CosmicEmbers/sounds/387479/
@@ -34,4 +35,20 @@ export const sound = () => {
   }
 
   return theSounds;
+};
+
+export const sayPhrase = (phrase: string, voiceIndex: number) => {
+  const utterance = new SpeechSynthesisUtterance(phrase);
+
+  if (!isBlank(voiceIndex)) {
+    const voices = window.speechSynthesis.getVoices();
+    if (voices?.length) {
+      utterance.voice = voices[voiceIndex as number];
+    }
+  }
+
+  // these can stack up
+  // cancelling cuts any current utterance off
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(utterance);
 };

@@ -1,7 +1,6 @@
-import isBlank from "@sedan-utils/is-blank";
 import { findLastPlayerToThrow, gameOperations } from "./games";
 import { useStore as machineUseStore } from "./machine";
-import { sound } from "./sound";
+import { sayPhrase, sound } from "./sound";
 import { Mark, Player } from "./types";
 
 export const initializeSubscribers = (useStore: typeof machineUseStore) => {
@@ -45,19 +44,8 @@ export const initializeSubscribers = (useStore: typeof machineUseStore) => {
       ([currentPlayerIndex, players, game, useSound, voiceIndex], [previousPlayerIndex]) => {
         if (useSound && currentPlayerIndex !== previousPlayerIndex && game !== null) {
           const name = players[currentPlayerIndex as number].name;
-          const utterance = new SpeechSynthesisUtterance(name);
 
-          if (!isBlank(voiceIndex)) {
-            const voices = window.speechSynthesis.getVoices();
-            if (voices?.length) {
-              utterance.voice = voices[voiceIndex as number];
-            }
-          }
-
-          // these can stack up if you hit 'next' real fast like
-          // cancelling cuts that off
-          window.speechSynthesis.cancel();
-          window.speechSynthesis.speak(utterance);
+          sayPhrase(name, voiceIndex as number);
         }
       }
     );

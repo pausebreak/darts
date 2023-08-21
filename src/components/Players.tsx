@@ -4,10 +4,16 @@ import { useStore } from "../machine";
 import { dartValue } from "../games";
 
 import "./Players.css";
+import { sayPhrase } from "../sound";
+
+const onNameClick = (name: string, voiceIndex: number) => () => {
+  sayPhrase(name, voiceIndex);
+};
 
 export const Players = () => {
   const players = useStore((state) => state.players);
   const game = useStore((state) => state.game);
+  const voiceIndex = useStore((state) => state.voiceIndex);
   const currentPlayerIndex = useStore((state) => state.currentPlayerIndex);
 
   return (
@@ -20,9 +26,10 @@ export const Players = () => {
         const remainder = dartsThrown % 3;
         const lastRoundThrows = player.darts.slice(-3);
         const thisRoundThrows = remainder === 0 ? [] : player.darts.slice(-remainder);
+        const onClick = isCurrentPlayer ? onNameClick(player.name, voiceIndex) : undefined;
 
         return (
-          <div key={player.name} className={playerClass}>
+          <div key={player.name} className={playerClass} onClick={onClick}>
             <div className="name">{player.name}</div>
             <div className="total">{total}</div>
             {!isCurrentPlayer && lastRoundThrows.length > 0 && (
