@@ -1,0 +1,1 @@
+mkdir -p dist && cp src/static/* dist/.

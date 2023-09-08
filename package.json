@@ -9,9 +9,11 @@
     }
   },
   "scripts": {
+    "prebuild": "scripts/statics.sh",
     "build": "parcel build --public-url ./",
     "check": "tsc --noEmit",
     "lint": "eslint src",
+    "prestart": "scripts/statics.sh",
     "start": "parcel",
     "test": "jest",
     "pretest": "npm run check",
