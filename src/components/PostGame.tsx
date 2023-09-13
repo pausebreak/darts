@@ -108,7 +108,7 @@ export const PostGame = () => {
             setGame(null);
           }}
         >
-          Play Again
+          Play Another
         </button>
       </div>
     </>

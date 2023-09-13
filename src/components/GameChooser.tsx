@@ -8,6 +8,7 @@ import isBlank from "@sedan-utils/is-blank";
 import { cutThroat } from "../games";
 
 import "./GameChooser.css";
+import { tactical } from "../games/tactical";
 
 const voiceSortCompare = (a: SpeechSynthesisVoice, b: SpeechSynthesisVoice) => a.lang.localeCompare(b.lang);
 
@@ -133,6 +134,14 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
         <button
           onClick={(event) => {
             event.preventDefault();
+            setGame(tactical(getPointing));
+          }}
+        >
+          Tactical {getGame?.name === GameName.Tactical && <span>!!</span>}
+        </button>
+        <button
+          onClick={(event) => {
+            event.preventDefault();
             setGame(ohGames(Number(getLimit)));
           }}
         >
@@ -192,7 +201,7 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
             </div>
           )}
 
-          {![GameName.Bulls, GameName.Cricket, GameName.CutThroat].includes(getGame.name) && (
+          {![GameName.Bulls, GameName.Cricket, GameName.Tactical, GameName.CutThroat].includes(getGame.name) && (
             <>
               <div>
                 <select onChange={onInChange} value={getIn}>

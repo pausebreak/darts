@@ -40,19 +40,20 @@ export type Player = {
 
 export enum GameName {
   Bulls = "Bulls",
-  Oh1 = "Oh1",
   Cricket = "Cricket",
   CutThroat = "CutThroat",
+  Oh1 = "Oh1",
+  Tactical = "Tactical",
 }
 
 export type Game = {
-  name: GameName;
   checkIn?: Multiple;
   checkOut?: Multiple;
+  clear: boolean;
   limit: number;
   marks: Mark[];
   multiples: Multiple[];
-  clear: boolean;
+  name: GameName;
   pointing: boolean;
 };
 

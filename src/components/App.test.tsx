@@ -4,6 +4,7 @@ import { App } from "./App";
 import { useStore } from "../machine";
 import { resetStores } from "../../__mocks__/zustand";
 import { bulls, cricket, ohGames } from "../games";
+import { tactical } from "../games/tactical";
 
 afterEach(resetStores);
 
@@ -36,6 +37,17 @@ describe("App", () => {
     const store = useStore.getState();
     store.addPlayer(player);
     store.setGame(cricket(false));
+
+    render(<App />);
+    const nextButton = screen.getByText(/Next/i);
+    expect(nextButton).toBeTruthy();
+  });
+
+  test("shows the Tactical game", () => {
+    const player = { name: "me", darts: [] };
+    const store = useStore.getState();
+    store.addPlayer(player);
+    store.setGame(tactical(false));
 
     render(<App />);
     const nextButton = screen.getByText(/Next/i);

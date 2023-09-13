@@ -34,6 +34,19 @@ const boardMark = (numOfMarks: number, aKey: string) => {
   );
 };
 
+const markLabel = (mark: Mark) => {
+  switch (mark) {
+    case Mark.Triple:
+      return "T";
+    case Mark.Double:
+      return "D";
+    case Mark.Bull:
+      return "Bull";
+    default:
+      return mark;
+  }
+};
+
 export const ScoreBoard = () => {
   const game = useStore((state) => state.game);
   const players = useStore((state) => state.players);
@@ -57,6 +70,7 @@ export const ScoreBoard = () => {
           ))}
         </div>
       )}
+
       {players.map((player, playerIndex) => {
         if (playerIndex >= half) {
           return;
@@ -84,11 +98,10 @@ export const ScoreBoard = () => {
         </div>
         {game.marks.map((mark) => {
           const cls = isMarkClearedForEveryone(players, mark) ? "markLabel cleared" : "markLabel";
-          const markLabel = mark === Mark.Bull ? "Bull" : mark;
 
           return (
             <div className={cls} key={mark}>
-              {markLabel}
+              {markLabel(mark)}
             </div>
           );
         })}

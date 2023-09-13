@@ -2,6 +2,7 @@ import { bullsOperations } from "./games/bulls";
 import { cricketOperations } from "./games/cricket";
 import { cutThroatOperations } from "./games/cutThroat";
 import { ohGamesOperations } from "./games/oh1";
+import { tacticalOperations } from "./games/tactical";
 import { Game, Dart, GameOperations, GameName, Player, Mark } from "./types";
 
 export const dartValue = (dart: Dart): number => dart[0] * dart[1];
@@ -72,6 +73,8 @@ export const gameOperations = (game: Game): GameOperations => {
       return cricketOperations(game);
     case GameName.CutThroat:
       return cutThroatOperations(game);
+    case GameName.Tactical:
+      return tacticalOperations(game);
     default:
       return {
         validThrow: () => false,
@@ -84,3 +87,4 @@ export { bulls } from "./games/bulls";
 export { cricket } from "./games/cricket";
 export { ohGames } from "./games/oh1";
 export { cutThroat } from "./games/cutThroat";
+export { tactical } from "./games/tactical";

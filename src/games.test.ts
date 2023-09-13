@@ -1,4 +1,13 @@
-import { areMarksCleared, bulls, cutThroat, dartValue, findLastPlayerToThrow, gameOperations, ohGames } from "./games";
+import {
+  areMarksCleared,
+  bulls,
+  cutThroat,
+  dartValue,
+  findLastPlayerToThrow,
+  gameOperations,
+  ohGames,
+  tactical,
+} from "./games";
 import { Game, GameName, Mark, Multiple, Player } from "./types";
 
 describe("findLastPlayerToThrow", () => {
@@ -82,6 +91,14 @@ describe("gameOperations", () => {
 
   it("returns a cutThroat ops", () => {
     const game = cutThroat();
+    const result = gameOperations(game);
+
+    expect(result).toBeDefined();
+    expect(result.stats).toBeDefined();
+  });
+
+  it("returns a Tactical ops", () => {
+    const game = tactical(false);
     const result = gameOperations(game);
 
     expect(result).toBeDefined();
