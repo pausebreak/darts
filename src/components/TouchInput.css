@@ -15,7 +15,8 @@
   transition: background-color 0.5s ease-in;
 }
 
-.marks.invalid button {
+.marks.invalid button,
+.controls.invalid button {
   background-color: red;
   transition: background-color 0.5s ease-out;
 }
