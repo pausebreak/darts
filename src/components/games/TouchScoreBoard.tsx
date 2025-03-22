@@ -10,7 +10,12 @@ import { useEffect, useState } from "react";
 const boardMark = (numOfMarks: number, aKey: string, onClick) => {
   if (isBlank(numOfMarks)) {
     return (
-      <div key={aKey} onClick={onClick}>
+      <div
+        key={aKey}
+        onClick={(event) => {
+          onClick(event);
+        }}
+      >
         &nbsp;
       </div>
     );
@@ -69,7 +74,7 @@ export const TouchScoreBoard = () => {
   const even = numOfPlayers % 2 === 0;
   const playerScores = gameOperations(game).stats?.(players);
 
-  const onClick = (_throw: Dart) => {
+  const onClick = (event: React.MouseEvent<HTMLElement, MouseEvent>, _throw: Dart) => {
     event.preventDefault();
 
     if (double) {
@@ -146,8 +151,8 @@ export const TouchScoreBoard = () => {
           const score = playerScores?.scores[playerIndex];
           const currentPlayer = isCurrentPlayer ? "playerForRow current" : "playerForRow";
           const onMarkClick = isCurrentPlayer
-            ? (mark: Mark) => () => {
-                onClick([mark, Multiple.Single]);
+            ? (mark: Mark) => (event) => {
+                onClick(event, [mark, Multiple.Single]);
               }
             : // eslint-disable-next-line @typescript-eslint/no-empty-function
               () => () => {};
@@ -175,8 +180,8 @@ export const TouchScoreBoard = () => {
               <div
                 className={cls}
                 key={mark}
-                onClick={() => {
-                  onClick([mark, Multiple.Single]);
+                onClick={(event) => {
+                  onClick(event, [mark, Multiple.Single]);
                 }}
               >
                 {markLabel(mark)}
@@ -195,8 +200,8 @@ export const TouchScoreBoard = () => {
           const isCurrentPlayer = playerIndex === currentPlayerIndex;
           const currentPlayer = isCurrentPlayer ? "playerForRow current" : "playerForRow";
           const onMarkClick = isCurrentPlayer
-            ? (mark: Mark) => () => {
-                onClick([mark, Multiple.Single]);
+            ? (mark: Mark) => (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+                onClick(event, [mark, Multiple.Single]);
               }
             : // eslint-disable-next-line @typescript-eslint/no-empty-function
               () => () => {};
