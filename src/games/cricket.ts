@@ -107,6 +107,10 @@ export const cricketOperations = (game: Game): GameOperations => ({
       return false;
     }
 
+    if (dart[0] === Mark.Bull && dart[1] === Multiple.Triple) {
+      return false;
+    }
+
     if (game.pointing) {
       return !isMarkClearedForEveryone(players, dart[0]);
     } else {
