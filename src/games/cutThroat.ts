@@ -102,6 +102,10 @@ export const cutThroatOperations = (game: Game): GameOperations => ({
       return false;
     }
 
+    if (dart[0] === Mark.Bull && dart[1] === Multiple.Triple) {
+      return false;
+    }
+
     return !isMarkClearedForEveryone(players, dart[0]);
   },
   stats: (players) => calculateStats(game, players),

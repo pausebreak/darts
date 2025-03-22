@@ -17,7 +17,7 @@ const GameLayout = () => {
   switch (currentGame?.name) {
     case GameName.Cricket:
     case GameName.CutThroat:
-      return <Cricket />;
+      return <TouchScoreBoard />;
     case GameName.Bulls:
     case GameName.Oh1:
       return (
