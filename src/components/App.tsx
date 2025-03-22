@@ -4,7 +4,6 @@ import { GameChooser } from "./GameChooser";
 import { useStore } from "../machine";
 import { PlayerChooser } from "./PlayerChooser";
 import { GameName } from "../types";
-import { Cricket } from "./games/Cricket";
 import { Players } from "./Players";
 import { TouchInput } from "./TouchInput";
 import { GameInfo } from "./GameInfo";

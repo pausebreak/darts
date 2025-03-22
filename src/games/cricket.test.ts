@@ -17,6 +17,13 @@ describe("validThrow", () => {
     expect(result).toBe(true);
   });
 
+  it("does not allow Bull Triple", () => {
+    const thisGame = { ...game };
+    const ops = gameOperations(thisGame);
+
+    expect(ops.validThrow(0, [{ name: "me", darts: [] }], [Mark.Bull, Multiple.Triple])).toBe(false);
+  });
+
   it("does not allow Marks outside the game", () => {
     const thisGame = { ...game };
     const ops = gameOperations(thisGame);
