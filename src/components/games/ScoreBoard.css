@@ -77,11 +77,19 @@
 
 .column .markLabel {
   font-family: Helvetica, sans-serif;
+  border: 2px solid white;
+  /* margin: 10px; */
+  border-radius: 50px;
 }
 
 .cleared {
-  background-color: lightgray;
   color: gray;
+  border: none !important;
+}
+
+.clearedForAll {
+  color: gray;
+  background-color: darkslategray;
 }
 
 .above {
