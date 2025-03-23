@@ -1,0 +1,16 @@
+.pips {
+  display: flex;
+  flex-direction: row;
+}
+
+.pips > div {
+  height: 1em;
+  width: 1em;
+  border-radius: 1em;
+  margin-top: 0.2em;
+  border: 2px solid white;
+}
+
+.pips .filled {
+  background-color: white;
+}
