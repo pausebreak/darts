@@ -4,6 +4,13 @@ import { Mark, Multiple, Player } from "../types";
 describe("validThrow", () => {
   const game = ohGames(201);
 
+  it("does not allow Bull Triple", () => {
+    const thisGame = { ...game };
+    const ops = gameOperations(thisGame);
+
+    expect(ops.validThrow(0, [{ name: "me", darts: [] }], [Mark.Bull, Multiple.Triple])).toBe(false);
+  });
+
   it("honers missing", () => {
     const ops = gameOperations({ ...game, checkIn: Multiple.Double });
     const result = ops.validThrow(

@@ -4,10 +4,15 @@ import { bulls } from "./bulls";
 
 describe("validThrow", () => {
   const ops = gameOperations(bulls());
+
   it("allows you to throw bulls", () => {
     const result = ops.validThrow(0, [{ name: "me", darts: [] }], [Mark.Bull, Multiple.Single]);
 
     expect(result).toBe(true);
+  });
+
+  it("does not allow Bull Triple", () => {
+    expect(ops.validThrow(0, [{ name: "me", darts: [] }], [Mark.Bull, Multiple.Triple])).toBe(false);
   });
 
   it("does not allows you to throw non-bulls", () => {

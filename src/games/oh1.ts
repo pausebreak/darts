@@ -19,6 +19,10 @@ export const ohGamesOperations = (game: Game): GameOperations => ({
     const player = players[playerIndex];
     const firstNonMiss = player.darts.find((_throw) => _throw[0] !== Mark.Miss);
 
+    if (dart[0] === Mark.Bull && dart[1] === Multiple.Triple) {
+      return false;
+    }
+
     if ((player.darts.length === 0 || !firstNonMiss) && checkIn !== Multiple.Single && dart[1] !== checkIn) {
       return false;
     }
