@@ -171,10 +171,8 @@ export const TouchScoreBoard = () => {
 
         <div className="column">
           <div className="playerForRow">
-            <div>
               <Pips
                 numThrown={players[currentPlayerIndex].darts.length % 3} />
-            </div>
             {game.pointing && playerScores && <div className="score">&nbsp;</div>}
           </div>
           {game.marks.map((mark) => {
