@@ -6,6 +6,7 @@ import { Dart, Mark, Multiple } from "../../types";
 
 import "./ScoreBoard.css";
 import { useEffect, useState } from "react";
+import { Pips } from "../Pips";
 
 const boardMark = (numOfMarks: number, aKey: string, onClick) => {
   if (isBlank(numOfMarks)) {
@@ -170,7 +171,8 @@ export const TouchScoreBoard = () => {
 
         <div className="column">
           <div className="playerForRow">
-            <div>&nbsp;</div>
+              <Pips
+                numThrown={players[currentPlayerIndex].darts.length % 3} />
             {game.pointing && playerScores && <div className="score">&nbsp;</div>}
           </div>
           {game.marks.map((mark) => {
