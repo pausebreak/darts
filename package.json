@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "source": "src/index.html",
   "license": "MIT",
-  "engines": {
-    "node": "=23.10.0"
-   },
   "targets": {
     "default": {
       "distDir": "./docs"
