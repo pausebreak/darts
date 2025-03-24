@@ -11,6 +11,10 @@
       "distDir": "./docs"
     }
   },
+  "browserslist": [
+    "last 2 versions",
+    "not dead"
+  ],
   "scripts": {
     "prebuild": "scripts/statics.sh",
     "build": "parcel build --public-url ./",
