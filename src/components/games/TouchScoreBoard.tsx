@@ -38,7 +38,7 @@ const boardMark = (numOfMarks: number, aKey: string, onClick, cleared: boolean) 
   }
 
   return (
-    <div key={aKey} className={`x above ${cleared ? 'clearedForAll' : null}`} onClick={onClick}>
+    <div key={aKey} className={`x above`} onClick={onClick}>
       <div className="behind">X</div>O
     </div>
   );
@@ -175,10 +175,12 @@ export const TouchScoreBoard = () => {
           </div>
           {game.marks.map((mark) => {
             let cls: string;
-            if (isMarkClearedForEveryone(players, mark)){
-              cls = "markLabel clearedForAll"
-            } else if (isMarkCleared(players[currentPlayerIndex], mark)){
+            const clearedForThisPlayer = isMarkCleared(players[currentPlayerIndex], mark);
+            const clearedForAll = isMarkClearedForEveryone(players, mark);
+            if (clearedForAll){
               cls = "markLabel cleared"
+            } else if (clearedForThisPlayer){
+              cls = game.pointing ? "markLabel" : "markLabel cleared"
             } else {
               cls = "markLabel"
             }
@@ -191,6 +193,7 @@ export const TouchScoreBoard = () => {
                   onClick(event, [mark, Multiple.Single]);
                 }}
               >
+                {clearedForAll && game.pointing && <div className="strikeThrough"/>}
                 {markLabel(mark)}
               </div>
             );

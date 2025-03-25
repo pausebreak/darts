@@ -78,7 +78,7 @@
 .column .markLabel {
   font-family: Helvetica, sans-serif;
   border: 2px solid white;
-  /* margin: 10px; */
+  margin: 10px;
   border-radius: 50px;
 }
 
@@ -87,9 +87,11 @@
   border: none !important;
 }
 
-.clearedForAll {
-  color: gray;
-  background-color: darkslategray;
+.strikeThrough {
+  position: absolute;
+  height: 2px;
+  width: 100vw;
+  background-color: white;
 }
 
 .above {
