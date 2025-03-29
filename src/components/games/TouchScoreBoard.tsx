@@ -39,7 +39,7 @@ const boardMark = (numOfMarks: number, aKey: string, onClick, cleared: boolean) 
   }
 
   return (
-    <div key={aKey} className={`x above`} onClick={onClick}>
+    <div key={aKey} className="x above" onClick={onClick}>
       <div className="behind">X</div>O
     </div>
   );
@@ -179,10 +179,8 @@ export const TouchScoreBoard = () => {
             let cls: string;
             const clearedForThisPlayer = isMarkCleared(players[currentPlayerIndex], mark);
             const clearedForAll = isMarkClearedForEveryone(players, mark);
-            if (clearedForAll){
+            if (clearedForAll || (clearedForThisPlayer && !game.pointing)){
               cls = "markLabel cleared"
-            } else if (clearedForThisPlayer){
-              cls = game.pointing ? "markLabel" : "markLabel cleared"
             } else {
               cls = "markLabel"
             }
