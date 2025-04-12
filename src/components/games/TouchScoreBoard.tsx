@@ -176,13 +176,11 @@ export const TouchScoreBoard = () => {
             {game.pointing && playerScores && <div className="score">&nbsp;</div>}
           </div>
           {game.marks.map((mark) => {
-            let cls: string;
+            let cls = "markLabel";
             const clearedForThisPlayer = isMarkCleared(players[currentPlayerIndex], mark);
             const clearedForAll = isMarkClearedForEveryone(players, mark);
-            if (clearedForAll || (clearedForThisPlayer && !game.pointing)){
-              cls = "markLabel cleared"
-            } else {
-              cls = "markLabel"
+            if (clearedForAll || (clearedForThisPlayer && !game.pointing)) {
+              cls = `${cls} cleared`;
             }
 
             return (
