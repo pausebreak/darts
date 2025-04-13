@@ -1,6 +1,6 @@
 import isBlank from "@sedan-utils/is-blank";
 import * as React from "react";
-import { gameOperations, isMarkClearedForEveryone, playerMarks } from "../../games";
+import { gameOperations, isMarkCleared, isMarkClearedForEveryone, playerMarks } from "../../games";
 import { useStore } from "../../machine";
 import { Dart, Mark, Multiple } from "../../types";
 
@@ -8,7 +8,7 @@ import "./ScoreBoard.css";
 import { useEffect, useState } from "react";
 import { Pips } from "../Pips";
 
-const boardMark = (numOfMarks: number, aKey: string, onClick) => {
+const boardMark = (numOfMarks: number, aKey: string, onClick, cleared: boolean) => {
   if (isBlank(numOfMarks)) {
     return (
       <div
@@ -164,7 +164,7 @@ export const TouchScoreBoard = () => {
                 <div className="name">{player.name}</div>
                 {game.pointing && playerScores && <div className="score">{score}</div>}
               </div>
-              {game.marks.map((mark) => boardMark(marks[mark], mark.toString(), onMarkClick(mark)))}
+              {game.marks.map((mark) => boardMark(marks[mark], mark.toString(), onMarkClick(mark), isMarkClearedForEveryone(players, mark)))}
             </div>
           );
         })}
@@ -176,7 +176,12 @@ export const TouchScoreBoard = () => {
             {game.pointing && playerScores && <div className="score">&nbsp;</div>}
           </div>
           {game.marks.map((mark) => {
-            const cls = isMarkClearedForEveryone(players, mark) ? "markLabel cleared" : "markLabel";
+            let cls = "markLabel";
+            const clearedForThisPlayer = isMarkCleared(players[currentPlayerIndex], mark);
+            const clearedForAll = isMarkClearedForEveryone(players, mark);
+            if (clearedForAll || (clearedForThisPlayer && !game.pointing)) {
+              cls = `${cls} cleared`;
+            }
 
             return (
               <div
@@ -186,6 +191,7 @@ export const TouchScoreBoard = () => {
                   onClick(event, [mark, Multiple.Single]);
                 }}
               >
+                {clearedForAll && game.pointing && <div className="strikeThrough"/>}
                 {markLabel(mark)}
               </div>
             );
@@ -214,7 +220,7 @@ export const TouchScoreBoard = () => {
                 <div className="name">{player.name}</div>
                 {game.pointing && playerScores && <div className="score">{score}</div>}
               </div>
-              {game.marks.map((mark) => boardMark(marks[mark], mark.toString(), onMarkClick(mark)))}
+              {game.marks.map((mark) => boardMark(marks[mark], mark.toString(), onMarkClick(mark), isMarkClearedForEveryone(players, mark)))}
             </div>
           );
         })}
