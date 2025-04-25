@@ -3,6 +3,9 @@ import { useStore } from "../machine";
 import { Mark, Multiple } from "../types";
 import { currentRound, gameOperations, mprForPlayerAsOfRound } from "../games";
 import LineChart from "./LineChart";
+import StackedBarChart from '../graphs/StackedBarChart';
+import PieChart from '../graphs/PieChart';
+import { prepareStackedBarData, preparePieChartData } from '../graphs/prepareThrowBreakdownData';
 
 import "./PostGame.css";
 
@@ -25,6 +28,7 @@ export const PostGame = () => {
 
   // Chart view state
   const [showChart, setShowChart] = useState(false);
+  const [chartTab, setChartTab] = useState<'mpr' | 'throw'>('mpr');
 
   // Prepare MPR data for each player for each round
   const chartSeries = getPlayers.map((player) => ({
@@ -41,13 +45,50 @@ export const PostGame = () => {
         <button className="backButton" onClick={() => setShowChart(false)} style={{ marginBottom: 16 }}>
           Back
         </button>
-        <h2 style={{ textAlign: 'center', margin: 0 }}>MPR over time</h2>
-        <LineChart
-          series={chartSeries}
-          xLabel="Round"
-          yLabel="MPR"
-          height={320}
-        />
+        {/* Chart tab/accordion UI */}
+        <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
+          <button
+            onClick={() => setChartTab('mpr')}
+            style={{ fontWeight: chartTab === 'mpr' ? 700 : 400 }}
+            aria-selected={chartTab === 'mpr'}
+          >
+            MPR over time
+          </button>
+          <button
+            onClick={() => setChartTab('throw')}
+            style={{ fontWeight: chartTab === 'throw' ? 700 : 400 }}
+            aria-selected={chartTab === 'throw'}
+          >
+            Throw breakdown
+          </button>
+        </div>
+        {chartTab === 'mpr' && (
+          <>
+            <h2 style={{ textAlign: 'center', margin: 0 }}>MPR over time</h2>
+            <LineChart
+              series={chartSeries}
+              xLabel="Round"
+              yLabel="MPR"
+              height={320}
+            />
+          </>
+        )}
+        {chartTab === 'throw' && (
+          <>
+            <h2 style={{ textAlign: 'center', margin: 0 }}>Throw breakdown</h2>
+            {getPlayers.length === 1 ? (
+              <PieChart
+                data={preparePieChartData(getPlayers[0])}
+                height={320}
+              />
+            ) : (
+              <StackedBarChart
+                {...prepareStackedBarData(getPlayers)}
+                height={320}
+              />
+            )}
+          </>
+        )}
       </div>
     );
   }

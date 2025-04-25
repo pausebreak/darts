@@ -3,16 +3,7 @@ import { ParentSize } from '@visx/responsive';
 import { LinePath } from '@visx/shape';
 import { scaleLinear, scalePoint } from '@visx/scale';
 import { AxisBottom, AxisLeft } from '@visx/axis';
-
-// Muted, accessible rainbow palette (should match CHART_COLORS in planning docs)
-export const CHART_COLORS = [
-  '#5B8FF9', // Muted blue
-  '#61DDAA', // Muted green
-  '#65789B', // Muted indigo
-  '#F6BD16', // Muted yellow
-  '#7262fd', // Muted purple
-  '#78D3F8', // Muted cyan
-];
+import CHART_COLORS from '../graphs/Palettes';
 
 // Types for props
 export interface LineChartSeries {
