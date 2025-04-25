@@ -96,7 +96,7 @@ const PieChart: React.FC<PieChartProps> = ({
               return (
                 <g key={d.label} transform={`translate(${col * LEGEND_ITEM_WIDTH},${row * (LEGEND_ITEM_HEIGHT + LEGEND_GAP)})`}>
                   <rect width={16} height={16} fill={CHART_COLORS[i % CHART_COLORS.length]} />
-                  <text x={22} y={13} fontSize={13} fill="#333">{d.label}</text>
+                  <text x={22} y={13} fontSize={13} fill="#fff">{d.label}</text>
                 </g>
               );
             })}

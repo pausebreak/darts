@@ -67,7 +67,8 @@ const StackedBarChart: React.FC<StackedBarChartProps> = ({
               scale={xScale}
               stroke="#888"
               tickStroke="#888"
-              tickLabelProps={() => ({ fill: '#888', fontSize: 12, textAnchor: 'middle', dy: '0.5em' })}
+              tickLabelProps={() => ({ fill: 'transparent', fontSize: 12, textAnchor: 'middle', dy: '0.5em' })}
+              tickLength={0}
             />
             <BarStack
               data={data}
@@ -102,7 +103,7 @@ const StackedBarChart: React.FC<StackedBarChartProps> = ({
                   x={(xScale(d.player) ?? 0) + (xScale.bandwidth() / 2)}
                   y={yScale(total) - 6}
                   fontSize={12}
-                  fill="#333"
+                  fill="#fff"
                   fontWeight={600}
                   textAnchor="middle"
                   aria-label={d.player}
@@ -120,7 +121,7 @@ const StackedBarChart: React.FC<StackedBarChartProps> = ({
                 return (
                   <g key={h} transform={`translate(${col * LEGEND_ITEM_WIDTH},${row * (LEGEND_ITEM_HEIGHT + LEGEND_GAP)})`}>
                     <rect width={16} height={16} fill={CHART_COLORS[i % CHART_COLORS.length]} />
-                    <text x={22} y={13} fontSize={13} fill="#333">{h}</text>
+                    <text x={22} y={13} fontSize={13} fill="#fff">{h}</text>
                   </g>
                 );
               })}
