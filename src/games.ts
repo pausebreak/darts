@@ -83,6 +83,15 @@ export const gameOperations = (game: Game): GameOperations => {
   }
 };
 
+export const mprForPlayerAsOfRound = (player: Player, round: number) => {
+  const numDarts = round * 3;
+  const darts = player.darts.slice(0, numDarts);
+  const playerAsOfRound = {name: player.name, darts}
+  const marks = playerMarks(playerAsOfRound);
+  const totalMarks = Object.keys(marks).reduce((prev, curr, i) => +prev + marks[curr])
+  return((Number(totalMarks)/round).toFixed(2));
+}
+
 export { bulls } from "./games/bulls";
 export { cricket } from "./games/cricket";
 export { ohGames } from "./games/oh1";

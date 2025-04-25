@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useStore } from "../machine";
 import { Mark, Multiple } from "../types";
-import { currentRound, gameOperations } from "../games";
+import { currentRound, gameOperations, mprForPlayerAsOfRound } from "../games";
+import LineChart from "./LineChart";
 
 import "./PostGame.css";
 
@@ -21,6 +22,35 @@ export const PostGame = () => {
   const totalRounds = currentRound(players);
   const stats = gameOperations(game).stats?.(players);
   const roundsText = totalRounds > 1 ? "rounds" : "round";
+
+  // Chart view state
+  const [showChart, setShowChart] = useState(false);
+
+  // Prepare MPR data for each player for each round
+  const chartSeries = getPlayers.map((player) => ({
+    label: player.name,
+    data: Array.from({ length: totalRounds }, (_, i) => ({
+      x: i + 1,
+      y: Number(mprForPlayerAsOfRound(player, i + 1)),
+    })),
+  }));
+
+  if (showChart) {
+    return (
+      <div className="chartView" style={{ padding: 16 }}>
+        <button className="backButton" onClick={() => setShowChart(false)} style={{ marginBottom: 16 }}>
+          Back
+        </button>
+        <h2 style={{ textAlign: 'center', margin: 0 }}>Marks Per Round (MPR) by Player</h2>
+        <LineChart
+          series={chartSeries}
+          xLabel="Round"
+          yLabel="MPR"
+          height={320}
+        />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -109,6 +139,13 @@ export const PostGame = () => {
           }}
         >
           Play Another
+        </button>
+        <button
+          className="viewChartsButton"
+          style={{ marginLeft: 12 }}
+          onClick={() => setShowChart(true)}
+        >
+          View charts
         </button>
       </div>
     </>
