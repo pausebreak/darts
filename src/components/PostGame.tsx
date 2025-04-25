@@ -41,7 +41,7 @@ export const PostGame = () => {
         <button className="backButton" onClick={() => setShowChart(false)} style={{ marginBottom: 16 }}>
           Back
         </button>
-        <h2 style={{ textAlign: 'center', margin: 0 }}>Marks Per Round (MPR) by Player</h2>
+        <h2 style={{ textAlign: 'center', margin: 0 }}>MPR over time</h2>
         <LineChart
           series={chartSeries}
           xLabel="Round"
