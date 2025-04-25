@@ -86,12 +86,9 @@ export const gameOperations = (game: Game): GameOperations => {
 export const mprForPlayerAsOfRound = (player: Player, round: number) => {
   const numDarts = round * 3;
   const darts = player.darts.slice(0, numDarts);
-  console.log(darts)
   const playerAsOfRound = {name: player.name, darts}
   const marks = playerMarks(playerAsOfRound);
-  console.log("marks keys")
-  console.log(Object.keys(marks))
-  const totalMarks = Object.keys(marks).reduce((prev, curr, i) => +prev + marks[curr], 0)
+  const totalMarks = Object.keys(marks).filter(key => key !== "0").reduce((prev, curr, i) => prev + marks[curr], 0)
   return((Number(totalMarks)/round).toFixed(2));
 }
 
