@@ -16,6 +16,10 @@ export interface PieChartProps {
 }
 
 const defaultMargin = { top: 24, right: 16, bottom: 40, left: 40 };
+const LEGEND_ITEM_WIDTH = 100;
+const LEGEND_ITEM_HEIGHT = 20;
+const LEGEND_GAP = 8;
+const LEGEND_ITEMS_PER_ROW = 4;
 
 const PieChart: React.FC<PieChartProps> = ({
   data,
@@ -26,6 +30,11 @@ const PieChart: React.FC<PieChartProps> = ({
     <ParentSize>{({ width }) => {
       const innerWidth = width - margin.left - margin.right;
       const innerHeight = height - margin.top - margin.bottom;
+      const legendItemsPerRow = Math.max(1, Math.floor(innerWidth / LEGEND_ITEM_WIDTH));
+      const legendRows = Math.ceil(data.length / legendItemsPerRow);
+      const legendHeight = legendRows * (LEGEND_ITEM_HEIGHT + LEGEND_GAP);
+      // Dynamically increase SVG height to fit legend
+      const svgHeight = height + legendHeight;
       const radius = Math.min(innerWidth, innerHeight) / 2 - 8;
       const colorScale = scaleOrdinal({
         domain: data.map(d => d.label),
@@ -33,8 +42,9 @@ const PieChart: React.FC<PieChartProps> = ({
       });
       const centerX = margin.left + innerWidth / 2;
       const centerY = margin.top + innerHeight / 2;
+      const total = data.reduce((sum, d) => sum + d.value, 0);
       return (
-        <svg width={width} height={height} role="img" aria-label="Pie chart">
+        <svg width={width} height={svgHeight} role="img" aria-label="Pie chart">
           <g transform={`translate(${centerX},${centerY})`}>
             <Pie
               data={data}
@@ -51,37 +61,45 @@ const PieChart: React.FC<PieChartProps> = ({
                       fill={colorScale(arc.data.label)}
                       aria-label={`${arc.data.label}: ${arc.data.value}`}
                     />
-                    {/* Direct label */}
+                    {/* Only show label if slice is at least 25% of total */}
                     {(() => {
                       const [centroidX, centroidY] = pie.path.centroid(arc);
-                      return (
-                        <text
-                          x={centroidX}
-                          y={centroidY}
-                          fontSize={13}
-                          fill="#333"
-                          fontWeight={600}
-                          textAnchor="middle"
-                          aria-label={arc.data.label}
-                          style={{ userSelect: 'none' }}
-                        >
-                          {arc.data.value > 0 ? arc.data.label : ''}
-                        </text>
-                      );
+                      const percent = arc.data.value / total;
+                      if (percent >= 0.25 && arc.data.value > 0) {
+                        return (
+                          <text
+                            x={centroidX}
+                            y={centroidY}
+                            fontSize={13}
+                            fill="#333"
+                            fontWeight={600}
+                            textAnchor="middle"
+                            aria-label={arc.data.label}
+                            style={{ userSelect: 'none' }}
+                          >
+                            {arc.data.label}
+                          </text>
+                        );
+                      }
+                      return null;
                     })()}
                   </g>
                 ))
               }
             </Pie>
           </g>
-          {/* Legend */}
+          {/* Responsive Legend */}
           <g transform={`translate(${margin.left},${height - margin.bottom + 16})`}>
-            {data.map((d, i) => (
-              <g key={d.label} transform={`translate(${i * 100},0)`}>
-                <rect width={16} height={16} fill={CHART_COLORS[i % CHART_COLORS.length]} />
-                <text x={22} y={13} fontSize={13} fill="#333">{d.label}</text>
-              </g>
-            ))}
+            {data.map((d, i) => {
+              const row = Math.floor(i / legendItemsPerRow);
+              const col = i % legendItemsPerRow;
+              return (
+                <g key={d.label} transform={`translate(${col * LEGEND_ITEM_WIDTH},${row * (LEGEND_ITEM_HEIGHT + LEGEND_GAP)})`}>
+                  <rect width={16} height={16} fill={CHART_COLORS[i % CHART_COLORS.length]} />
+                  <text x={22} y={13} fontSize={13} fill="#333">{d.label}</text>
+                </g>
+              );
+            })}
           </g>
         </svg>
       );
