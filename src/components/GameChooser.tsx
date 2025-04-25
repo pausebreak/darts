@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useState, useEffect } from "react";
 import { bulls } from "../games/bulls";
 import { cricket } from "../games/cricket";
 import { ohGames } from "../games/oh1";
@@ -13,6 +13,25 @@ import { tactical } from "../games/tactical";
 const voiceSortCompare = (a: SpeechSynthesisVoice, b: SpeechSynthesisVoice) => a.lang.localeCompare(b.lang);
 
 const isAndroid = window?.navigator?.userAgent?.indexOf("Android") !== -1;
+
+const GAME_DEFAULTS_KEY = 'darts-game-defaults';
+
+function getSavedDefaults(gameName) {
+  try {
+    const all = JSON.parse(localStorage.getItem(GAME_DEFAULTS_KEY) || '{}');
+    return all[gameName] || {};
+  } catch {
+    return {};
+  }
+}
+
+function setSavedDefaults(gameName, values) {
+  try {
+    const all = JSON.parse(localStorage.getItem(GAME_DEFAULTS_KEY) || '{}');
+    all[gameName] = values;
+    localStorage.setItem(GAME_DEFAULTS_KEY, JSON.stringify(all));
+  } catch {}
+}
 
 export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer }) => {
   const chooseGame = useStore((state) => state.setGame);
@@ -31,6 +50,17 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
 
   // this does not work until the user clicks a button
   const voices = window.speechSynthesis?.getVoices();
+
+  useEffect(() => {
+    if (getGame && getGame.name) {
+      const defaults = getSavedDefaults(getGame.name);
+      if (defaults.limit !== undefined) setLimit(defaults.limit);
+      if (defaults.in !== undefined) setIn(defaults.in);
+      if (defaults.out !== undefined) setOut(defaults.out);
+      if (defaults.pointing !== undefined) setPointing(defaults.pointing);
+      if (defaults.numberOfBulls !== undefined) setNumberOfBulls(defaults.numberOfBulls);
+    }
+  }, [getGame?.name]);
 
   const onLimitChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = Number(event.target.value);
@@ -256,9 +286,16 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
                 limit = 0;
                 checkIn = null;
                 checkOut = null;
-
                 arePointing = true;
               }
+
+              setSavedDefaults(getGame.name, {
+                limit,
+                in: checkIn,
+                out: checkOut,
+                pointing: arePointing,
+                numberOfBulls: getNumberOfBulls,
+              });
 
               chooseGame({
                 name: getGame.name,
