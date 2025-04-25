@@ -8,7 +8,7 @@ import "./ScoreBoard.css";
 import { useEffect, useState } from "react";
 import { Pips } from "../Pips";
 
-const boardMark = (numOfMarks: number, aKey: string, onClick, cleared: boolean) => {
+const boardMark = (numOfMarks: number, aKey: string, onClick) => {
   if (isBlank(numOfMarks)) {
     return (
       <div

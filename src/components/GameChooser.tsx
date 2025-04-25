@@ -21,7 +21,7 @@ function getSavedDefaults(gameName) {
     const all = JSON.parse(localStorage.getItem(GAME_DEFAULTS_KEY) || '{}');
     return all[gameName] || {};
   } catch {
-    return {};
+    console.log("error getting saved defaults");
   }
 }
 
@@ -30,7 +30,9 @@ function setSavedDefaults(gameName, values) {
     const all = JSON.parse(localStorage.getItem(GAME_DEFAULTS_KEY) || '{}');
     all[gameName] = values;
     localStorage.setItem(GAME_DEFAULTS_KEY, JSON.stringify(all));
-  } catch {}
+  } catch {
+    console.log("error setting saved defaults");
+  }
 }
 
 export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer }) => {
