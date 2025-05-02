@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import { useStore } from "../machine";
 import { Mark, Multiple } from "../types";
-import { currentRound, gameOperations } from "../games";
+import { currentRound, gameOperations, mprForPlayerAsOfRound, pointsForPlayerAsOfRound } from "../games";
+import LineChart from "./LineChart";
+import StackedBarChart from '../graphs/StackedBarChart';
+import PieChart from '../graphs/PieChart';
+import { prepareStackedBarData, preparePieChartData } from '../graphs/prepareThrowBreakdownData';
 
 import "./PostGame.css";
 
@@ -21,6 +25,77 @@ export const PostGame = () => {
   const totalRounds = currentRound(players);
   const stats = gameOperations(game).stats?.(players);
   const roundsText = totalRounds > 1 ? "rounds" : "round";
+
+  // Chart view state
+  const [showChart, setShowChart] = useState(false);
+  const [chartTab, setChartTab] = useState<'mpr' | 'points'>('mpr');
+
+  // Prepare MPR data for each player for each round
+  const chartSeries = getPlayers.map((player) => ({
+    label: player.name,
+    data: Array.from({ length: totalRounds }, (_, i) => ({
+      x: i + 1,
+      y: Number(mprForPlayerAsOfRound(player, i + 1)),
+    })),
+  }));
+
+  // Prepare Points data for each player for each round
+  const pointsChartSeries = getPlayers.map((player) => ({
+    label: player.name,
+    data: Array.from({ length: totalRounds }, (_, i) => ({
+      x: i + 1,
+      y: pointsForPlayerAsOfRound(player, getPlayers, game, i + 1),
+    })),
+  }));
+
+  if (showChart) {
+    return (
+      <div className="chartView" style={{ padding: 16 }}>
+        <button className="backButton" onClick={() => setShowChart(false)} style={{ marginBottom: 16 }}>
+          Back
+        </button>
+        {/* Chart tab/accordion UI */}
+        <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
+          <button
+            onClick={() => setChartTab('mpr')}
+            style={{ fontWeight: chartTab === 'mpr' ? 700 : 400 }}
+            aria-selected={chartTab === 'mpr'}
+          >
+            MPR over time
+          </button>
+          <button
+            onClick={() => setChartTab('points')}
+            style={{ fontWeight: chartTab === 'points' ? 700 : 400 }}
+            aria-selected={chartTab === 'points'}
+          >
+            Points over time
+          </button>
+        </div>
+        {chartTab === 'mpr' && (
+          <>
+            <h2 style={{ textAlign: 'center', margin: 0 }}>MPR over time</h2>
+            <LineChart
+              series={chartSeries}
+              xLabel="Round"
+              yLabel="MPR"
+              height={320}
+            />
+          </>
+        )}
+        {chartTab === 'points' && (
+          <>
+            <h2 style={{ textAlign: 'center', margin: 0 }}>Points over time</h2>
+            <LineChart
+              series={pointsChartSeries}
+              xLabel="Round"
+              yLabel="Points"
+              height={320}
+            />
+          </>
+        )}
+      </div>
+    );
+  }
 
   return (
     <>
@@ -109,6 +184,13 @@ export const PostGame = () => {
           }}
         >
           Play Another
+        </button>
+        <button
+          className="viewChartsButton"
+          style={{ marginLeft: 12 }}
+          onClick={() => setShowChart(true)}
+        >
+          View charts
         </button>
       </div>
     </>
