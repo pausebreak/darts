@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useStore } from "../machine";
 import { Mark, Multiple } from "../types";
-import { currentRound, gameOperations, mprForPlayerAsOfRound } from "../games";
+import { currentRound, gameOperations, mprForPlayerAsOfRound, pointsForPlayerAsOfRound } from "../games";
 import LineChart from "./LineChart";
 import StackedBarChart from '../graphs/StackedBarChart';
 import PieChart from '../graphs/PieChart';
@@ -28,7 +28,7 @@ export const PostGame = () => {
 
   // Chart view state
   const [showChart, setShowChart] = useState(false);
-  const [chartTab, setChartTab] = useState<'mpr' | 'throw'>('mpr');
+  const [chartTab, setChartTab] = useState<'mpr' | 'points'>('mpr');
 
   // Prepare MPR data for each player for each round
   const chartSeries = getPlayers.map((player) => ({
@@ -36,6 +36,15 @@ export const PostGame = () => {
     data: Array.from({ length: totalRounds }, (_, i) => ({
       x: i + 1,
       y: Number(mprForPlayerAsOfRound(player, i + 1)),
+    })),
+  }));
+
+  // Prepare Points data for each player for each round
+  const pointsChartSeries = getPlayers.map((player) => ({
+    label: player.name,
+    data: Array.from({ length: totalRounds }, (_, i) => ({
+      x: i + 1,
+      y: pointsForPlayerAsOfRound(player, getPlayers, game, i + 1),
     })),
   }));
 
@@ -55,11 +64,11 @@ export const PostGame = () => {
             MPR over time
           </button>
           <button
-            onClick={() => setChartTab('throw')}
-            style={{ fontWeight: chartTab === 'throw' ? 700 : 400 }}
-            aria-selected={chartTab === 'throw'}
+            onClick={() => setChartTab('points')}
+            style={{ fontWeight: chartTab === 'points' ? 700 : 400 }}
+            aria-selected={chartTab === 'points'}
           >
-            Throw breakdown
+            Points over time
           </button>
         </div>
         {chartTab === 'mpr' && (
@@ -73,20 +82,15 @@ export const PostGame = () => {
             />
           </>
         )}
-        {chartTab === 'throw' && (
+        {chartTab === 'points' && (
           <>
-            <h2 style={{ textAlign: 'center', margin: 0 }}>Throw breakdown</h2>
-            {getPlayers.length === 1 ? (
-              <PieChart
-                data={preparePieChartData(getPlayers[0])}
-                height={320}
-              />
-            ) : (
-              <StackedBarChart
-                {...prepareStackedBarData(getPlayers)}
-                height={320}
-              />
-            )}
+            <h2 style={{ textAlign: 'center', margin: 0 }}>Points over time</h2>
+            <LineChart
+              series={pointsChartSeries}
+              xLabel="Round"
+              yLabel="Points"
+              height={320}
+            />
           </>
         )}
       </div>
