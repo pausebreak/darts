@@ -17,6 +17,9 @@ export interface LineChartProps {
   yLabel?: string;
   height?: number;
   margin?: { top: number; right: number; bottom: number; left: number };
+  yTickFormat?: (n: number) => string;
+  xTickValues?: (string | number)[];
+  yTickValues?: number[];
 }
 
 const defaultMargin = { top: 24, right: 16, bottom: 40, left: 40 };
@@ -27,6 +30,9 @@ export const LineChart: React.FC<LineChartProps> = ({
   yLabel,
   height = 240,
   margin = defaultMargin,
+  yTickFormat,
+  xTickValues,
+  yTickValues,
 }) => {
   // Flatten all x values for scale
   const allX = Array.from(
@@ -74,6 +80,8 @@ export const LineChart: React.FC<LineChartProps> = ({
                 fontWeight: 600,
                 dy: '-2em',
               }}
+              tickFormat={yTickFormat ? (n) => String(yTickFormat(Number(n))) : undefined}
+              tickValues={yTickValues}
             />
             {/* X Axis */}
             <AxisBottom
@@ -95,6 +103,7 @@ export const LineChart: React.FC<LineChartProps> = ({
                 fontWeight: 600,
                 dy: '2.5em',
               }}
+              tickValues={xTickValues}
             />
             {/* Lines */}
             {series.map((s, i) => (
