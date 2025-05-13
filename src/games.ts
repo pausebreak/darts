@@ -83,6 +83,34 @@ export const gameOperations = (game: Game): GameOperations => {
   }
 };
 
+export const mprForPlayerAsOfRound = (player: Player, round: number) => {
+  const numDarts = round * 3;
+  const darts = player.darts.slice(0, numDarts);
+  const playerAsOfRound = {name: player.name, darts}
+  const marks = playerMarks(playerAsOfRound);
+  const totalMarks = Object.keys(marks).filter(key => key !== "0").reduce((prev, curr, i) => prev + marks[curr], 0)
+  return((Number(totalMarks)/round).toFixed(2));
+}
+
+// Returns the points for a player as of a given round
+export const pointsForPlayerAsOfRound = (
+  player: Player,
+  players: Player[],
+  game: Game,
+  round: number
+): number => {
+  // For each player, slice darts up to this round
+  const playersAsOfRound = players.map((p) => ({
+    ...p,
+    darts: p.darts.slice(0, round * 3),
+  }));
+  // Find the index of the player in the players array
+  const idx = players.findIndex((p) => p.name === player.name);
+  if (idx === -1) return 0;
+  const statsAsOfRound = gameOperations(game).stats?.(playersAsOfRound);
+  return statsAsOfRound?.scores[idx] ?? 0;
+}
+
 export { bulls } from "./games/bulls";
 export { cricket } from "./games/cricket";
 export { ohGames } from "./games/oh1";

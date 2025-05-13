@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useStore } from "../machine";
 import { Mark, Multiple } from "../types";
-import { currentRound, gameOperations } from "../games";
-
+import { currentRound, gameOperations, mprForPlayerAsOfRound, pointsForPlayerAsOfRound } from "../games";
+import LineChart from "../graphs/LineChart";
 import "./PostGame.css";
+import CHART_COLORS from "../graphs/Palettes";
 
 export const PostGame = () => {
   const game = useStore((state) => state.game);
@@ -22,12 +23,48 @@ export const PostGame = () => {
   const stats = gameOperations(game).stats?.(players);
   const roundsText = totalRounds > 1 ? "rounds" : "round";
 
+  // Chart view state
+  const [chartTab, setChartTab] = useState<'mpr' | 'points'>('mpr');
+
+  // Prepare MPR data for each player for each round
+  const chartSeries = getPlayers.map((player) => ({
+    label: player.name,
+    data: Array.from({ length: totalRounds }, (_, i) => ({
+      x: i + 1,
+      y: Number(mprForPlayerAsOfRound(player, i + 1)),
+    })),
+  }));
+
+  // Prepare Points data for each player for each round
+  const pointsChartSeries = getPlayers.map((player) => ({
+    label: player.name,
+    data: Array.from({ length: totalRounds }, (_, i) => ({
+      x: i + 1,
+      y: pointsForPlayerAsOfRound(player, getPlayers, game, i + 1),
+    })),
+  }));
+
+  const winnerIndex = getPlayers.findIndex(p => p.name === winner.name);
+  const winnerColor = CHART_COLORS[winnerIndex % CHART_COLORS.length];
+
   return (
     <>
-      <div className="winner">{winner.name} is the winner</div>
-      <p>
-        In {totalRounds} {roundsText} {winner.name} won the game of {game.name}.
-      </p>
+      <div className="winnerBannerRow">
+        <div className="winnerBanner" style={{ background: winnerColor, color: '#000' }}>
+          <div className="winnerSubtext" style={{ fontSize: '1em' }}>
+            In {totalRounds} {roundsText}, <span className="winnerNameEm">{winner.name}</span> won the game of {game.name}.
+          </div>
+        </div>
+        <button
+          className="playAnotherSmall"
+          onClick={() => {
+            setWinner(null);
+            setGame(null);
+          }}
+        >
+          Play Another
+        </button>
+      </div>
       <div className="stats">
         {getPlayers.map((player, index) => {
           let singles = 0;
@@ -53,10 +90,15 @@ export const PostGame = () => {
             }
           });
 
+          const playerColor = CHART_COLORS[index % CHART_COLORS.length];
           const cName = player.name === winner.name ? "playerStats win" : "playerStats";
 
           return (
-            <div className={cName} key={player.name}>
+            <div
+              className={cName}
+              key={player.name}
+              style={{ border: `2px solid ${playerColor}` }}
+            >
               <div className="centered">{player.name}</div>
               {game.pointing && stats && <div className="centered">{stats.scores[index]}</div>}
               <table>
@@ -101,15 +143,67 @@ export const PostGame = () => {
           );
         })}
       </div>
-      <div className="backAgain">
-        <button
-          onClick={() => {
-            setWinner(null);
-            setGame(null);
-          }}
-        >
-          Play Another
-        </button>
+      <div className="chartSection" style={{ padding: 16 }}>
+        {game.pointing && (
+          <div className="chartTabButtons">
+            <button
+              onClick={() => setChartTab('mpr')}
+              style={{ fontWeight: chartTab === 'mpr' ? 700 : 400 }}
+              aria-selected={chartTab === 'mpr'}
+            >
+              MPR over rounds
+            </button>
+            <button
+              onClick={() => setChartTab('points')}
+              style={{ fontWeight: chartTab === 'points' ? 700 : 400 }}
+              aria-selected={chartTab === 'points'}
+            >
+              Points over rounds
+            </button>
+          </div>
+        )}
+        {chartTab === 'mpr' && (
+          <>
+            <h2 style={{ textAlign: 'center', margin: 0 }}>MPR over rounds</h2>
+            <LineChart
+              series={chartSeries}
+              xLabel="Round"
+              yLabel="MPR"
+              height={320}
+              margin={{ top: 24, right: 24, bottom: 56, left: 56 }}
+              yTickFormat={n => String(n)}
+              yTickValues={(() => {
+                const min = Math.floor(Math.min(...chartSeries.flatMap(s => s.data.map(d => d.y)), 0));
+                const max = Math.ceil(Math.max(...chartSeries.flatMap(s => s.data.map(d => d.y)), 1));
+                return Array.from({length: max - min + 1}, (_,i) => min + i);
+              })()}
+              xTickValues={Array.from({length: Math.ceil((totalRounds+1)/5)}, (_,i) => i*5)}
+            />
+          </>
+        )}
+        {game.pointing && chartTab === 'points' && (
+          <>
+            <h2 style={{ textAlign: 'center', margin: 0 }}>Points over rounds</h2>
+            <LineChart
+              series={pointsChartSeries}
+              xLabel="Round"
+              yLabel="Points"
+              height={320}
+              margin={{ top: 24, right: 24, bottom: 56, left: 56 }}
+              yTickFormat={n => String(n)}
+              yTickValues={(() => {
+                const min = Math.floor(Math.min(...pointsChartSeries.flatMap(s => s.data.map(d => d.y)), 0));
+                const max = Math.ceil(Math.max(...pointsChartSeries.flatMap(s => s.data.map(d => d.y)), 1));
+                const start = Math.floor(min / 10) * 10;
+                const end = Math.ceil(max / 10) * 10;
+                const ticks = [];
+                for (let v = start; v <= end; v += 10) ticks.push(v);
+                return ticks;
+              })()}
+              xTickValues={Array.from({length: Math.ceil((totalRounds+1)/5)}, (_,i) => i*5)}
+            />
+          </>
+        )}
       </div>
     </>
   );
