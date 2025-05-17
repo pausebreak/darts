@@ -6,6 +6,14 @@ import { Game, Player, Dart, GameName, Multiple, Mark } from "./types";
 import { subscribeWithSelector } from "zustand/middleware";
 import { gameOperations } from "./games";
 
+export type GameDefaults = {
+  limit?: number;
+  in?: Multiple;
+  out?: Multiple;
+  pointing?: boolean;
+  numberOfBulls?: number;
+};
+
 export type GameState = {
   players: Player[];
   addPlayer(player: Player): void;
@@ -27,6 +35,8 @@ export type GameState = {
   movePlayerRight(playerIndex: number): void;
   voiceIndex: number;
   setVoiceIndex(index: number): void;
+  gameDefaults: { [gameName: string]: GameDefaults };
+  setGameDefaults(gameName: string, defaults: GameDefaults): void;
 };
 
 // this is mutating
@@ -66,6 +76,11 @@ export const useStore = create<GameState>()(
         game: null,
         invalidThrow: false,
         playerBusted: null,
+        gameDefaults: {},
+        setGameDefaults: (gameName, defaults) =>
+          set((state) => {
+            state.gameDefaults[gameName] = defaults;
+          }),
         setWinner: (player) => {
           set((state) => {
             state.winner = player;

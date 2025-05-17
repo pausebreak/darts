@@ -14,33 +14,14 @@ const voiceSortCompare = (a: SpeechSynthesisVoice, b: SpeechSynthesisVoice) => a
 
 const isAndroid = window?.navigator?.userAgent?.indexOf("Android") !== -1;
 
-const GAME_DEFAULTS_KEY = 'darts-game-defaults';
-
-function getSavedDefaults(gameName) {
-  try {
-    const all = JSON.parse(localStorage.getItem(GAME_DEFAULTS_KEY) || '{}');
-    return all[gameName] || {};
-  } catch {
-    console.log("error getting saved defaults");
-  }
-}
-
-function setSavedDefaults(gameName, values) {
-  try {
-    const all = JSON.parse(localStorage.getItem(GAME_DEFAULTS_KEY) || '{}');
-    all[gameName] = values;
-    localStorage.setItem(GAME_DEFAULTS_KEY, JSON.stringify(all));
-  } catch {
-    console.log("error setting saved defaults");
-  }
-}
-
 export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer }) => {
   const chooseGame = useStore((state) => state.setGame);
   const setUseSound = useStore((state) => state.setUseSound);
   const useSound = useStore((state) => state.useSound);
   const voiceIndex = useStore((state) => state.voiceIndex);
   const setVoiceIndex = useStore((state) => state.setVoiceIndex);
+  const gameDefaults = useStore((state) => state.gameDefaults);
+  const setGameDefaults = useStore((state) => state.setGameDefaults);
 
   const [getGame, setGame] = useState<Game>(null);
   const [getLimit, setLimit] = useState(301);
@@ -55,14 +36,14 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
 
   useEffect(() => {
     if (getGame && getGame.name) {
-      const defaults = getSavedDefaults(getGame.name);
+      const defaults = gameDefaults[getGame.name] || {};
       if (defaults.limit !== undefined) setLimit(defaults.limit);
       if (defaults.in !== undefined) setIn(defaults.in);
       if (defaults.out !== undefined) setOut(defaults.out);
       if (defaults.pointing !== undefined) setPointing(defaults.pointing);
       if (defaults.numberOfBulls !== undefined) setNumberOfBulls(defaults.numberOfBulls);
     }
-  }, [getGame?.name]);
+  }, [getGame?.name, gameDefaults]);
 
   const onLimitChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = Number(event.target.value);
@@ -291,7 +272,7 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
                 arePointing = true;
               }
 
-              setSavedDefaults(getGame.name, {
+              setGameDefaults(getGame.name, {
                 limit,
                 in: checkIn,
                 out: checkOut,
