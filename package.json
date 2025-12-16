@@ -13,15 +13,16 @@
     "not dead"
   ],
   "scripts": {
-    "prebuild": "scripts/statics.sh",
     "build": "parcel build --public-url ./",
     "check": "tsc --noEmit",
+    "coverage": "jest --coverage",
     "lint": "eslint src",
+    "prebuild": "scripts/statics.sh",
     "prestart": "scripts/statics.sh",
+    "pretest": "npm run check",
+    "qrcode": "node scripts/qrcode.js",
     "start": "parcel",
     "test": "jest",
-    "pretest": "npm run check",
-    "coverage": "jest --coverage",
     "watch": "parcel watch"
   },
   "devDependencies": {
@@ -40,6 +41,7 @@
     "jest-environment-jsdom": "29.5.0",
     "parcel": "2.16.3",
     "process": "0.11.10",
+    "qr": "0.5.3",
     "ts-jest": "29.1.0",
     "typescript": "4.7.4"
   },
