@@ -148,7 +148,7 @@ describe("stats", () => {
   it("shows 0 for no throws", () => {
     const result = ops.stats([{ name: "me", darts: [] }]);
 
-    expect(result).toStrictEqual({ marks: [0], scores: [0] });
+    expect(result).toStrictEqual({ marks: [0], scores: [0], countableMarks: [0] });
   });
 
   it("handles a win with no score", () => {
@@ -169,7 +169,115 @@ describe("stats", () => {
     };
     const result = gameOperations(b).stats([player]);
 
-    expect(result).toStrictEqual({ marks: [21], scores: [0] });
+    expect(result).toStrictEqual({ marks: [21], scores: [0], countableMarks: [21] });
+  });
+
+  it("correctly under marks multiple overages with scoring", () => {
+    const b = cricket(true);
+    const player1: Player = {
+      name: "me",
+      darts: [
+        [Mark.Fifteen, Multiple.Double],
+        [Mark.Fifteen, Multiple.Triple],
+        [Mark.Twenty, Multiple.Double],
+        [Mark.Twenty, Multiple.Double], // this should count as a single mark
+      ],
+    };
+    const player2: Player = {
+      name: "them",
+      darts: [
+        [Mark.Twenty, Multiple.Triple],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Miss, Multiple.Single],
+      ],
+    };
+
+    const result = gameOperations(b).stats([player1, player2]);
+
+    expect(result).toStrictEqual({ marks: [9, 3], scores: [30, 0], countableMarks: [8, 3] });
+  });
+
+  it("correctly under marks multiple overages with no scoring", () => {
+    const b = cricket(false);
+    const player: Player = {
+      name: "me",
+      darts: [
+        // a double and then a triple should only mark 3 not 5
+        [Mark.Fifteen, Multiple.Double],
+        [Mark.Fifteen, Multiple.Triple],
+        [Mark.Sixteen, Multiple.Triple],
+        [Mark.Seventeen, Multiple.Triple],
+        [Mark.Eighteen, Multiple.Triple],
+        [Mark.Nineteen, Multiple.Triple],
+        [Mark.Twenty, Multiple.Triple],
+        [Mark.Bull, Multiple.Double],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Bull, Multiple.Single],
+      ],
+    };
+    const result = gameOperations(b).stats([player]);
+
+    expect(result).toStrictEqual({ marks: [23], scores: [0], countableMarks: [21] });
+  });
+
+  it("correctly calculates the ending MPR", () => {
+    const b = cricket(false);
+    const player: Player = {
+      name: "me",
+      darts: [
+        // perfect 3.0 MPR with 1 triple over that shouldn't be counted
+        [Mark.Fifteen, Multiple.Triple],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Sixteen, Multiple.Triple],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Seventeen, Multiple.Triple],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Eighteen, Multiple.Triple],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Nineteen, Multiple.Triple],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Twenty, Multiple.Single],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Twenty, Multiple.Triple],
+        [Mark.Bull, Multiple.Single],
+        [Mark.Bull, Multiple.Single],
+        [Mark.Bull, Multiple.Single],
+      ],
+    };
+    const otherPlayer: Player = {
+      name: "they",
+      darts: [
+        // perfect 3.0 but doesn't throw the last round because they lost
+        [Mark.Fifteen, Multiple.Triple],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Sixteen, Multiple.Triple],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Seventeen, Multiple.Triple],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Eighteen, Multiple.Triple],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Nineteen, Multiple.Triple],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Twenty, Multiple.Single],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Twenty, Multiple.Double],
+      ],
+    };
+
+    const result = gameOperations(b).stats([player, otherPlayer]);
+
+    expect(result).toStrictEqual({ marks: [22, 18], scores: [0, 0], countableMarks: [21, 18] });
   });
 
   it("can score a pointing game", () => {
@@ -197,12 +305,11 @@ describe("stats", () => {
         [Mark.Eighteen, Multiple.Triple],
         [Mark.Nineteen, Multiple.Triple],
         [Mark.Twenty, Multiple.Triple],
-        [Mark.Miss, Multiple.Single],
       ],
     };
 
     const result = gameOperations(b).stats([player, otherPlayer]);
 
-    expect(result).toStrictEqual({ marks: [23, 17], scores: [45, 0] });
+    expect(result).toStrictEqual({ marks: [23, 17], scores: [45, 0], countableMarks: [23, 0] });
   });
 });

@@ -6,9 +6,13 @@ import {
   isMarkCleared,
   isMarkClearedForEveryone,
 } from "../games";
-import { Game, Mark, GameOperations, GameName, Multiple, Player, Dart } from "../types";
+import { Game, Mark, GameOperations, GameName, Multiple, Player } from "../types";
+import { dartsInThrownOrder } from "./calculations";
 
-const calculateStats = (game: Game, players: Player[]): { scores: number[]; marks: number[] } => {
+const calculateStats = (
+  game: Game,
+  players: Player[]
+): { scores: number[]; marks: number[]; countableMarks: number[] } => {
   const emptyMarks = game.marks.reduce((acc, mark) => {
     acc[mark] = 0;
 
@@ -20,29 +24,8 @@ const calculateStats = (game: Game, players: Player[]): { scores: number[]; mark
   const playersToMarkTotal: number[] = new Array(players.length).fill(0);
   const playersToScore: number[] = new Array(players.length).fill(0);
   const highestRound = currentRound(players);
-  const dartsInOrderThrown: [dart: Dart, playerIndex: number][] = [];
 
-  for (let round = 0; round <= highestRound; round++) {
-    players.forEach((player, playerIndex) => {
-      const first = player.darts[round * 3];
-      const second = player.darts[round * 3 + 1];
-      const third = player.darts[round * 3 + 2];
-
-      if (first) {
-        dartsInOrderThrown.push([first, playerIndex]);
-      }
-
-      if (second) {
-        dartsInOrderThrown.push([second, playerIndex]);
-      }
-
-      if (third) {
-        dartsInOrderThrown.push([third, playerIndex]);
-      }
-    });
-  }
-
-  dartsInOrderThrown.forEach((dartTuple) => {
+  dartsInThrownOrder(highestRound, players).forEach((dartTuple) => {
     const playerIndex = dartTuple[1];
     const dart = dartTuple[0];
 
@@ -74,7 +57,7 @@ const calculateStats = (game: Game, players: Player[]): { scores: number[]; mark
     playerToMarks[playerIndex][dart[0]] = playerToMarks[playerIndex][dart[0]] + dart[1];
   });
 
-  return { scores: playersToScore, marks: playersToMarkTotal };
+  return { scores: playersToScore, marks: playersToMarkTotal, countableMarks: [] };
 };
 
 export const tacticalOperations = (game: Game): GameOperations => ({

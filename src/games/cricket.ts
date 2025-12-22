@@ -6,9 +6,13 @@ import {
   isMarkCleared,
   isMarkClearedForEveryone,
 } from "../games";
-import { Game, Mark, GameOperations, GameName, Multiple, Player, Dart } from "../types";
+import { Game, Mark, GameOperations, GameName, Multiple, Player } from "../types";
+import { dartsInThrownOrder } from "./calculations";
 
-const calculateStats = (game: Game, players: Player[]): { scores: number[]; marks: number[] } => {
+const calculateStats = (
+  game: Game,
+  players: Player[]
+): { scores: number[]; marks: number[]; countableMarks: number[] } => {
   const emptyMarks = game.marks.reduce((acc, mark) => {
     acc[mark] = 0;
 
@@ -18,63 +22,57 @@ const calculateStats = (game: Game, players: Player[]): { scores: number[]; mark
     .fill({})
     .map(() => JSON.parse(JSON.stringify(emptyMarks)));
   const playersToMarkTotal: number[] = new Array(players.length).fill(0);
+  const playersToCountableMarksTotal: number[] = new Array(players.length).fill(0);
   const playersToScore: number[] = new Array(players.length).fill(0);
-  const highestRound = currentRound(players);
-  const dartsInOrderThrown: [dart: Dart, playerIndex: number][] = [];
+  const highestRoundOverall = currentRound(players);
 
-  for (let round = 0; round <= highestRound; round++) {
-    players.forEach((player, playerIndex) => {
-      const first = player.darts[round * 3];
-      const second = player.darts[round * 3 + 1];
-      const third = player.darts[round * 3 + 2];
+  dartsInThrownOrder(highestRoundOverall, players).forEach((dartTuple) => {
+    const [[mark, multiple], playerIndex] = dartTuple;
 
-      if (first) {
-        dartsInOrderThrown.push([first, playerIndex]);
-      }
-
-      if (second) {
-        dartsInOrderThrown.push([second, playerIndex]);
-      }
-
-      if (third) {
-        dartsInOrderThrown.push([third, playerIndex]);
-      }
-    });
-  }
-
-  dartsInOrderThrown.forEach((dartTuple) => {
-    const playerIndex = dartTuple[1];
-    const dart = dartTuple[0];
-
-    if (dart[0] === Mark.Miss) {
+    if (mark === Mark.Miss) {
       return;
     }
 
-    const otherPlayersHaveNotClosedMark = playerToMarks
-      .filter((p, index) => index !== playerIndex)
-      .some((p) => p[dart[0]] < 3);
+    const playerMarksSoFar = playerToMarks[playerIndex][mark];
+    const marksWithCurrentDart = playerMarksSoFar + multiple;
 
-    if (otherPlayersHaveNotClosedMark) {
-      const playerMarksSoFar = playerToMarks[playerIndex][dart[0]];
-      const marksWithCurrentDart = playerMarksSoFar + dart[1];
+    if (game.pointing) {
+      const otherPlayersHaveNotClosedMark = playerToMarks
+        .filter((p, index) => index !== playerIndex)
+        .some((p) => p[mark] < 3);
 
-      if (marksWithCurrentDart > 3) {
-        if (playerMarksSoFar >= 3) {
-          playersToScore[playerIndex] = playersToScore[playerIndex] + dartValue(dart);
-        } else {
-          const diff = playerMarksSoFar - 3 + dart[1];
-          playersToScore[playerIndex] = playersToScore[playerIndex] + dartValue([dart[0], diff]);
+      if (otherPlayersHaveNotClosedMark) {
+        if (marksWithCurrentDart > 3) {
+          if (playerMarksSoFar >= 3) {
+            playersToScore[playerIndex] += dartValue([mark, multiple]);
+          } else {
+            const diff = playerMarksSoFar - 3 + multiple;
+            playersToScore[playerIndex] += dartValue([mark, diff]);
+          }
         }
+        playersToCountableMarksTotal[playerIndex] += multiple;
+      } else {
+        if (marksWithCurrentDart > 3) {
+          const diff = 3 - playerMarksSoFar;
+          playersToCountableMarksTotal[playerIndex] += diff;
+        }
+      }
+    } else {
+      if (marksWithCurrentDart > 3) {
+        const diff = 3 - playerMarksSoFar;
+        playersToCountableMarksTotal[playerIndex] += diff;
+      } else {
+        playersToCountableMarksTotal[playerIndex] += multiple;
       }
     }
 
-    playersToMarkTotal[playerIndex] = playersToMarkTotal[playerIndex] + dart[1];
+    playersToMarkTotal[playerIndex] += multiple;
 
     // finally add to player marks
-    playerToMarks[playerIndex][dart[0]] = playerToMarks[playerIndex][dart[0]] + dart[1];
+    playerToMarks[playerIndex][mark] += multiple;
   });
 
-  return { scores: playersToScore, marks: playersToMarkTotal };
+  return { scores: playersToScore, marks: playersToMarkTotal, countableMarks: playersToCountableMarksTotal };
 };
 
 export const cricketOperations = (game: Game): GameOperations => ({

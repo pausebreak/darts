@@ -1,7 +1,11 @@
 import { areMarksCleared, currentRound, dartValue, findLastPlayerToThrow, isMarkClearedForEveryone } from "../games";
-import { Game, Mark, GameOperations, GameName, Multiple, Player, Dart } from "../types";
+import { Game, Mark, GameOperations, GameName, Multiple, Player } from "../types";
+import { dartsInThrownOrder } from "./calculations";
 
-const calculateStats = (game: Game, players: Player[]): { scores: number[]; marks: number[] } => {
+const calculateStats = (
+  game: Game,
+  players: Player[]
+): { scores: number[]; marks: number[]; countableMarks: number[] } => {
   const emptyMarks = game.marks.reduce((acc, mark) => {
     acc[mark] = 0;
     return acc;
@@ -9,73 +13,71 @@ const calculateStats = (game: Game, players: Player[]): { scores: number[]; mark
   const playersToMarks: { [mark: number]: number }[] = new Array(players.length)
     .fill({})
     .map(() => JSON.parse(JSON.stringify(emptyMarks)));
+  const playersToCountableMarksTotal: number[] = new Array(players.length).fill(0);
   const playersToMarkTotal: number[] = new Array(players.length).fill(0);
   const playersToScore: number[] = new Array(players.length).fill(0);
   const highestRound = currentRound(players);
-  const dartsInOrderThrown: [dart: Dart, playerIndex: number][] = [];
 
-  for (let round = 0; round <= highestRound; round++) {
-    players.forEach((player, playerIndex) => {
-      const first = player.darts[round * 3];
-      const second = player.darts[round * 3 + 1];
-      const third = player.darts[round * 3 + 2];
+  dartsInThrownOrder(highestRound, players).forEach((dartTuple) => {
+    const [[mark, multiple], playerIndex] = dartTuple;
 
-      if (first) {
-        dartsInOrderThrown.push([first, playerIndex]);
-      }
-
-      if (second) {
-        dartsInOrderThrown.push([second, playerIndex]);
-      }
-
-      if (third) {
-        dartsInOrderThrown.push([third, playerIndex]);
-      }
-    });
-  }
-
-  dartsInOrderThrown.forEach((dartTuple) => {
-    const playerIndex = dartTuple[1];
-    const dart = dartTuple[0];
-
-    if (dart[0] === Mark.Miss) {
+    if (mark === Mark.Miss) {
       return;
     }
 
-    const canScore = playersToMarks[playerIndex][dart[0]] + dart[1] > 3;
+    const otherPlayersHaveNotClosedMark = playersToMarks
+      .filter((p, index) => index !== playerIndex)
+      .some((p) => p[mark] < 3);
+
+    const playerMarksSoFar = playersToMarks[playerIndex][mark];
+
+    const canScore = otherPlayersHaveNotClosedMark && playerMarksSoFar + multiple > 3;
 
     if (canScore) {
       const playersWhoGetScored = playersToMarks.slice();
       delete playersWhoGetScored[playerIndex];
 
       playersToMarks.forEach((playerMarks, index) => {
-        if (playerMarks[dart[0]] >= 3) {
+        if (playerMarks[mark] >= 3) {
           delete playersWhoGetScored[index];
         }
       });
 
+      // this index can't be right
       playersWhoGetScored.forEach((scoredPlayer, index) => {
-        const playerMarksSoFar = playersToMarks[playerIndex][dart[0]];
+        const playerMarksSoFar = playersToMarks[playerIndex][mark];
 
         let scoringValue = 0;
         if (playerMarksSoFar >= 3) {
-          scoringValue = dartValue(dart);
+          scoringValue = dartValue([mark, multiple]);
         } else {
-          const diff = Math.abs(playerMarksSoFar - 3);
-
-          scoringValue = dartValue([dart[0], dart[1] - diff]);
+          const diff = 3 - playerMarksSoFar;
+          scoringValue = dartValue([mark, multiple - diff]);
         }
 
-        playersToScore[index] = playersToScore[index] + scoringValue;
+        playersToScore[index] += scoringValue;
       });
     }
 
-    playersToMarkTotal[playerIndex] = playersToMarkTotal[playerIndex] + dart[1];
+    playersToMarkTotal[playerIndex] += multiple;
+    playersToMarks[playerIndex][mark] += multiple;
 
-    playersToMarks[playerIndex][dart[0]] = playersToMarks[playerIndex][dart[0]] + dart[1];
+    if (otherPlayersHaveNotClosedMark) {
+      playersToCountableMarksTotal[playerIndex] += multiple;
+    } else if (playerMarksSoFar < 3) {
+      const overage = playerMarksSoFar + multiple;
+      let diff = 0;
+      if (overage > 3) {
+        diff = 3 - playerMarksSoFar;
+      } else {
+        diff = multiple;
+      }
+
+      playersToCountableMarksTotal[playerIndex] += diff;
+    }
   });
 
-  return { scores: playersToScore, marks: playersToMarkTotal };
+  return { scores: playersToScore, marks: playersToMarkTotal, countableMarks: playersToCountableMarksTotal };
 };
 
 export const cutThroatOperations = (game: Game): GameOperations => ({

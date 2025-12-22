@@ -35,6 +35,8 @@ export const PostGame = () => {
           let triples = 0;
           let misses = 0;
 
+          const playerTotalRounds = currentRound([player]);
+
           player.darts.forEach((dart) => {
             if (dart[1] === Multiple.Single && dart[0] !== Mark.Miss) {
               singles++;
@@ -85,12 +87,14 @@ export const PostGame = () => {
                     <>
                       <tr>
                         <td className="right">marks</td>
-                        <td className="centered">{stats.marks[index]}</td>
+                        <td className="centered">{stats.countableMarks[index]}</td>
                       </tr>
                       <tr>
                         <td className="right">MPR</td>
                         <td className="centered">
-                          {stats.marks[index] ? (stats.marks[index] / totalRounds).toFixed(2) : 0}
+                          {stats.countableMarks[index]
+                            ? (stats.countableMarks[index] / playerTotalRounds).toFixed(2)
+                            : 0}
                         </td>
                       </tr>
                     </>
