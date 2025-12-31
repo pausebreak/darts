@@ -231,4 +231,45 @@ describe("stats", () => {
 
     expect(result).toStrictEqual({ marks: [23, 17], scores: [45, 0] });
   });
+
+  it("correctly under marks multiple overages with scoring", () => {
+    const game = tactical(true);
+    const player1: Player = {
+      name: "me",
+      darts: [
+        [Mark.Fifteen, Multiple.Double],
+        [Mark.Fifteen, Multiple.Triple],
+        [Mark.Twenty, Multiple.Double],
+        [Mark.Twenty, Multiple.Double],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Miss, Multiple.Single],
+      ],
+    };
+    const player2: Player = {
+      name: "them",
+      darts: [
+        [Mark.Twenty, Multiple.Triple],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Miss, Multiple.Single],
+      ],
+    };
+    const player3: Player = {
+      name: "they",
+      darts: [
+        [Mark.Twenty, Multiple.Triple],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Miss, Multiple.Single],
+      ],
+    };
+
+    const result = gameOperations(game).stats([player1, player2, player3]);
+
+    expect(result).toStrictEqual({ marks: [8, 3, 3], scores: [30, 0, 0] });
+  });
 });
