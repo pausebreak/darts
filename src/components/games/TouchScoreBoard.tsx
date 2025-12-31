@@ -8,7 +8,7 @@ import "./ScoreBoard.css";
 import { useEffect, useState } from "react";
 import { Pips } from "../Pips";
 
-const boardMark = (numOfMarks: number, aKey: string, onClick, cleared: boolean) => {
+const boardMark = (numOfMarks: number, aKey: string, onClick: React.MouseEventHandler) => {
   if (isBlank(numOfMarks)) {
     return (
       <div
@@ -164,15 +164,14 @@ export const TouchScoreBoard = () => {
                 <div className="name">{player.name}</div>
                 {game.pointing && playerScores && <div className="score">{score}</div>}
               </div>
-              {game.marks.map((mark) => boardMark(marks[mark], mark.toString(), onMarkClick(mark), isMarkClearedForEveryone(players, mark)))}
+              {game.marks.map((mark) => boardMark(marks[mark], mark.toString(), onMarkClick(mark)))}
             </div>
           );
         })}
 
         <div className="column">
           <div className="playerForRow">
-              <Pips
-                numThrown={players[currentPlayerIndex].darts.length % 3} />
+            <Pips numThrown={players[currentPlayerIndex].darts.length % 3} />
             {game.pointing && playerScores && <div className="score">&nbsp;</div>}
           </div>
           {game.marks.map((mark) => {
@@ -191,7 +190,7 @@ export const TouchScoreBoard = () => {
                   onClick(event, [mark, Multiple.Single]);
                 }}
               >
-                {clearedForAll && game.pointing && <div className="strikeThrough"/>}
+                {clearedForAll && game.pointing && <div className="strikeThrough" />}
                 {markLabel(mark)}
               </div>
             );
@@ -220,7 +219,7 @@ export const TouchScoreBoard = () => {
                 <div className="name">{player.name}</div>
                 {game.pointing && playerScores && <div className="score">{score}</div>}
               </div>
-              {game.marks.map((mark) => boardMark(marks[mark], mark.toString(), onMarkClick(mark), isMarkClearedForEveryone(players, mark)))}
+              {game.marks.map((mark) => boardMark(marks[mark], mark.toString(), onMarkClick(mark)))}
             </div>
           );
         })}

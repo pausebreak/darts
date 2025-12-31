@@ -187,12 +187,51 @@ describe("stats", () => {
         [Mark.Eighteen, Multiple.Triple],
         [Mark.Nineteen, Multiple.Triple],
         [Mark.Twenty, Multiple.Triple],
-        [Mark.Miss, Multiple.Single],
       ],
     };
 
     const result = ops.stats([player, otherPlayer]);
 
     expect(result).toStrictEqual({ marks: [23, 17], scores: [0, 45] });
+  });
+
+  it("correctly under marks multiple overages with scoring", () => {
+    const player1: Player = {
+      name: "me",
+      darts: [
+        [Mark.Fifteen, Multiple.Double],
+        [Mark.Fifteen, Multiple.Triple],
+        [Mark.Twenty, Multiple.Double],
+        [Mark.Twenty, Multiple.Double],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Miss, Multiple.Single],
+      ],
+    };
+    const player2: Player = {
+      name: "them",
+      darts: [
+        [Mark.Twenty, Multiple.Triple],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Miss, Multiple.Single],
+      ],
+    };
+    const player3: Player = {
+      name: "them",
+      darts: [
+        [Mark.Twenty, Multiple.Triple],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Miss, Multiple.Single],
+      ],
+    };
+
+    const result = ops.stats([player1, player2, player3]);
+
+    expect(result).toStrictEqual({ marks: [8, 3, 3], scores: [0, 30, 30] });
   });
 });

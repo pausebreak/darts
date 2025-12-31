@@ -35,20 +35,22 @@ export const PostGame = () => {
           let triples = 0;
           let misses = 0;
 
-          player.darts.forEach((dart) => {
-            if (dart[1] === Multiple.Single && dart[0] !== Mark.Miss) {
+          const playerTotalRounds = currentRound([player]);
+
+          player.darts.forEach(([mark, multiple]) => {
+            if (multiple === Multiple.Single && mark !== Mark.Miss) {
               singles++;
             }
 
-            if (dart[0] === Mark.Double || dart[1] === Multiple.Double) {
+            if (mark === Mark.Double || multiple === Multiple.Double) {
               doubles++;
             }
 
-            if (dart[0] === Mark.Triple || dart[1] === Multiple.Triple) {
+            if (mark === Mark.Triple || multiple === Multiple.Triple) {
               triples++;
             }
 
-            if (dart[0] === Mark.Miss) {
+            if (mark === Mark.Miss) {
               misses++;
             }
           });
@@ -90,7 +92,7 @@ export const PostGame = () => {
                       <tr>
                         <td className="right">MPR</td>
                         <td className="centered">
-                          {stats.marks[index] ? (stats.marks[index] / totalRounds).toFixed(2) : 0}
+                          {stats.marks[index] ? (stats.marks[index] / playerTotalRounds).toFixed(2) : 0}
                         </td>
                       </tr>
                     </>
