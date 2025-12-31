@@ -56,9 +56,7 @@ export const calculateStatsForCricketOrTactical = (
   const playersToScore: number[] = new Array(players.length).fill(0);
   const highestRound = currentRound(players);
 
-  dartsInThrownOrder(highestRound, players).forEach((dartTuple) => {
-    const [[mark, multiple], playerIndex] = dartTuple;
-
+  dartsInThrownOrder(highestRound, players).forEach(([[mark, multiple], playerIndex]) => {
     if (mark === Mark.Miss) {
       return;
     }

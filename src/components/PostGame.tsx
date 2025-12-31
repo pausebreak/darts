@@ -37,8 +37,7 @@ export const PostGame = () => {
 
           const playerTotalRounds = currentRound([player]);
 
-          player.darts.forEach((dart) => {
-            const [mark, multiple] = dart;
+          player.darts.forEach(([mark, multiple]) => {
             if (multiple === Multiple.Single && mark !== Mark.Miss) {
               singles++;
             }
