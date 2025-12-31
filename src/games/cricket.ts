@@ -1,68 +1,8 @@
-import {
-  areMarksCleared,
-  currentRound,
-  dartValue,
-  findLastPlayerToThrow,
-  isMarkCleared,
-  isMarkClearedForEveryone,
-} from "../games";
-import { Game, Mark, GameOperations, GameName, Multiple, Player } from "../types";
-import { actualMarksNotPointing, dartsInThrownOrder } from "./calculations";
+import { areMarksCleared, findLastPlayerToThrow, isMarkCleared, isMarkClearedForEveryone } from "../games";
+import { Game, Mark, GameOperations, GameName, Multiple } from "../types";
+import { calculateStatsForCricketOrTactical } from "./calculations";
 
-const calculateStats = (game: Game, players: Player[]): { scores: number[]; marks: number[] } => {
-  const emptyMarks = game.marks.reduce((acc, mark) => {
-    acc[mark] = 0;
-
-    return acc;
-  }, {});
-  const playerToMarks: { [mark: number]: number }[] = new Array(players.length)
-    .fill({})
-    .map(() => JSON.parse(JSON.stringify(emptyMarks)));
-  const playersToCountableMarksTotal: number[] = new Array(players.length).fill(0);
-  const playersToScore: number[] = new Array(players.length).fill(0);
-  const highestRoundOverall = currentRound(players);
-
-  dartsInThrownOrder(highestRoundOverall, players).forEach((dartTuple) => {
-    const [[mark, multiple], playerIndex] = dartTuple;
-
-    if (mark === Mark.Miss) {
-      return;
-    }
-
-    const playerMarksSoFar = playerToMarks[playerIndex][mark];
-    const marksWithCurrentDart = playerMarksSoFar + multiple;
-
-    if (game.pointing) {
-      const otherPlayersHaveNotClosedMark = playerToMarks
-        .filter((p, index) => index !== playerIndex)
-        .some((p) => p[mark] < 3);
-
-      if (otherPlayersHaveNotClosedMark) {
-        if (marksWithCurrentDart > 3) {
-          if (playerMarksSoFar >= 3) {
-            playersToScore[playerIndex] += dartValue([mark, multiple]);
-          } else {
-            const diff = playerMarksSoFar - 3 + multiple;
-            playersToScore[playerIndex] += dartValue([mark, diff]);
-          }
-        }
-        playersToCountableMarksTotal[playerIndex] += multiple;
-      } else {
-        if (marksWithCurrentDart > 3) {
-          const diff = 3 - playerMarksSoFar;
-          playersToCountableMarksTotal[playerIndex] += diff;
-        }
-      }
-    } else {
-      playersToCountableMarksTotal[playerIndex] += actualMarksNotPointing(multiple, playerMarksSoFar);
-    }
-
-    // finally add to player marks
-    playerToMarks[playerIndex][mark] += multiple;
-  });
-
-  return { scores: playersToScore, marks: playersToCountableMarksTotal };
-};
+const calculateStats = calculateStatsForCricketOrTactical;
 
 export const cricketOperations = (game: Game): GameOperations => ({
   didWin: (players, currentPlayerIndex: number) => {

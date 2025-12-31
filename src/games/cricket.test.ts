@@ -310,6 +310,6 @@ describe("stats", () => {
 
     const result = gameOperations(b).stats([player, otherPlayer]);
 
-    expect(result).toStrictEqual({ marks: [23, 0], scores: [45, 0] });
+    expect(result).toStrictEqual({ marks: [23, 17], scores: [45, 0] });
   });
 });
