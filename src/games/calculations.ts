@@ -1,19 +1,6 @@
 import { currentRound, dartValue } from "../games";
 import { Dart, Game, Mark, Player } from "../types";
 
-export const actualMarksNotPointing = (multiple: number, playerMarksSoFar: number): number => {
-  // sanity
-  if (playerMarksSoFar >= 3 || playerMarksSoFar < 0 || multiple > 3 || multiple < 0) {
-    return 0;
-  }
-
-  if (playerMarksSoFar + multiple <= 3) {
-    return multiple;
-  }
-
-  return 3 - playerMarksSoFar;
-};
-
 export const dartsInThrownOrder = (highestRound: number, players: Player[]): [dart: Dart, playerIndex: number][] => {
   const orderedDarts = [];
 
@@ -74,7 +61,9 @@ export const calculateStatsForCricketOrTactical = (
       }
       playersToCountableMarksTotal[playerIndex] += multiple;
     } else {
-      playersToCountableMarksTotal[playerIndex] += actualMarksNotPointing(multiple, playerMarksSoFar);
+      // account for partial marks when going over 3
+      const diff = playerMarksSoFar + multiple <= 3 ? multiple : 3 - playerMarksSoFar;
+      playersToCountableMarksTotal[playerIndex] += diff;
     }
 
     // finally add to player marks to keep track
