@@ -1,5 +1,18 @@
 import { Dart, Player } from "../types";
 
+export const actualMarksNotPointing = (multiple: number, playerMarksSoFar: number): number => {
+  // sanity
+  if (playerMarksSoFar >= 3 || playerMarksSoFar < 0 || multiple > 3 || multiple < 0) {
+    return 0;
+  }
+
+  if (playerMarksSoFar + multiple <= 3) {
+    return multiple;
+  }
+
+  return 3 - playerMarksSoFar;
+};
+
 export const dartsInThrownOrder = (highestRound: number, players: Player[]): [dart: Dart, playerIndex: number][] => {
   const orderedDarts = [];
 

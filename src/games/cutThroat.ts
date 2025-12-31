@@ -2,10 +2,7 @@ import { areMarksCleared, currentRound, dartValue, findLastPlayerToThrow, isMark
 import { Game, Mark, GameOperations, GameName, Multiple, Player } from "../types";
 import { dartsInThrownOrder } from "./calculations";
 
-const calculateStats = (
-  game: Game,
-  players: Player[]
-): { scores: number[]; marks: number[]; countableMarks: number[] } => {
+const calculateStats = (game: Game, players: Player[]): { scores: number[]; marks: number[] } => {
   const emptyMarks = game.marks.reduce((acc, mark) => {
     acc[mark] = 0;
     return acc;
@@ -14,7 +11,6 @@ const calculateStats = (
     .fill({})
     .map(() => JSON.parse(JSON.stringify(emptyMarks)));
   const playersToCountableMarksTotal: number[] = new Array(players.length).fill(0);
-  const playersToMarkTotal: number[] = new Array(players.length).fill(0);
   const playersToScore: number[] = new Array(players.length).fill(0);
   const highestRound = currentRound(players);
 
@@ -59,7 +55,6 @@ const calculateStats = (
       });
     }
 
-    playersToMarkTotal[playerIndex] += multiple;
     playersToMarks[playerIndex][mark] += multiple;
 
     if (otherPlayersHaveNotClosedMark) {
@@ -77,7 +72,7 @@ const calculateStats = (
     }
   });
 
-  return { scores: playersToScore, marks: playersToMarkTotal, countableMarks: playersToCountableMarksTotal };
+  return { scores: playersToScore, marks: playersToCountableMarksTotal };
 };
 
 export const cutThroatOperations = (game: Game): GameOperations => ({

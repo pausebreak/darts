@@ -7,12 +7,9 @@ import {
   isMarkClearedForEveryone,
 } from "../games";
 import { Game, Mark, GameOperations, GameName, Multiple, Player } from "../types";
-import { dartsInThrownOrder } from "./calculations";
+import { actualMarksNotPointing, dartsInThrownOrder } from "./calculations";
 
-const calculateStats = (
-  game: Game,
-  players: Player[]
-): { scores: number[]; marks: number[]; countableMarks: number[] } => {
+const calculateStats = (game: Game, players: Player[]): { scores: number[]; marks: number[] } => {
   const emptyMarks = game.marks.reduce((acc, mark) => {
     acc[mark] = 0;
 
@@ -21,43 +18,40 @@ const calculateStats = (
   const playerToMarks: { [mark: number]: number }[] = new Array(players.length)
     .fill({})
     .map(() => JSON.parse(JSON.stringify(emptyMarks)));
-  const playersToMarkTotal: number[] = new Array(players.length).fill(0);
+  const playersToCountableMarksTotal: number[] = new Array(players.length).fill(0);
   const playersToScore: number[] = new Array(players.length).fill(0);
   const highestRound = currentRound(players);
 
   dartsInThrownOrder(highestRound, players).forEach((dartTuple) => {
-    const playerIndex = dartTuple[1];
-    const dart = dartTuple[0];
+    const [[mark, multiple], playerIndex] = dartTuple;
 
-    if (dart[0] === Mark.Miss) {
+    if (mark === Mark.Miss) {
       return;
     }
 
+    // this will go over 3 because we are blindly summing so clamp it to 3
+    const playerMarksSoFar = Math.min(playerToMarks[playerIndex][mark], 3);
+
     const otherPlayersHaveNotClosedMark = playerToMarks
-      .filter((p, index) => index !== playerIndex)
-      .some((p) => p[dart[0]] < 3);
+      .filter((_, index) => index !== playerIndex)
+      .some((p) => p[mark] < 3);
 
     if (otherPlayersHaveNotClosedMark) {
-      const playerMarksSoFar = playerToMarks[playerIndex][dart[0]];
-      const marksWithCurrentDart = playerMarksSoFar + dart[1];
-
-      if (marksWithCurrentDart > 3) {
-        if (playerMarksSoFar >= 3) {
-          playersToScore[playerIndex] = playersToScore[playerIndex] + dartValue(dart);
-        } else {
-          const diff = playerMarksSoFar - 3 + dart[1];
-          playersToScore[playerIndex] = playersToScore[playerIndex] + dartValue([dart[0], diff]);
-        }
+      if (playerMarksSoFar + multiple > 3) {
+        playersToScore[playerIndex] += dartValue([mark, playerMarksSoFar + multiple - 3]);
       }
+      // count all the marks either way
+      playersToCountableMarksTotal[playerIndex] += multiple;
+    } else {
+      // when everyone else has closed you get marks like we're not pointing
+      playersToCountableMarksTotal[playerIndex] += actualMarksNotPointing(multiple, playerMarksSoFar);
     }
 
-    playersToMarkTotal[playerIndex] = playersToMarkTotal[playerIndex] + dart[1];
-
     // finally add to player marks
-    playerToMarks[playerIndex][dart[0]] = playerToMarks[playerIndex][dart[0]] + dart[1];
+    playerToMarks[playerIndex][mark] += multiple;
   });
 
-  return { scores: playersToScore, marks: playersToMarkTotal, countableMarks: [] };
+  return { scores: playersToScore, marks: playersToCountableMarksTotal };
 };
 
 export const tacticalOperations = (game: Game): GameOperations => ({

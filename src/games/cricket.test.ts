@@ -148,7 +148,7 @@ describe("stats", () => {
   it("shows 0 for no throws", () => {
     const result = ops.stats([{ name: "me", darts: [] }]);
 
-    expect(result).toStrictEqual({ marks: [0], scores: [0], countableMarks: [0] });
+    expect(result).toStrictEqual({ marks: [0], scores: [0] });
   });
 
   it("handles a win with no score", () => {
@@ -169,7 +169,7 @@ describe("stats", () => {
     };
     const result = gameOperations(b).stats([player]);
 
-    expect(result).toStrictEqual({ marks: [21], scores: [0], countableMarks: [21] });
+    expect(result).toStrictEqual({ marks: [21], scores: [0] });
   });
 
   it("correctly under marks multiple overages with scoring", () => {
@@ -195,7 +195,7 @@ describe("stats", () => {
 
     const result = gameOperations(b).stats([player1, player2]);
 
-    expect(result).toStrictEqual({ marks: [9, 3], scores: [30, 0], countableMarks: [8, 3] });
+    expect(result).toStrictEqual({ marks: [8, 3], scores: [30, 0] });
   });
 
   it("correctly under marks multiple overages with no scoring", () => {
@@ -218,7 +218,7 @@ describe("stats", () => {
     };
     const result = gameOperations(b).stats([player]);
 
-    expect(result).toStrictEqual({ marks: [23], scores: [0], countableMarks: [21] });
+    expect(result).toStrictEqual({ marks: [21], scores: [0] });
   });
 
   it("correctly calculates the ending MPR", () => {
@@ -277,7 +277,7 @@ describe("stats", () => {
 
     const result = gameOperations(b).stats([player, otherPlayer]);
 
-    expect(result).toStrictEqual({ marks: [22, 18], scores: [0, 0], countableMarks: [21, 18] });
+    expect(result).toStrictEqual({ marks: [21, 18], scores: [0, 0] });
   });
 
   it("can score a pointing game", () => {
@@ -310,6 +310,6 @@ describe("stats", () => {
 
     const result = gameOperations(b).stats([player, otherPlayer]);
 
-    expect(result).toStrictEqual({ marks: [23, 17], scores: [45, 0], countableMarks: [23, 0] });
+    expect(result).toStrictEqual({ marks: [23, 0], scores: [45, 0] });
   });
 });

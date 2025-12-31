@@ -7,12 +7,9 @@ import {
   isMarkClearedForEveryone,
 } from "../games";
 import { Game, Mark, GameOperations, GameName, Multiple, Player } from "../types";
-import { dartsInThrownOrder } from "./calculations";
+import { actualMarksNotPointing, dartsInThrownOrder } from "./calculations";
 
-const calculateStats = (
-  game: Game,
-  players: Player[]
-): { scores: number[]; marks: number[]; countableMarks: number[] } => {
+const calculateStats = (game: Game, players: Player[]): { scores: number[]; marks: number[] } => {
   const emptyMarks = game.marks.reduce((acc, mark) => {
     acc[mark] = 0;
 
@@ -21,7 +18,6 @@ const calculateStats = (
   const playerToMarks: { [mark: number]: number }[] = new Array(players.length)
     .fill({})
     .map(() => JSON.parse(JSON.stringify(emptyMarks)));
-  const playersToMarkTotal: number[] = new Array(players.length).fill(0);
   const playersToCountableMarksTotal: number[] = new Array(players.length).fill(0);
   const playersToScore: number[] = new Array(players.length).fill(0);
   const highestRoundOverall = currentRound(players);
@@ -58,21 +54,14 @@ const calculateStats = (
         }
       }
     } else {
-      if (marksWithCurrentDart > 3) {
-        const diff = 3 - playerMarksSoFar;
-        playersToCountableMarksTotal[playerIndex] += diff;
-      } else {
-        playersToCountableMarksTotal[playerIndex] += multiple;
-      }
+      playersToCountableMarksTotal[playerIndex] += actualMarksNotPointing(multiple, playerMarksSoFar);
     }
-
-    playersToMarkTotal[playerIndex] += multiple;
 
     // finally add to player marks
     playerToMarks[playerIndex][mark] += multiple;
   });
 
-  return { scores: playersToScore, marks: playersToMarkTotal, countableMarks: playersToCountableMarksTotal };
+  return { scores: playersToScore, marks: playersToCountableMarksTotal };
 };
 
 export const cricketOperations = (game: Game): GameOperations => ({
