@@ -10,8 +10,10 @@ export const GameInfo = () => {
   const setWinner = useStore((state) => state.setWinner);
 
   const stopGame = () => {
-    setGame(null);
-    setWinner(null);
+    if (window.confirm("Are you sure?")) {
+      setGame(null);
+      setWinner(null);
+    }
   };
 
   return (
