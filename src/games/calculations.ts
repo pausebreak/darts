@@ -27,6 +27,12 @@ export const dartsInThrownOrder = (highestRound: number, players: Player[]): [da
   return orderedDarts;
 };
 
+export const countAllDarts = (players: Player[]) => {
+  return players.reduce((acc, player) => {
+    return acc + player.darts.length;
+  }, 0);
+};
+
 export const calculateStatsForCricketOrTactical = (
   game: Game,
   players: Player[]
