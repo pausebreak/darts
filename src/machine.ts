@@ -11,9 +11,12 @@ export type GameState = {
   addPlayer(player: Player): void;
   removePlayer(playerId: number): void;
   game: Game;
+  finishRound(): void;
   setGame(game: Game): void;
   useSound: boolean;
   setUseSound(sound: boolean): void;
+  useAutoForward: boolean;
+  setUseAutoForward(auto: boolean): void;
   currentPlayerIndex: number;
   invalidThrow: boolean;
   setInvalidThrow(valid: boolean): void;
@@ -30,7 +33,7 @@ export type GameState = {
 };
 
 // this is mutating
-const applyNextPlayer = (currentPlayerIndex: number, draft: GameState) => {
+export const applyNextPlayer = (currentPlayerIndex: number, draft: GameState) => {
   if (currentPlayerIndex + 1 === draft.players.length) {
     draft.currentPlayerIndex = 0;
   } else {
@@ -47,6 +50,33 @@ const applyDart = (draft: GameState, currentPlayerIndex: number, dart: Dart) => 
   // end of the round for the current player
   if (player.darts.length % 3 === 0) {
     applyNextPlayer(currentPlayerIndex, draft);
+  }
+};
+
+const addThrowToCurrentPlayerWork = (game: Game, currentPlayerIndex: number, players: Player[], dart: Dart, set) => {
+  if (!gameOperations(game).validThrow(currentPlayerIndex, players, dart)) {
+    set((draft: GameState) => {
+      draft.invalidThrow = true;
+    });
+  } else {
+    if (game.name === GameName.Oh1 && gameOperations(game).didBust(currentPlayerIndex, players, dart)) {
+      set((draft: GameState) => {
+        const player = draft.players[currentPlayerIndex];
+        const brokenThrows = player.darts.length % 3;
+
+        if (brokenThrows > 0) {
+          player.darts.splice(-brokenThrows);
+        }
+
+        player.darts.push([Mark.Miss, Multiple.Single], [Mark.Miss, Multiple.Single], [Mark.Miss, Multiple.Single]);
+        draft.playerBusted = player;
+        applyNextPlayer(currentPlayerIndex, draft);
+      });
+    } else {
+      set((draft: GameState) => {
+        applyDart(draft, currentPlayerIndex, dart);
+      });
+    }
   }
 };
 
@@ -88,6 +118,11 @@ export const useStore = create<GameState>()(
           set((state) => {
             state.useSound = sound;
           }),
+        useAutoForward: false,
+        setUseAutoForward: (auto) =>
+          set((state) => {
+            state.useAutoForward = auto;
+          }),
         setGame: (game) =>
           set((state) => {
             state.game = game;
@@ -103,42 +138,19 @@ export const useStore = create<GameState>()(
           }),
         addThrowToCurrentPlayer: (dart) => {
           const { game, players, currentPlayerIndex } = get();
-
-          if (!gameOperations(game).validThrow(currentPlayerIndex, players, dart)) {
-            set((draft) => {
-              draft.invalidThrow = true;
-            });
-          } else {
-            if (game.name === GameName.Oh1 && gameOperations(game).didBust(currentPlayerIndex, players, dart)) {
-              set((draft) => {
-                const player = draft.players[currentPlayerIndex];
-                const brokenThrows = player.darts.length % 3;
-
-                if (brokenThrows > 0) {
-                  player.darts.splice(-brokenThrows);
-                }
-
-                player.darts.push(
-                  [Mark.Miss, Multiple.Single],
-                  [Mark.Miss, Multiple.Single],
-                  [Mark.Miss, Multiple.Single]
-                );
-
-                draft.playerBusted = player;
-
-                applyNextPlayer(currentPlayerIndex, draft);
-              });
-            } else {
-              set((draft) => {
-                applyDart(draft, currentPlayerIndex, dart);
-              });
-            }
-          }
+          addThrowToCurrentPlayerWork(game, currentPlayerIndex, players, dart, set);
         },
         setPlayerBusted: (player) =>
           set((draft) => {
             draft.playerBusted = player;
           }),
+        finishRound: () => {
+          const { game, players, currentPlayerIndex } = get();
+          const numberThrown = players[currentPlayerIndex].darts.length;
+          for (let i = numberThrown % 3; i < 3; i++) {
+            addThrowToCurrentPlayerWork(game, currentPlayerIndex, players, [Mark.Miss, Multiple.Single], set);
+          }
+        },
         goBack: () => {
           set((state) => {
             const players = state.players;

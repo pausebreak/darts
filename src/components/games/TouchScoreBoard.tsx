@@ -67,6 +67,7 @@ export const TouchScoreBoard = () => {
   const multiples = useStore((state) => state.game)?.multiples;
   const invalidThrow = useStore((state) => state.invalidThrow);
   const setInvalidThrow = useStore((state) => state.setInvalidThrow);
+  const finishRound = useStore((state) => state.finishRound);
   const [double, setDouble] = useState(false);
   const [triple, setTriple] = useState(false);
 
@@ -110,10 +111,8 @@ export const TouchScoreBoard = () => {
   const onFinishTurn = () => {
     setDouble(false);
     setTriple(false);
-    const numberThrown = players[currentPlayerIndex].darts.length;
-    for (let i = numberThrown % 3; i < 3; i++) {
-      addThrowToCurrentPlayer([Mark.Miss, Multiple.Single]);
-    }
+
+    finishRound();
   };
 
   const className = invalidThrow ? "invalid" : "";

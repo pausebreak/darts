@@ -17,7 +17,9 @@ const isAndroid = window?.navigator?.userAgent?.indexOf("Android") !== -1;
 export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer }) => {
   const chooseGame = useStore((state) => state.setGame);
   const setUseSound = useStore((state) => state.setUseSound);
+  const setUseAutoForward = useStore((state) => state.setUseAutoForward);
   const useSound = useStore((state) => state.useSound);
+  const useAutoForward = useStore((state) => state.useAutoForward);
   const voiceIndex = useStore((state) => state.voiceIndex);
   const setVoiceIndex = useStore((state) => state.setVoiceIndex);
 
@@ -84,6 +86,7 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
   const pointing = singlePlayer ? false : getPointing;
 
   const toggleUseSound = () => setUseSound(!useSound);
+  const toggleUseAutoForward = () => setUseAutoForward(!useAutoForward);
 
   return (
     <>
@@ -91,6 +94,10 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
         <label>
           Sounds ?
           <input type="checkbox" checked={useSound} onChange={toggleUseSound} />
+        </label>
+        <label>
+          Auto forward to next player when idle ?
+          <input type="checkbox" checked={useAutoForward} onChange={toggleUseAutoForward} />
         </label>
         {useSound && !isAndroid && voices && voices.length !== 0 && (
           <div>
