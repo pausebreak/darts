@@ -247,8 +247,8 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
 
               if (getGame?.name === GameName.Bulls) {
                 limit = getNumberOfBulls * 25;
-                checkIn = Multiple.Single;
-                checkOut = Multiple.Single;
+                checkIn = null;
+                checkOut = null;
               }
 
               if (getGame?.name === GameName.Cricket) {
@@ -259,7 +259,7 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
 
               let arePointing = getPointing;
 
-              if (getGame?.name === GameName.CutThroat) {
+              if ([GameName.CutThroat, GameName.Tactical].includes(getGame?.name)) {
                 limit = 0;
                 checkIn = null;
                 checkOut = null;
