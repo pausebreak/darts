@@ -5,9 +5,9 @@
   margin-top: 1em;
 }
 
-@media (min-width: 600px) {
+@media (min-width: 650px) {
   .game-setup {
-    width: 800px;
+    width: 600px;
     margin-left: auto;
     margin-right: auto;
   }
