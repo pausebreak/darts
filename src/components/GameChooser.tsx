@@ -14,10 +14,11 @@ export interface GameChooserProps {
   singlePlayer: boolean;
   initialGame?: Game | null;
   onGameChange?: (game: Game | null) => void;
+  onPointingChange?: (pointing: boolean) => void;
   onStartReady?: (canStart: boolean, startHandler: () => void) => void;
 }
 
-export const GameChooser: React.FC<GameChooserProps> = ({ singlePlayer, initialGame, onGameChange, onStartReady }) => {
+export const GameChooser: React.FC<GameChooserProps> = ({ singlePlayer, initialGame, onGameChange, onPointingChange, onStartReady }) => {
   const chooseGame = useStore((state) => state.setGame);
 
   const [getGame, setGame] = useState<Game>(initialGame || null);
@@ -81,7 +82,7 @@ export const GameChooser: React.FC<GameChooserProps> = ({ singlePlayer, initialG
     setOut(value as unknown as Multiple);
   };
 
-  const onPointingChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handlePointingChange = (event: ChangeEvent<HTMLInputElement>) => {
     setPointing(event.target.checked);
   };
 
@@ -93,6 +94,13 @@ export const GameChooser: React.FC<GameChooserProps> = ({ singlePlayer, initialG
       onGameChange(getGame);
     }
   }, [getGame, onGameChange]);
+
+  // Notify parent when pointing changes
+  useEffect(() => {
+    if (onPointingChange) {
+      onPointingChange(pointing);
+    }
+  }, [pointing, onPointingChange]);
 
   // Create start handler with useCallback
   const handleStart = useCallback(() => {
@@ -216,7 +224,7 @@ export const GameChooser: React.FC<GameChooserProps> = ({ singlePlayer, initialG
           {![GameName.Bulls, GameName.Oh1, GameName.CutThroat].includes(getGame.name) && (
             <div>
               <label>
-                <input type="checkbox" disabled={singlePlayer} checked={pointing} onChange={onPointingChange} />
+                <input type="checkbox" disabled={singlePlayer} checked={pointing} onChange={handlePointingChange} />
                 pointing ?
               </label>
               {hasError && <span>invalid value</span>}

@@ -14,9 +14,9 @@ const getPlayersSummary = (players: Player[]): string => {
   return `${players.length} players`;
 };
 
-const getGameSummary = (game: Game | null): string => {
+const getGameSummary = (game: Game | null, pointing: boolean): string => {
   if (!game) return "No game selected";
-  return game.name;
+  return pointing ? `${game.name} (pointing)` : game.name;
 };
 
 // Settings component extracted from GameChooser
@@ -160,12 +160,13 @@ export const GameSetup: React.FC = () => {
   // Get summaries
   const playersSummary = getPlayersSummary(players);
   
-  // Track selected game and start handler
+  // Track selected game, pointing state, and start handler
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
+  const [pointing, setPointing] = useState(false);
   const [canStart, setCanStart] = useState(false);
   const [startHandler, setStartHandler] = useState<(() => void) | null>(null);
   
-  const gameSummary = getGameSummary(selectedGame);
+  const gameSummary = getGameSummary(selectedGame, pointing);
 
   const handleStartReady = (canStartGame: boolean, handler: () => void) => {
     setCanStart(canStartGame);
@@ -204,6 +205,7 @@ export const GameSetup: React.FC = () => {
               singlePlayer={singlePlayer}
               initialGame={selectedGame}
               onGameChange={setSelectedGame}
+              onPointingChange={setPointing}
               onStartReady={handleStartReady}
             />
           </AccordionSection>
