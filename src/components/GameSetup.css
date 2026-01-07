@@ -5,6 +5,20 @@
   margin-top: 1em;
 }
 
+@media (min-width: 600px) {
+  .game-setup {
+    width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .start-button {
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
 .accordion-section {
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 4px;
