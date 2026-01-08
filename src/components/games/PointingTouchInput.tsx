@@ -1,6 +1,6 @@
 import React from "react";
 import { Mark } from "../../types";
-import "./TouchInput.css";
+import "../TouchInput.css";
 
 const marks = [
   Mark.One,
