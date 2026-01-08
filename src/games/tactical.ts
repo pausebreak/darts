@@ -25,26 +25,28 @@ export const tacticalOperations = (game: Game): GameOperations => ({
   },
   validThrow: (playerIndex, players, dart) => {
     const currentPlayer = players[playerIndex];
+    const [mark, multiple] = dart;
 
-    if (dart[0] === Mark.Miss) {
+    if (mark === Mark.Miss) {
       return true;
     }
 
-    if (!game.marks.includes(dart[0])) {
+    if (!game.marks.includes(mark)) {
       return false;
     }
 
-    if ([Mark.Double, Mark.Triple].includes(dart[0]) && dart[1] !== Multiple.Single) {
+    if ([Mark.Double, Mark.Triple].includes(mark) && multiple !== Multiple.Single) {
       return false;
     }
 
-    if (dart[0] === Mark.Bull && dart[1] === Multiple.Triple) {
+    if (dart[0] === Mark.Bull && multiple === Multiple.Triple) {
       return false;
     }
+
     if (game.pointing) {
-      return !isMarkClearedForEveryone(players, dart[0]);
+      return !isMarkClearedForEveryone(players, mark);
     } else {
-      return !isMarkCleared(currentPlayer, dart[0]);
+      return !isMarkCleared(currentPlayer, mark);
     }
   },
   stats: (players) => calculateStats(game, players),

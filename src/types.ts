@@ -31,7 +31,7 @@ export enum Multiple {
   Triple = 3,
 }
 
-export type Dart = [dart: Mark, multiple: Multiple];
+export type Dart = [dart: Mark, multiple: Multiple, points?: Omit<Mark, "Bull" | "Double" | "Triple">];
 
 export type Player = {
   name: string;

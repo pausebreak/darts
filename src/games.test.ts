@@ -8,7 +8,7 @@ import {
   ohGames,
   tactical,
 } from "./games";
-import { Game, GameName, Mark, Multiple, Player } from "./types";
+import { Dart, Game, GameName, Mark, Multiple, Player } from "./types";
 
 describe("findLastPlayerToThrow", () => {
   it("handles the start of a game ( no darts thrown yet ) one player", () => {
@@ -41,6 +41,18 @@ describe("dartValue", () => {
   it("adds", () => {
     const result = dartValue([Mark.Bull, Multiple.Double]);
     expect(result).toBe(50);
+  });
+
+  it("handles a pointing double", () => {
+    const dart: Dart = [Mark.Double, Multiple.Single, Mark.Eight];
+    const result = dartValue(dart);
+    expect(result).toBe(16);
+  });
+
+  it("handles a pointing triple", () => {
+    const dart: Dart = [Mark.Triple, Multiple.Single, Mark.Eight];
+    const result = dartValue(dart);
+    expect(result).toBe(24);
   });
 });
 
