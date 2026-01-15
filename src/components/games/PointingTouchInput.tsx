@@ -31,10 +31,7 @@ export const PointingTouchInput: React.FC<{ onClicks: (mark: Mark) => void }> = 
     onClicks(mark);
   };
 
-  let className = "marks";
-  if (marks.length > 6) {
-    className = `${className} long`;
-  }
+  const className = "marks long";
 
   return (
     <>
