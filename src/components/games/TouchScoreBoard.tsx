@@ -7,6 +7,10 @@ import { Dart, Mark, Multiple } from "../../types";
 import "./ScoreBoard.css";
 import { useEffect, useState } from "react";
 import { Pips } from "../Pips";
+import { PointingTouchInput } from "./PointingTouchInput";
+
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+const doubleNoOp = () => () => {};
 
 const boardMark = (numOfMarks: number, aKey: string, onClick: React.MouseEventHandler) => {
   if (isBlank(numOfMarks)) {
@@ -70,6 +74,8 @@ export const TouchScoreBoard = () => {
   const finishRound = useStore((state) => state.finishRound);
   const [double, setDouble] = useState(false);
   const [triple, setTriple] = useState(false);
+  const [showGrid, setShowGrid] = useState(false);
+  const [doubleOrTriple, setDoubleOrTriple] = useState<Mark>(undefined);
 
   const numOfPlayers = players.length;
   const half = Math.floor(numOfPlayers / 2);
@@ -115,6 +121,12 @@ export const TouchScoreBoard = () => {
     finishRound();
   };
 
+  const clicker = (mark: Mark) => {
+    addThrowToCurrentPlayer([doubleOrTriple, Multiple.Single, mark]);
+    setShowGrid(false);
+    setDoubleOrTriple(undefined);
+  };
+
   const className = invalidThrow ? "invalid" : "";
 
   useEffect(() => {
@@ -125,6 +137,23 @@ export const TouchScoreBoard = () => {
 
   const doubleClass = double ? "engaged" : "";
   const tripleClass = triple ? "engaged" : "";
+
+  if (showGrid) {
+    return <PointingTouchInput onClicks={clicker} />;
+  }
+
+  const handleMarkClick = (mark: Mark) => (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    if (game.pointing && [Mark.Double, Mark.Triple].includes(mark)) {
+      const marks = playerMarks(players[currentPlayerIndex]);
+      const cleared = marks[mark] >= 3;
+      if (cleared) {
+        setShowGrid(true);
+        setDoubleOrTriple(mark);
+        return;
+      }
+    }
+    onClick(event, [mark, Multiple.Single]);
+  };
 
   return (
     <>
@@ -150,12 +179,7 @@ export const TouchScoreBoard = () => {
           const marks = playerMarks(player);
           const score = playerScores?.scores[playerIndex];
           const currentPlayer = isCurrentPlayer ? "playerForRow current" : "playerForRow";
-          const onMarkClick = isCurrentPlayer
-            ? (mark: Mark) => (event) => {
-                onClick(event, [mark, Multiple.Single]);
-              }
-            : // eslint-disable-next-line @typescript-eslint/no-empty-function
-              () => () => {};
+          const onMarkClick = isCurrentPlayer ? handleMarkClick : doubleNoOp;
 
           return (
             <div className="column" key={`${player.name}`}>
@@ -182,13 +206,7 @@ export const TouchScoreBoard = () => {
             }
 
             return (
-              <div
-                className={cls}
-                key={mark}
-                onClick={(event) => {
-                  onClick(event, [mark, Multiple.Single]);
-                }}
-              >
+              <div className={cls} key={mark} onClick={handleMarkClick(mark)}>
                 {clearedForAll && game.pointing && <div className="strikeThrough" />}
                 {markLabel(mark)}
               </div>
@@ -205,12 +223,7 @@ export const TouchScoreBoard = () => {
           const score = playerScores?.scores[playerIndex];
           const isCurrentPlayer = playerIndex === currentPlayerIndex;
           const currentPlayer = isCurrentPlayer ? "playerForRow current" : "playerForRow";
-          const onMarkClick = isCurrentPlayer
-            ? (mark: Mark) => (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
-                onClick(event, [mark, Multiple.Single]);
-              }
-            : // eslint-disable-next-line @typescript-eslint/no-empty-function
-              () => () => {};
+          const onMarkClick = isCurrentPlayer ? handleMarkClick : doubleNoOp;
 
           return (
             <div className="column" key={`${player.name}`}>
