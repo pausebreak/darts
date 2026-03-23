@@ -106,7 +106,7 @@ const AboutSection: React.FC = () => {
   return (
     <div className="about-section">
       <a
-        href="https://github.com/pausebreak/darts"
+        href="https://buymeacoffee.com/pausebreak"
         target="_blank"
         rel="noopener noreferrer"
         className="buy-me-coffee-link"
@@ -230,12 +230,12 @@ export const GameSetup: React.FC = () => {
         >
           <AboutSection />
         </AccordionSection>
+        {canStart && startHandler && (
+          <button className="start-button" onClick={handleStartClick}>
+            start
+          </button>
+        )}
       </div>
-      {canStart && startHandler && (
-        <button className="start-button" onClick={handleStartClick}>
-          start
-        </button>
-      )}
     </>
   );
 };

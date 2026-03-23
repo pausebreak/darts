@@ -3,9 +3,15 @@
   flex-direction: column;
   gap: 0.5em;
   margin-top: 1em;
-  max-width: 600px;
+  width: 95vw;
   margin-left: auto;
   margin-right: auto;
+}
+
+@media (min-width: 768px) {
+  .game-setup {
+    width: 80vw;
+  }
 }
 
 .accordion-section {
@@ -121,9 +127,6 @@
 
 .start-button {
   width: 100%;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
   font-size: 2em;
   padding: 0.5em 1em;
   margin-top: 1em;
