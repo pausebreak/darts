@@ -39,11 +39,7 @@ export const GameChooser: React.FC<GameChooserProps> = ({ singlePlayer, initialG
       }
     }
     // Intentionally exclude getGame to avoid reset loops; we only react to initialGame
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialGame]);
-
-  // this does not work until the user clicks a button
-  const voices = window.speechSynthesis?.getVoices();
 
   const onLimitChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = Number(event.target.value);
