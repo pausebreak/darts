@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import isBlank from "@sedan-utils/is-blank";
 import { useStore } from "../machine";
 import { PlayerChooser } from "./PlayerChooser";
@@ -165,10 +165,10 @@ export const GameSetup: React.FC = () => {
   
   const gameSummary = getGameSummary(selectedGame, pointing);
 
-  const handleStartReady = (canStartGame: boolean, handler: () => void) => {
+  const handleStartReady = useCallback((canStartGame: boolean, handler: () => void) => {
     setCanStart(canStartGame);
     setStartHandler(() => handler);
-  };
+  }, []);
 
   const handleStartClick = () => {
     if (startHandler) {
