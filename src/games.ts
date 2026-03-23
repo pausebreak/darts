@@ -5,7 +5,18 @@ import { ohGamesOperations } from "./games/oh1";
 import { tacticalOperations } from "./games/tactical";
 import { Game, Dart, GameOperations, GameName, Player, Mark } from "./types";
 
-export const dartValue = (dart: Dart): number => dart[0] * dart[1];
+export const dartValue = (dart: Dart): number => {
+  const [mark, multiple, points] = dart;
+
+  if (points) {
+    if (mark === Mark.Double) {
+      return 2 * Number(points);
+    } else {
+      return 3 * Number(points);
+    }
+  }
+  return mark * multiple;
+};
 
 export const currentRound = (players: Player[]) => {
   const highestDart = players.reduce((acc, player) => {

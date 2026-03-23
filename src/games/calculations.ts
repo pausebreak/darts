@@ -49,7 +49,7 @@ export const calculateStatsForCricketOrTactical = (
   const playersToScore: number[] = new Array(players.length).fill(0);
   const highestRound = currentRound(players);
 
-  dartsInThrownOrder(highestRound, players).forEach(([[mark, multiple], playerIndex]) => {
+  dartsInThrownOrder(highestRound, players).forEach(([[mark, multiple, pointingMultiple], playerIndex]) => {
     if (mark === Mark.Miss) {
       return;
     }
@@ -63,7 +63,8 @@ export const calculateStatsForCricketOrTactical = (
 
     if (game.pointing && otherPlayersHaveNotClosedMark) {
       if (playerMarksSoFar + multiple > 3) {
-        playersToScore[playerIndex] += dartValue([mark, playerMarksSoFar + multiple - 3]);
+        const val = dartValue([mark, playerMarksSoFar + multiple - 3, pointingMultiple]);
+        playersToScore[playerIndex] += val;
       }
       playersToCountableMarksTotal[playerIndex] += multiple;
     } else {
