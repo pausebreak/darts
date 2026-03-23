@@ -30,17 +30,15 @@ export const GameChooser: React.FC<GameChooserProps> = ({ singlePlayer, initialG
   const [hasError, setError] = useState(false);
 
   // Sync with initialGame prop when it changes (e.g., when accordion reopens)
-  // This handles the case where the component remounts with a different initialGame
   useEffect(() => {
     if (initialGame !== undefined) {
       const currentGameName = getGame?.name;
       const initialGameName = initialGame?.name;
-      
-      // Only update if the game actually differs
       if (currentGameName !== initialGameName) {
         setGame(initialGame);
       }
     }
+    // Intentionally exclude getGame to avoid reset loops; we only react to initialGame
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialGame]);
 

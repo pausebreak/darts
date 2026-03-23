@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import isBlank from "@sedan-utils/is-blank";
 import { useStore } from "../machine";
 import { PlayerChooser } from "./PlayerChooser";
 import { GameChooser } from "./GameChooser";
@@ -36,7 +37,8 @@ const SettingsSection: React.FC = () => {
 
   const onVoiceChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const index = Number(event.target.value);
-    const voice = voices[index];
+    const voice = voices?.[index];
+    if (!voice) return;
     const utterance = new SpeechSynthesisUtterance(voice.name);
     utterance.voice = voice;
 
@@ -150,11 +152,6 @@ const AccordionSection: React.FC<{
 export const GameSetup: React.FC = () => {
   const [activeSection, setActiveSection] = useState<ActiveSection>(null);
   const players = useStore((state) => state.players);
-  const useSound = useStore((state) => state.useSound);
-  const useAutoForward = useStore((state) => state.useAutoForward);
-  const voiceIndex = useStore((state) => state.voiceIndex);
-
-  const voices = window.speechSynthesis?.getVoices();
   const singlePlayer = players.length === 1;
 
   // Get summaries

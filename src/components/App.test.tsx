@@ -54,27 +54,30 @@ describe("App", () => {
     expect(nextButton).toBeTruthy();
   });
 
-  test("shows game chooser if no game set", () => {
+  test("shows game setup if no game set", () => {
     const player = { name: "me", darts: [] };
     const store = useStore.getState();
     store.addPlayer(player);
 
     render(<App />);
-    const addPlayerButton = screen.getByText(/Add Player/i);
-    expect(addPlayerButton).toBeTruthy();
+    const playersHeader = screen.getByText("Players");
+    expect(playersHeader).toBeTruthy();
+    expect(screen.getByText("1 player")).toBeTruthy();
+    const gameHeader = screen.getByText("Game");
+    expect(gameHeader).toBeTruthy();
   });
 
-  test("shows qr code button", () => {
+  test("shows qr code and share url in about section", () => {
     const player = { name: "me", darts: [] };
     const store = useStore.getState();
     store.addPlayer(player);
 
     render(<App />);
-    const showQrButton = screen.getByText(/Show Qr/i);
-    expect(showQrButton).toBeTruthy();
+    const aboutHeader = screen.getByText("About");
+    expect(aboutHeader).toBeTruthy();
 
     act(() => {
-      showQrButton.click();
+      aboutHeader.click();
     });
 
     const htmlText = screen.getByText("https://pausebreak.github.io/darts/");
@@ -82,11 +85,5 @@ describe("App", () => {
 
     const qr = screen.getByLabelText("QR URL CODE");
     expect(qr).toBeTruthy();
-
-    act(() => {
-      qr.click();
-    });
-
-    expect(() => screen.getByText("https://pausebreak.github.io/darts/")).toThrow();
   });
 });
