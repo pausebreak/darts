@@ -263,8 +263,6 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
                 limit = 0;
                 checkIn = null;
                 checkOut = null;
-
-                arePointing = true;
               }
 
               chooseGame({
