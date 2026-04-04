@@ -257,8 +257,6 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
                 checkOut = null;
               }
 
-              let arePointing = getPointing;
-
               if ([GameName.CutThroat, GameName.Tactical].includes(getGame?.name)) {
                 limit = 0;
                 checkIn = null;
@@ -273,7 +271,7 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
                 marks: getGame.marks,
                 multiples: getGame.multiples,
                 clear: getGame.clear,
-                pointing: arePointing,
+                pointing: getPointing,
               });
             }}
           >
