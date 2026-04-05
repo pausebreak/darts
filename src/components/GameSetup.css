@@ -1,0 +1,157 @@
+.game-setup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  margin-top: 1em;
+  width: 95vw;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (min-width: 768px) {
+  .game-setup {
+    width: 80vw;
+  }
+}
+
+.accordion-section {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.accordion-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1em;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: none;
+  cursor: pointer;
+  font-size: 1.5em;
+  color: azure;
+  min-height: 44px;
+  text-align: left;
+  transition: background-color 0.2s ease;
+}
+
+.accordion-header:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.accordion-header:active {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.accordion-title {
+  font-weight: bold;
+  flex: 0 0 auto;
+  margin-right: 1em;
+}
+
+.accordion-summary {
+  flex: 1;
+  opacity: 0.7;
+  font-size: 0.9em;
+  text-align: right;
+  margin-right: 1em;
+}
+
+.accordion-summary:empty {
+  display: none;
+}
+
+.accordion-chevron {
+  flex: 0 0 auto;
+  font-size: 1.5em;
+  transition: transform 0.3s ease;
+  transform: rotate(0deg);
+  display: inline-block;
+  width: 1em;
+  text-align: center;
+}
+
+.accordion-chevron.expanded {
+  transform: rotate(90deg);
+}
+
+.accordion-content {
+  padding: 1em;
+  background-color: rgba(0, 0, 0, 0.2);
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 1000px;
+  }
+}
+
+.about-section {
+  font-size: 1.25em;
+  line-height: 1.6;
+  text-align: left;
+}
+
+.about-section p {
+  margin: 0.5em 0;
+}
+
+.buy-me-coffee-link {
+  display: inline-block;
+  font-size: 1.25em;
+  color: azure;
+  text-decoration: underline;
+  margin-bottom: 1em;
+}
+
+.buy-me-coffee-link:hover {
+  text-decoration: none;
+}
+
+.share-section {
+  text-align: left;
+  margin-top: 1em;
+}
+
+.share-header {
+  font-size: 1.25em;
+  margin-bottom: 0.5em;
+}
+
+.start-button {
+  width: 100%;
+  font-size: 2em;
+  padding: 0.5em 1em;
+  margin-top: 1em;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: azure;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.start-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.start-button:active {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.qr {
+  margin-top: 0.5em;
+  text-align: left;
+}
+
+.qr svg path {
+  fill: whitesmoke;
+}
+

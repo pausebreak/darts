@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useState, useEffect, useCallback } from "react";
 import { bulls } from "../games/bulls";
 import { cricket } from "../games/cricket";
 import { ohGames } from "../games/oh1";
@@ -10,20 +10,18 @@ import { cutThroat } from "../games";
 import "./GameChooser.css";
 import { tactical } from "../games/tactical";
 
-const voiceSortCompare = (a: SpeechSynthesisVoice, b: SpeechSynthesisVoice) => a.lang.localeCompare(b.lang);
+export interface GameChooserProps {
+  singlePlayer: boolean;
+  initialGame?: Game | null;
+  onGameChange?: (game: Game | null) => void;
+  onPointingChange?: (pointing: boolean) => void;
+  onStartReady?: (canStart: boolean, startHandler: () => void) => void;
+}
 
-const isAndroid = window?.navigator?.userAgent?.indexOf("Android") !== -1;
-
-export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer }) => {
+export const GameChooser: React.FC<GameChooserProps> = ({ singlePlayer, initialGame, onGameChange, onPointingChange, onStartReady }) => {
   const chooseGame = useStore((state) => state.setGame);
-  const setUseSound = useStore((state) => state.setUseSound);
-  const setUseAutoForward = useStore((state) => state.setUseAutoForward);
-  const useSound = useStore((state) => state.useSound);
-  const useAutoForward = useStore((state) => state.useAutoForward);
-  const voiceIndex = useStore((state) => state.voiceIndex);
-  const setVoiceIndex = useStore((state) => state.setVoiceIndex);
 
-  const [getGame, setGame] = useState<Game>(null);
+  const [getGame, setGame] = useState<Game>(initialGame || null);
   const [getLimit, setLimit] = useState(301);
   const [getPointing, setPointing] = useState(false);
   const [getNumberOfBulls, setNumberOfBulls] = useState(25);
@@ -31,8 +29,17 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
   const [getOut, setOut] = useState(Multiple.Single);
   const [hasError, setError] = useState(false);
 
-  // this does not work until the user clicks a button
-  const voices = window.speechSynthesis?.getVoices();
+  // Sync with initialGame prop when it changes (e.g., when accordion reopens)
+  useEffect(() => {
+    if (initialGame !== undefined) {
+      const currentGameName = getGame?.name;
+      const initialGameName = initialGame?.name;
+      if (currentGameName !== initialGameName) {
+        setGame(initialGame);
+      }
+    }
+    // Intentionally exclude getGame to avoid reset loops; we only react to initialGame
+  }, [initialGame]);
 
   const onLimitChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = Number(event.target.value);
@@ -69,57 +76,82 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
     setOut(value as unknown as Multiple);
   };
 
-  const onPointingChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handlePointingChange = (event: ChangeEvent<HTMLInputElement>) => {
     setPointing(event.target.checked);
-  };
-
-  const onVoiceChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    const index = Number(event.target.value);
-    const voice = voices[index];
-    const utterance = new SpeechSynthesisUtterance(voice.name);
-    utterance.voice = voice;
-
-    setVoiceIndex(index);
-    window.speechSynthesis.speak(utterance);
   };
 
   const pointing = singlePlayer ? false : getPointing;
 
-  const toggleUseSound = () => setUseSound(!useSound);
-  const toggleUseAutoForward = () => setUseAutoForward(!useAutoForward);
+  // Notify parent when game changes
+  useEffect(() => {
+    if (onGameChange) {
+      onGameChange(getGame);
+    }
+  }, [getGame, onGameChange]);
+
+  // Notify parent when pointing changes
+  useEffect(() => {
+    if (onPointingChange) {
+      onPointingChange(pointing);
+    }
+  }, [pointing, onPointingChange]);
+
+  // Create start handler with useCallback
+  const handleStart = useCallback(() => {
+    if (!getGame) return;
+
+    let limit = getLimit;
+    let checkIn = getIn;
+    let checkOut = getOut;
+
+    if (getGame?.name === GameName.Oh1 && isBlank(limit)) {
+      setError(true);
+      return;
+    }
+
+    if (getGame?.name === GameName.Bulls) {
+      limit = getNumberOfBulls * 25;
+      checkIn = null;
+      checkOut = null;
+    }
+
+    if (getGame?.name === GameName.Cricket) {
+      limit = getGame.limit;
+      checkIn = null;
+      checkOut = null;
+    }
+
+    let arePointing = getPointing;
+
+    if ([GameName.CutThroat, GameName.Tactical].includes(getGame?.name)) {
+      limit = 0;
+      checkIn = null;
+      checkOut = null;
+
+      arePointing = true;
+    }
+
+    chooseGame({
+      name: getGame.name,
+      checkIn,
+      checkOut,
+      limit,
+      marks: getGame.marks,
+      multiples: getGame.multiples,
+      clear: getGame.clear,
+      pointing: arePointing,
+    });
+  }, [getGame, getLimit, getIn, getOut, getPointing, getNumberOfBulls, chooseGame]);
+
+  // Notify parent about start readiness
+  useEffect(() => {
+    if (onStartReady) {
+      onStartReady(!!getGame, handleStart);
+    }
+  }, [getGame, onStartReady, handleStart]);
 
   return (
     <>
-      <div className="options">
-        <label>
-          Sounds ?
-          <input type="checkbox" checked={useSound} onChange={toggleUseSound} />
-        </label>
-        <label>
-          Auto forward to next player when idle ?
-          <input type="checkbox" checked={useAutoForward} onChange={toggleUseAutoForward} />
-        </label>
-        {useSound && !isAndroid && voices && voices.length !== 0 && (
-          <div>
-            <label>
-              Voice{" "}
-              <select className="voice" onChange={onVoiceChange} value={isBlank(voiceIndex) ? "" : voiceIndex}>
-                {voices
-                  .slice()
-                  .sort(voiceSortCompare)
-                  .map((v) => {
-                    const voiceIdx = voices.findIndex((vo) => vo.lang === v.lang && vo.name === v.name);
-                    return (
-                      <option key={v.name} value={voiceIdx}>
-                        {v.lang} - {v.name}
-                      </option>
-                    );
-                  })}
-              </select>
-            </label>
-          </div>
-        )}
-      </div>
       <div className="games">
         <button
           onClick={(event) => {
@@ -186,7 +218,7 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
           {![GameName.Bulls, GameName.Oh1, GameName.CutThroat].includes(getGame.name) && (
             <div>
               <label>
-                <input type="checkbox" disabled={singlePlayer} checked={pointing} onChange={onPointingChange} />
+                <input type="checkbox" disabled={singlePlayer} checked={pointing} onChange={handlePointingChange} />
                 pointing ?
               </label>
               {hasError && <span>invalid value</span>}
@@ -230,53 +262,6 @@ export const GameChooser: React.FC<{ singlePlayer: boolean }> = ({ singlePlayer 
               </div>
             </>
           )}
-
-          <button
-            style={{ flex: 1, fontSize: "2em", padding: "0 1em", marginTop: "0.77em" }}
-            onClick={(event) => {
-              event.preventDefault();
-
-              let limit = getLimit;
-              let checkIn = getIn;
-              let checkOut = getOut;
-
-              if (getGame?.name === GameName.Oh1 && isBlank(limit)) {
-                setError(true);
-                return;
-              }
-
-              if (getGame?.name === GameName.Bulls) {
-                limit = getNumberOfBulls * 25;
-                checkIn = null;
-                checkOut = null;
-              }
-
-              if (getGame?.name === GameName.Cricket) {
-                limit = getGame.limit;
-                checkIn = null;
-                checkOut = null;
-              }
-
-              if ([GameName.CutThroat, GameName.Tactical].includes(getGame?.name)) {
-                limit = 0;
-                checkIn = null;
-                checkOut = null;
-              }
-
-              chooseGame({
-                name: getGame.name,
-                checkIn,
-                checkOut,
-                limit,
-                marks: getGame.marks,
-                multiples: getGame.multiples,
-                clear: getGame.clear,
-                pointing: getPointing,
-              });
-            }}
-          >
-            start
-          </button>
         </div>
       )}
     </>
