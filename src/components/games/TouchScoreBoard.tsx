@@ -9,7 +9,6 @@ import { useEffect, useState } from "react";
 import { Pips } from "../Pips";
 import { PointingTouchInput } from "./PointingTouchInput";
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function
 const doubleNoOp = () => () => {};
 
 const boardMark = (numOfMarks: number, aKey: string, onClick: React.MouseEventHandler) => {
