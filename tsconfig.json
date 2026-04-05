@@ -6,7 +6,8 @@
     "jsx": "react",
     "lib": ["dom", "esnext"],
     "module": "esnext",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "skipLibCheck": true
   },
   "exclude": ["node_modules"]
 }

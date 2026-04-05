@@ -2,9 +2,7 @@ import { currentRound, findLastPlayerToThrow, gameOperations } from "./games";
 import { countAllDarts } from "./games/calculations";
 import { applyNextPlayer, useStore as machineUseStore } from "./machine";
 import { sayPhrase, sound } from "./sound";
-import { Mark, Multiple, Player } from "./types";
-
-const autoForwardTimeoutInMillis = 9000;
+import { GameName, Mark, Multiple, Player } from "./types";
 
 export const initializeSubscribers = (useStore: typeof machineUseStore) => {
   useStore.subscribe(
@@ -23,28 +21,33 @@ export const initializeSubscribers = (useStore: typeof machineUseStore) => {
         // never auto advance if no darts have been entered for the round
         // or if the feature is turned off
       } else if (useStore.getState().useAutoForward && currentPlayer?.darts.length % 3) {
-        setTimeout(() => {
-          useStore.setState((state) => {
-            const roundIsSame = round === currentRound(state.players);
-            const playerIsSame = currentPlayerIndex === state.currentPlayerIndex;
-            const dartsAreSame = dartsCount === countAllDarts(state.players);
+        setTimeout(
+          () => {
+            useStore.setState((state) => {
+              const roundIsSame = round === currentRound(state.players);
+              const playerIsSame = currentPlayerIndex === state.currentPlayerIndex;
+              const dartsAreSame = dartsCount === countAllDarts(state.players);
 
-            // make sure state is the same as when we started the timeout via closures
-            if (roundIsSame && playerIsSame && dartsAreSame) {
-              const { players, currentPlayerIndex } = state;
-              const numberThrown = players[currentPlayerIndex].darts.length;
-              const player = state.players[currentPlayerIndex];
+              // make sure state is the same as when we started the timeout via closures
+              if (roundIsSame && playerIsSame && dartsAreSame) {
+                const { players, currentPlayerIndex } = state;
+                const numberThrown = players[currentPlayerIndex].darts.length;
+                const player = state.players[currentPlayerIndex];
 
-              for (let i = numberThrown % 3; i < 3; i++) {
-                player.darts.push([Mark.Miss, Multiple.Single]);
+                for (let i = numberThrown % 3; i < 3; i++) {
+                  player.darts.push([Mark.Miss, Multiple.Single]);
+                }
+
+                applyNextPlayer(currentPlayerIndex, state);
               }
-
-              applyNextPlayer(currentPlayerIndex, state);
-            }
-          });
-        }, autoForwardTimeoutInMillis);
+            });
+            // give oh1 games more time because you have to pause between
+            // darts and do math
+          },
+          game.name === GameName.Oh1 ? 34000 : 8000,
+        );
       }
-    }
+    },
   );
 
   useStore.subscribe(
@@ -53,7 +56,7 @@ export const initializeSubscribers = (useStore: typeof machineUseStore) => {
       if (invalidThrow && useSound) {
         sound().error.play();
       }
-    }
+    },
   );
 
   useStore.subscribe(
@@ -65,7 +68,7 @@ export const initializeSubscribers = (useStore: typeof machineUseStore) => {
         }
         useStore.getState().setPlayerBusted(null);
       }
-    }
+    },
   );
 
   if ("speechSynthesis" in window) {
@@ -77,7 +80,7 @@ export const initializeSubscribers = (useStore: typeof machineUseStore) => {
 
           sayPhrase(name, voiceIndex as number);
         }
-      }
+      },
     );
   }
 
@@ -97,6 +100,6 @@ export const initializeSubscribers = (useStore: typeof machineUseStore) => {
           }
         }
       }
-    }
+    },
   );
 };
