@@ -6,7 +6,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v4
       - name: prepare
         run: |
-          npm ci > /dev/null 2>&1
-          npm run lint
+          pnpm install --frozen-lockfile > /dev/null 2>&1
+          pnpm run lint

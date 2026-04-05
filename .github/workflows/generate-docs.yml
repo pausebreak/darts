@@ -6,7 +6,7 @@ on:
     paths:
       - "src/**"
       - "package.json"
-      - "package-lock.json"
+      - "pnpm-lock.yaml"
       - "tsconfig.json"
 jobs:
   docs:
@@ -16,13 +16,14 @@ jobs:
         with:
           fetch-depth: 0
           ref: main
+      - uses: pnpm/action-setup@v4
       - name: prepare
         run: |
           git config user.email "github-actions[bot]"
           git config user.name "github-actions[bot]@users.noreply.github.com"
           git switch docs
           git merge main --no-edit -q
-          npm ci > /dev/null 2>&1
+          pnpm install --frozen-lockfile > /dev/null 2>&1
           git rm docs/*
           npm run build
           cp src/static/* docs/.

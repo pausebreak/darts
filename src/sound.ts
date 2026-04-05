@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable @typescript-eslint/no-require-imports */
 import isBlank from "@sedan-utils/is-blank";
 import { Howl } from "howler";
 
