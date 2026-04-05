@@ -1,11 +1,14 @@
 .games {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   margin-top: 1em;
+  gap: 0.5em;
 }
 
 .games button {
-  flex: 1;
+  flex: 1 1 calc(50% - 0.25em);
+  min-width: 100px;
   font-size: 1.25em;
   padding: 0.5em;
 }
@@ -17,6 +20,11 @@
 
 .options {
   padding: 0.33em 0.5em;
+}
+
+.options label {
+  display: block;
+  margin-bottom: 0.5em;
 }
 
 .options input,

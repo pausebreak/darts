@@ -12,7 +12,6 @@ export const PlayerChooser: React.FC = () => {
   const movePlayerRight = useStore((state) => state.movePlayerRight);
 
   const [getPlayer, setPlayer] = useState("");
-  const [getActivePlayerName, setActivePlayerName] = useState(null);
   const [hasError, setError] = useState(false);
 
   const setNewPlayer = (event: ChangeEvent<HTMLInputElement>) => {
@@ -39,7 +38,6 @@ export const PlayerChooser: React.FC = () => {
           type="text"
           size={15}
           maxLength={15}
-          onFocus={() => setActivePlayerName(null)}
           onChange={setNewPlayer}
           value={getPlayer}
         />
@@ -51,48 +49,33 @@ export const PlayerChooser: React.FC = () => {
 
       <div className="playerChooser">
         {players.map((player, id) => {
-          const divClick =
-            player.name !== getActivePlayerName
-              ? (event) => {
-                  event.preventDefault();
-                  setActivePlayerName(player.name);
-                }
-              : null;
-
           return (
-            <div className="player" key={`${player.name}${id}`} onClick={divClick}>
-              {player.name !== getActivePlayerName && player.name}
-              {player.name === getActivePlayerName && (
-                <>
-                  <button
-                    onClick={(event) => {
-                      event.preventDefault();
-                      removePlayer(id);
-                      setActivePlayerName(null);
-                    }}
-                  >
-                    remove
-                  </button>
-                  {player.name}
-                  <button
-                    style={{ marginLeft: "0.5em" }}
-                    onClick={(event) => {
-                      event.preventDefault();
-                      movePlayerLeft(id);
-                    }}
-                  >
-                    &lt;
-                  </button>
-                  <button
-                    onClick={(event) => {
-                      event.preventDefault();
-                      movePlayerRight(id);
-                    }}
-                  >
-                    &gt;
-                  </button>
-                </>
-              )}
+            <div className="player" key={`${player.name}${id}`}>
+              <button
+                onClick={(event) => {
+                  event.preventDefault();
+                  removePlayer(id);
+                }}
+              >
+                remove
+              </button>
+              <span className="player-name">{player.name}</span>
+              <button
+                onClick={(event) => {
+                  event.preventDefault();
+                  movePlayerLeft(id);
+                }}
+              >
+                ↑
+              </button>
+              <button
+                onClick={(event) => {
+                  event.preventDefault();
+                  movePlayerRight(id);
+                }}
+              >
+                ↓
+              </button>
             </div>
           );
         })}
