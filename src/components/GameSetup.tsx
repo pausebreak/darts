@@ -49,7 +49,7 @@ const AboutSection: React.FC = () => {
         ☕ Buy me a coffee
       </a>
       <div className="share-section">
-        <div className="share-header">Share app:</div>
+        <div className="share-header">Share This:</div>
         <Qr />
         <p>https://pausebreak.github.io/darts/</p>
       </div>
