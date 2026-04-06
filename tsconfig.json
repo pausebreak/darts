@@ -1,13 +1,14 @@
 {
   "compilerOptions": {
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true,
     "target": "ES2022",
     "jsx": "react",
     "lib": ["dom", "esnext"],
     "module": "esnext",
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "types": ["jest"]
   },
   "exclude": ["node_modules"]
 }

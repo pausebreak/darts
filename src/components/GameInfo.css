@@ -1,16 +1,92 @@
-.gameInfo {
+.gameInfoWrapper {
+  padding: 0.25em 0 0 0;
+  position: relative;
   display: flex;
-  align-items: stretch;
-  align-content: center;
-  margin: 0.25em 0.25em 0 0;
-  padding: 0;
-  font-size: 1.75em;
+  align-items: center;
 }
 
-.gameInfo > div {
+.gameInfo {
   flex: 1;
-  margin: 0;
-  text-align: center;
+  font-size: 1.75em;
+  text-align: left;
+}
+
+.gameInfo > span {
+  margin-left: 0.25em;
+  font-size: 0.7em;
+  display: inline-flex;
+  align-items: center;
+}
+
+.gameInfo > span.name {
+  font-size: 1em;
+}
+
+.hamburger {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.hamburger span {
+  display: block;
+  width: 48px;
+  height: 3px;
+  background: white;
+  border-radius: 2px;
+}
+
+.menuBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9;
+}
+
+.menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 30;
+  background: #333;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  min-width: 150px;
+}
+
+.menu button {
+  width: 100%;
+  padding: 0.75em 1em;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.1em;
+  text-align: left;
+  cursor: pointer;
+}
+
+.menu button:hover {
+  background: #444;
+}
+
+.settingsOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  background: #222;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1em;
+  padding: 1em;
+}
+
+.settingsOverlay button {
+  font-size: 1.25em;
+  padding: 0.5em 2em;
 }
 
 @media only screen and (max-width: 600px) and (min-width: 1px) {
