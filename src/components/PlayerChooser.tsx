@@ -10,6 +10,15 @@ export const PlayerChooser: React.FC = () => {
   const removePlayer = useStore((state) => state.removePlayer);
   const movePlayerLeft = useStore((state) => state.movePlayerLeft);
   const movePlayerRight = useStore((state) => state.movePlayerRight);
+  const game = useStore((state) => state.game);
+  const currentPlayerIndex = useStore((state) => state.currentPlayerIndex);
+
+  const midGame = !!game;
+  const atRoundBoundary =
+    !midGame ||
+    players.length === 0 ||
+    (currentPlayerIndex === 0 && players.every((p) => p.darts.length % 3 === 0));
+  const canReorder = atRoundBoundary;
 
   const [getPlayer, setPlayer] = useState("");
   const [hasError, setError] = useState(false);
@@ -41,11 +50,15 @@ export const PlayerChooser: React.FC = () => {
           onChange={setNewPlayer}
           value={getPlayer}
         />
-        <button onClick={addNewPlayer} disabled={hasError}>
+        <button onClick={addNewPlayer} disabled={hasError || (midGame && !atRoundBoundary)}>
           Add Player
         </button>
         {hasError && <div>name already exists</div>}
       </div>
+
+      {midGame && !atRoundBoundary && (
+        <div className="reorder-message">Finish the current round to add or reorder players</div>
+      )}
 
       <div className="playerChooser">
         {players.map((player, id) => {
@@ -61,6 +74,7 @@ export const PlayerChooser: React.FC = () => {
               </button>
               <span className="player-name">{player.name}</span>
               <button
+                disabled={!canReorder}
                 onClick={(event) => {
                   event.preventDefault();
                   movePlayerLeft(id);
@@ -69,6 +83,7 @@ export const PlayerChooser: React.FC = () => {
                 ↑
               </button>
               <button
+                disabled={!canReorder}
                 onClick={(event) => {
                   event.preventDefault();
                   movePlayerRight(id);

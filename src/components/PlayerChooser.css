@@ -33,6 +33,13 @@
   white-space: nowrap;
 }
 
+.reorder-message {
+  text-align: center;
+  color: #f0ad4e;
+  font-size: 1.1em;
+  padding: 0.5em;
+}
+
 .addPlayer {
   display: flex;
   flex-direction: row;
