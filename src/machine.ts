@@ -4,7 +4,7 @@ import { immer } from "zustand/middleware/immer";
 import { Game, Player, Dart, GameName, Multiple, Mark } from "./types";
 
 import { subscribeWithSelector } from "zustand/middleware";
-import { gameOperations } from "./games";
+import { currentRound, gameOperations } from "./games";
 
 export type GameState = {
   players: Player[];
@@ -103,6 +103,13 @@ export const useStore = create<GameState>()(
         },
         addPlayer: (player) =>
           set((state) => {
+            if (state.game && state.players.length > 0) {
+              const round = currentRound(state.players);
+              const missCount = round * 3;
+              for (let i = 0; i < missCount; i++) {
+                player.darts.push([Mark.Miss, Multiple.Single]);
+              }
+            }
             state.players.push(player);
           }),
         removePlayer: (playerId) =>
@@ -188,10 +195,10 @@ export const useStore = create<GameState>()(
             state.players.splice(newIndex, 0, state.players.splice(index, 1)[0]);
           });
         },
-      }))
+      })),
     ),
     {
       name: "dart-game-state", // name of item in the storage (must be unique)
-    }
-  )
+    },
+  ),
 );

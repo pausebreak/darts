@@ -18,10 +18,16 @@ export interface GameChooserProps {
   onStartReady?: (canStart: boolean, startHandler: () => void) => void;
 }
 
-export const GameChooser: React.FC<GameChooserProps> = ({ singlePlayer, initialGame, onGameChange, onPointingChange, onStartReady }) => {
+export const GameChooser: React.FC<GameChooserProps> = ({
+  singlePlayer,
+  initialGame,
+  onGameChange,
+  onPointingChange,
+  onStartReady,
+}) => {
   const chooseGame = useStore((state) => state.setGame);
 
-  const [getGame, setGame] = useState<Game>(initialGame || null);
+  const [getGame, setGame] = useState<Game | null>(initialGame || null);
   const [getLimit, setLimit] = useState(301);
   const [getPointing, setPointing] = useState(false);
   const [getNumberOfBulls, setNumberOfBulls] = useState(25);
@@ -100,9 +106,9 @@ export const GameChooser: React.FC<GameChooserProps> = ({ singlePlayer, initialG
   const handleStart = useCallback(() => {
     if (!getGame) return;
 
-    let limit = getLimit;
-    let checkIn = getIn;
-    let checkOut = getOut;
+    let limit: number = getLimit;
+    let checkIn: Multiple | undefined = getIn;
+    let checkOut: Multiple | undefined = getOut;
 
     if (getGame?.name === GameName.Oh1 && isBlank(limit)) {
       setError(true);
@@ -111,22 +117,22 @@ export const GameChooser: React.FC<GameChooserProps> = ({ singlePlayer, initialG
 
     if (getGame?.name === GameName.Bulls) {
       limit = getNumberOfBulls * 25;
-      checkIn = null;
-      checkOut = null;
+      checkIn = undefined;
+      checkOut = undefined;
     }
 
     if (getGame?.name === GameName.Cricket) {
       limit = getGame.limit;
-      checkIn = null;
-      checkOut = null;
+      checkIn = undefined;
+      checkOut = undefined;
     }
 
     let arePointing = getPointing;
 
     if ([GameName.CutThroat, GameName.Tactical].includes(getGame?.name)) {
       limit = 0;
-      checkIn = null;
-      checkOut = null;
+      checkIn = undefined;
+      checkOut = undefined;
 
       arePointing = true;
     }
