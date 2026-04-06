@@ -188,10 +188,10 @@ export const useStore = create<GameState>()(
             state.players.splice(newIndex, 0, state.players.splice(index, 1)[0]);
           });
         },
-      }))
+      })),
     ),
     {
       name: "dart-game-state", // name of item in the storage (must be unique)
-    }
-  )
+    },
+  ),
 );
