@@ -127,14 +127,10 @@ export const GameChooser: React.FC<GameChooserProps> = ({
       checkOut = undefined;
     }
 
-    let arePointing = getPointing;
-
     if ([GameName.CutThroat, GameName.Tactical].includes(getGame?.name)) {
       limit = 0;
       checkIn = undefined;
       checkOut = undefined;
-
-      arePointing = true;
     }
 
     chooseGame({
@@ -145,7 +141,7 @@ export const GameChooser: React.FC<GameChooserProps> = ({
       marks: getGame.marks,
       multiples: getGame.multiples,
       clear: getGame.clear,
-      pointing: arePointing,
+      pointing: getPointing,
     });
   }, [getGame, getLimit, getIn, getOut, getPointing, getNumberOfBulls, chooseGame]);
 
