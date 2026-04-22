@@ -1,6 +1,5 @@
 .gameInfoWrapper {
   padding: 0.25em 0 0 0;
-  position: relative;
   display: flex;
   align-items: center;
 }
@@ -22,53 +21,38 @@
   font-size: 1em;
 }
 
-.hamburger {
-  background: none;
-  border: none;
-  cursor: pointer;
+.iconButtons {
   display: flex;
-  flex-direction: column;
-  gap: 5px;
+  gap: 0.25em;
+  align-items: center;
+  font-size: 1.75em;
 }
 
-.hamburger span {
-  display: block;
-  width: 48px;
-  height: 3px;
-  background: white;
-  border-radius: 2px;
-}
-
-.menuBackdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 9;
-}
-
-.menu {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  z-index: 30;
-  background: #333;
-  border-radius: 4px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-  min-width: 150px;
-}
-
-.menu button {
-  width: 100%;
-  padding: 0.75em 1em;
+.iconButton {
   background: none;
   border: none;
-  color: white;
-  font-size: 1.1em;
-  text-align: left;
   cursor: pointer;
+  color: white;
+  padding: 0.35em;
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.menu button:hover {
-  background: #444;
+.iconButton svg {
+  width: 1.75em;
+  height: 1.75em;
+  display: block;
+}
+
+.iconButton:hover {
+  color: #aaa;
+}
+
+.iconButton.destructive:hover {
+  color: red;
 }
 
 .settingsOverlay {
@@ -90,7 +74,8 @@
 }
 
 @media only screen and (max-width: 600px) and (min-width: 1px) {
-  .gameInfo {
+  .gameInfo,
+  .iconButtons {
     font-size: 1.25em;
   }
 }
