@@ -71,6 +71,10 @@
   flex: none;
 }
 
+.column .playerForRow.pipsContainer {
+  align-items: normal;
+}
+
 .column .playerForRow.current {
   background-color: red;
 }

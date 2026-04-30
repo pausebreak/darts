@@ -8,6 +8,8 @@ on:
       - "package.json"
       - "pnpm-lock.yaml"
       - "tsconfig.json"
+permissions:
+  contents: write
 jobs:
   docs:
     runs-on: ubuntu-latest

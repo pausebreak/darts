@@ -4,7 +4,17 @@ import { Mark, Multiple, Dart } from "../types";
 
 export const DartLabel: React.FC<{ dart: Dart; condensed?: boolean }> = ({ dart, condensed = false }) => {
   if (condensed) {
-    const value = dart[0] === Mark.Bull ? "B" : dart[0];
+    let value: Mark | string = dart[0];
+
+    switch (dart[0]) {
+      case Mark.Bull:
+        value = "B";
+        break;
+      case Mark.Miss:
+        value = "-";
+        break;
+    }
+
     return (
       <div className="dart condensed">
         {dart[1] !== Multiple.Single && `${Multiple[dart[1]][0]}`}
