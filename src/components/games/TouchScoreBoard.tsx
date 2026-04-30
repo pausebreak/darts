@@ -74,7 +74,7 @@ export const TouchScoreBoard = () => {
   const [double, setDouble] = useState(false);
   const [triple, setTriple] = useState(false);
   const [showGrid, setShowGrid] = useState(false);
-  const [doubleOrTriple, setDoubleOrTriple] = useState<Mark>(undefined);
+  const [doubleOrTriple, setDoubleOrTriple] = useState<Mark | undefined>(undefined);
 
   const numOfPlayers = players.length;
   const half = Math.floor(numOfPlayers / 2);
@@ -121,7 +121,9 @@ export const TouchScoreBoard = () => {
   };
 
   const clicker = (mark: Mark) => {
-    addThrowToCurrentPlayer([doubleOrTriple, Multiple.Single, mark]);
+    if (doubleOrTriple) {
+      addThrowToCurrentPlayer([doubleOrTriple, Multiple.Single, mark]);
+    }
     setShowGrid(false);
     setDoubleOrTriple(undefined);
   };
@@ -153,6 +155,16 @@ export const TouchScoreBoard = () => {
     }
     onClick(event, [mark, Multiple.Single]);
   };
+
+  const numSoFar = players[currentPlayerIndex].darts.length;
+  const dartNumThisRound = numSoFar % 3;
+  const dartsThisRound = [];
+
+  for (let i = 0; i < dartNumThisRound; i++) {
+    dartsThisRound[i] = players[currentPlayerIndex].darts[numSoFar - i - 1];
+  }
+
+  dartsThisRound.reverse();
 
   return (
     <>
@@ -192,9 +204,9 @@ export const TouchScoreBoard = () => {
         })}
 
         <div className="column">
-          <div className="playerForRow">
-            <Pips numThrown={players[currentPlayerIndex].darts.length % 3} />
-            {game.pointing && playerScores && <div className="score">&nbsp;</div>}
+          <div className="playerForRow pipsContainer">
+            <Pips dartsThisRound={dartsThisRound} />
+            {game.pointing && <div className="score">&nbsp;</div>}
           </div>
           {game.marks.map((mark) => {
             let cls = "markLabel";

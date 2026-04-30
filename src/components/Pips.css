@@ -1,14 +1,20 @@
 .pips {
+  flex: 1;
   display: flex;
   flex-direction: row;
 }
 
 .pips > div {
+  flex: 1;
+}
+
+.pips > div > div {
   height: 1em;
   width: 1em;
   border-radius: 1em;
   margin-top: 0.2em;
   border: 2px solid white;
+  justify-self: center;
 }
 
 .pips .filled {
