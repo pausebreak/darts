@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from "react";
+import React from "react";
 import { Multiple, GameName } from "../types";
 
 import "./GameChooser.css";
@@ -146,10 +146,7 @@ export const GameChooser: React.FC<GameChooserProps> = ({ singlePlayer, state, o
           {showInOut(selected) && (
             <>
               <div>
-                <select
-                  onChange={(e) => update({ checkIn: Number(e.target.value) as Multiple })}
-                  value={checkIn}
-                >
+                <select onChange={(e) => update({ checkIn: Number(e.target.value) as Multiple })} value={checkIn}>
                   <option value={Multiple.Single}>Single</option>
                   <option value={Multiple.Double}>Double</option>
                   <option value={Multiple.Triple}>Triple</option>
@@ -157,10 +154,7 @@ export const GameChooser: React.FC<GameChooserProps> = ({ singlePlayer, state, o
                 in
               </div>
               <div>
-                <select
-                  onChange={(e) => update({ checkOut: Number(e.target.value) as Multiple })}
-                  value={checkOut}
-                >
+                <select onChange={(e) => update({ checkOut: Number(e.target.value) as Multiple })} value={checkOut}>
                   <option value={Multiple.Single}>Single</option>
                   <option value={Multiple.Double}>Double</option>
                   <option value={Multiple.Triple}>Triple</option>
