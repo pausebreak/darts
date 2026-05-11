@@ -1,26 +1,56 @@
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import { useStore } from "../machine";
 import { PlayerChooser } from "./PlayerChooser";
-import { GameChooser } from "./GameChooser";
+import { GameChooser, GameChooserState, initialChooserState } from "./GameChooser";
 import { SettingsSection } from "./SettingsSection";
-import { Game, Player } from "../types";
+import { bulls } from "../games/bulls";
+import { cricket } from "../games/cricket";
+import { tactical } from "../games/tactical";
+import { ohGames } from "../games/oh1";
+import { cutThroat } from "../games";
+import { Game, GameName, Player } from "../types";
 import "./GameSetup.css";
 
 type ActiveSection = "players" | "settings" | "game" | "about" | null;
 
-// Summary helper functions
 const getPlayersSummary = (players: Player[]): string => {
   if (players.length === 0) return "No players";
   if (players.length === 1) return "1 player";
   return `${players.length} players`;
 };
 
-const getGameSummary = (game: Game | null, pointing: boolean): string => {
-  if (!game) return "No game selected";
-  return pointing ? `${game.name} (pointing)` : game.name;
+const getGameSummary = (state: GameChooserState, singlePlayer: boolean): string => {
+  if (!state.selected) return "No game selected";
+  const pointing = !singlePlayer && state.pointing;
+  const canPoint = state.selected === GameName.Cricket || state.selected === GameName.Tactical;
+  return canPoint && pointing ? `${state.selected} (pointing)` : state.selected;
 };
 
-// QR component
+const buildGame = (state: GameChooserState, singlePlayer: boolean): Game | null => {
+  if (!state.selected) return null;
+  const pointing = singlePlayer ? false : state.pointing;
+
+  switch (state.selected) {
+    case GameName.Bulls:
+      return { ...bulls(), limit: state.numberOfBulls * 25 };
+    case GameName.Cricket:
+      return cricket(pointing);
+    case GameName.Tactical:
+      return tactical(pointing);
+    case GameName.CutThroat:
+      return cutThroat();
+    case GameName.Oh1:
+      return { ...ohGames(state.limit), checkIn: state.checkIn, checkOut: state.checkOut };
+  }
+};
+
+const canStartGame = (state: GameChooserState): boolean => {
+  if (!state.selected) return false;
+  if (state.selected === GameName.Oh1 && (Number.isNaN(state.limit) || state.limit < 10)) return false;
+  if (state.selected === GameName.Bulls && (state.numberOfBulls < 3 || state.numberOfBulls > 100)) return false;
+  return true;
+};
+
 const Qr = () => {
   return (
     <div className="qr">
@@ -36,7 +66,6 @@ const Qr = () => {
   );
 };
 
-// About section component
 const AboutSection: React.FC = () => {
   return (
     <div className="about-section">
@@ -57,7 +86,6 @@ const AboutSection: React.FC = () => {
   );
 };
 
-// Accordion section component
 const AccordionSection: React.FC<{
   id: ActiveSection;
   title: string;
@@ -83,30 +111,18 @@ const AccordionSection: React.FC<{
 };
 
 export const GameSetup: React.FC = () => {
-  const [activeSection, setActiveSection] = useState<ActiveSection>(null);
   const players = useStore((state) => state.players);
+  const setGame = useStore((state) => state.setGame);
+
+  const [activeSection, setActiveSection] = useState<ActiveSection>(null);
+  const [chooserState, setChooserState] = useState<GameChooserState>(initialChooserState);
+
   const singlePlayer = players.length === 1;
+  const canStart = canStartGame(chooserState);
 
-  // Get summaries
-  const playersSummary = getPlayersSummary(players);
-  
-  // Track selected game, pointing state, and start handler
-  const [selectedGame, setSelectedGame] = useState<Game | null>(null);
-  const [pointing, setPointing] = useState(false);
-  const [canStart, setCanStart] = useState(false);
-  const [startHandler, setStartHandler] = useState<(() => void) | null>(null);
-  
-  const gameSummary = getGameSummary(selectedGame, pointing);
-
-  const handleStartReady = useCallback((canStartGame: boolean, handler: () => void) => {
-    setCanStart(canStartGame);
-    setStartHandler(() => handler);
-  }, []);
-
-  const handleStartClick = () => {
-    if (startHandler) {
-      startHandler();
-    }
+  const handleStart = () => {
+    const game = buildGame(chooserState, singlePlayer);
+    if (game) setGame(game);
   };
 
   return (
@@ -116,7 +132,7 @@ export const GameSetup: React.FC = () => {
         <AccordionSection
           id="players"
           title="Players"
-          summary={playersSummary}
+          summary={getPlayersSummary(players)}
           isActive={activeSection === "players"}
           onToggle={setActiveSection}
         >
@@ -127,17 +143,11 @@ export const GameSetup: React.FC = () => {
           <AccordionSection
             id="game"
             title="Game"
-            summary={gameSummary}
+            summary={getGameSummary(chooserState, singlePlayer)}
             isActive={activeSection === "game"}
             onToggle={setActiveSection}
           >
-            <GameChooser
-              singlePlayer={singlePlayer}
-              initialGame={selectedGame}
-              onGameChange={setSelectedGame}
-              onPointingChange={setPointing}
-              onStartReady={handleStartReady}
-            />
+            <GameChooser singlePlayer={singlePlayer} state={chooserState} onChange={setChooserState} />
           </AccordionSection>
         )}
 
@@ -160,8 +170,8 @@ export const GameSetup: React.FC = () => {
         >
           <AboutSection />
         </AccordionSection>
-        {canStart && startHandler && (
-          <button className="start-button" onClick={handleStartClick}>
+        {canStart && (
+          <button className="start-button" onClick={handleStart}>
             start
           </button>
         )}
@@ -169,4 +179,3 @@ export const GameSetup: React.FC = () => {
     </>
   );
 };
-
