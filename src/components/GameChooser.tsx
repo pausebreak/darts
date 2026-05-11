@@ -141,9 +141,9 @@ export const GameChooser: React.FC<GameChooserProps> = ({
       marks: getGame.marks,
       multiples: getGame.multiples,
       clear: getGame.clear,
-      pointing: getPointing,
+      pointing: getGame.pointing,
     });
-  }, [getGame, getLimit, getIn, getOut, getPointing, getNumberOfBulls, chooseGame]);
+  }, [getGame, getLimit, getIn, getOut, getNumberOfBulls, chooseGame]);
 
   // Notify parent about start readiness
   useEffect(() => {

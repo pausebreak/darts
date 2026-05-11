@@ -8,7 +8,6 @@ import "./GameSetup.css";
 
 type ActiveSection = "players" | "settings" | "game" | "about" | null;
 
-// Summary helper functions
 const getPlayersSummary = (players: Player[]): string => {
   if (players.length === 0) return "No players";
   if (players.length === 1) return "1 player";
@@ -20,7 +19,6 @@ const getGameSummary = (game: Game | null, pointing: boolean): string => {
   return pointing ? `${game.name} (pointing)` : game.name;
 };
 
-// QR component
 const Qr = () => {
   return (
     <div className="qr">
@@ -36,7 +34,6 @@ const Qr = () => {
   );
 };
 
-// About section component
 const AboutSection: React.FC = () => {
   return (
     <div className="about-section">
@@ -57,7 +54,6 @@ const AboutSection: React.FC = () => {
   );
 };
 
-// Accordion section component
 const AccordionSection: React.FC<{
   id: ActiveSection;
   title: string;
@@ -83,19 +79,16 @@ const AccordionSection: React.FC<{
 };
 
 export const GameSetup: React.FC = () => {
-  const [activeSection, setActiveSection] = useState<ActiveSection>(null);
   const players = useStore((state) => state.players);
-  const singlePlayer = players.length === 1;
 
-  // Get summaries
-  const playersSummary = getPlayersSummary(players);
-  
-  // Track selected game, pointing state, and start handler
+  const [activeSection, setActiveSection] = useState<ActiveSection>(null);
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
   const [pointing, setPointing] = useState(false);
   const [canStart, setCanStart] = useState(false);
   const [startHandler, setStartHandler] = useState<(() => void) | null>(null);
-  
+
+  const singlePlayer = players.length === 1;
+  const playersSummary = getPlayersSummary(players);
   const gameSummary = getGameSummary(selectedGame, pointing);
 
   const handleStartReady = useCallback((canStartGame: boolean, handler: () => void) => {
@@ -169,4 +162,3 @@ export const GameSetup: React.FC = () => {
     </>
   );
 };
-
