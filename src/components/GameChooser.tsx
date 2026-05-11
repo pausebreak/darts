@@ -1,156 +1,46 @@
-import React, { ChangeEvent, useState, useEffect, useCallback } from "react";
-import { bulls } from "../games/bulls";
-import { cricket } from "../games/cricket";
-import { ohGames } from "../games/oh1";
-import { useStore } from "../machine";
-import { Game, Multiple, GameName } from "../types";
-import isBlank from "@sedan-utils/is-blank";
-import { cutThroat } from "../games";
+import React from "react";
+import { Multiple, GameName } from "../types";
 
 import "./GameChooser.css";
-import { tactical } from "../games/tactical";
+
+export interface GameChooserState {
+  selected: GameName | null;
+  limit: number;
+  pointing: boolean;
+  numberOfBulls: number;
+  checkIn: Multiple;
+  checkOut: Multiple;
+}
+
+export const initialChooserState: GameChooserState = {
+  selected: null,
+  limit: 301,
+  pointing: false,
+  numberOfBulls: 25,
+  checkIn: Multiple.Single,
+  checkOut: Multiple.Single,
+};
 
 export interface GameChooserProps {
   singlePlayer: boolean;
-  initialGame?: Game | null;
-  onGameChange?: (game: Game | null) => void;
-  onPointingChange?: (pointing: boolean) => void;
-  onStartReady?: (canStart: boolean, startHandler: () => void) => void;
+  state: GameChooserState;
+  onChange: (state: GameChooserState) => void;
 }
 
-export const GameChooser: React.FC<GameChooserProps> = ({
-  singlePlayer,
-  initialGame,
-  onGameChange,
-  onPointingChange,
-  onStartReady,
-}) => {
-  const chooseGame = useStore((state) => state.setGame);
+const showLimit = (name: GameName) => name === GameName.Oh1;
+const showPointing = (name: GameName) => name === GameName.Cricket || name === GameName.Tactical;
+const showBulls = (name: GameName) => name === GameName.Bulls;
+const showInOut = (name: GameName) => name === GameName.Oh1;
 
-  const [getGame, setGame] = useState<Game | null>(initialGame || null);
-  const [getLimit, setLimit] = useState(301);
-  const [getPointing, setPointing] = useState(false);
-  const [getNumberOfBulls, setNumberOfBulls] = useState(25);
-  const [getIn, setIn] = useState(Multiple.Single);
-  const [getOut, setOut] = useState(Multiple.Single);
-  const [hasError, setError] = useState(false);
+export const GameChooser: React.FC<GameChooserProps> = ({ singlePlayer, state, onChange }) => {
+  const { selected, limit, pointing, numberOfBulls, checkIn, checkOut } = state;
+  const update = (patch: Partial<GameChooserState>) => onChange({ ...state, ...patch });
 
-  // Sync with initialGame prop when it changes (e.g., when accordion reopens)
-  useEffect(() => {
-    if (initialGame !== undefined) {
-      const currentGameName = getGame?.name;
-      const initialGameName = initialGame?.name;
-      if (currentGameName !== initialGameName) {
-        setGame(initialGame);
-      }
-    }
-    // Intentionally exclude getGame to avoid reset loops; we only react to initialGame
-  }, [initialGame]);
+  const effectivePointing = singlePlayer ? false : pointing;
+  const limitInvalid = selected === GameName.Oh1 && (Number.isNaN(limit) || limit < 10);
+  const bullsInvalid = selected === GameName.Bulls && (numberOfBulls < 3 || numberOfBulls > 100);
 
-  const onLimitChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const value = Number(event.target.value);
-
-    if (isBlank(getLimit) || value < 10) {
-      setError(true);
-    } else {
-      setError(false);
-    }
-
-    setLimit(value);
-  };
-
-  const onNumberOfBulls = (event: ChangeEvent<HTMLInputElement>) => {
-    const value = Number(event.target.value);
-
-    if (isBlank(getLimit) || value < 3 || value > 100) {
-      setError(true);
-    } else {
-      setError(false);
-    }
-
-    setNumberOfBulls(value);
-    setLimit(value * 25);
-  };
-
-  const onInChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    const value = Number(event.target.value);
-    setIn(value as unknown as Multiple);
-  };
-
-  const onOutChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    const value = Number(event.target.value);
-    setOut(value as unknown as Multiple);
-  };
-
-  const handlePointingChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setPointing(event.target.checked);
-  };
-
-  const pointing = singlePlayer ? false : getPointing;
-
-  // Notify parent when game changes
-  useEffect(() => {
-    if (onGameChange) {
-      onGameChange(getGame);
-    }
-  }, [getGame, onGameChange]);
-
-  // Notify parent when pointing changes
-  useEffect(() => {
-    if (onPointingChange) {
-      onPointingChange(pointing);
-    }
-  }, [pointing, onPointingChange]);
-
-  // Create start handler with useCallback
-  const handleStart = useCallback(() => {
-    if (!getGame) return;
-
-    let limit: number = getLimit;
-    let checkIn: Multiple | undefined = getIn;
-    let checkOut: Multiple | undefined = getOut;
-
-    if (getGame?.name === GameName.Oh1 && isBlank(limit)) {
-      setError(true);
-      return;
-    }
-
-    if (getGame?.name === GameName.Bulls) {
-      limit = getNumberOfBulls * 25;
-      checkIn = undefined;
-      checkOut = undefined;
-    }
-
-    if (getGame?.name === GameName.Cricket) {
-      limit = getGame.limit;
-      checkIn = undefined;
-      checkOut = undefined;
-    }
-
-    if ([GameName.CutThroat, GameName.Tactical].includes(getGame?.name)) {
-      limit = 0;
-      checkIn = undefined;
-      checkOut = undefined;
-    }
-
-    chooseGame({
-      name: getGame.name,
-      checkIn,
-      checkOut,
-      limit,
-      marks: getGame.marks,
-      multiples: getGame.multiples,
-      clear: getGame.clear,
-      pointing: getPointing,
-    });
-  }, [getGame, getLimit, getIn, getOut, getPointing, getNumberOfBulls, chooseGame]);
-
-  // Notify parent about start readiness
-  useEffect(() => {
-    if (onStartReady) {
-      onStartReady(!!getGame, handleStart);
-    }
-  }, [getGame, onStartReady, handleStart]);
+  const pick = (name: GameName) => update({ selected: name });
 
   return (
     <>
@@ -158,109 +48,118 @@ export const GameChooser: React.FC<GameChooserProps> = ({
         <button
           onClick={(event) => {
             event.preventDefault();
-            setGame(bulls());
+            pick(GameName.Bulls);
           }}
         >
-          Bulls {getGame?.name === GameName.Bulls && <span>!!</span>}
+          Bulls {selected === GameName.Bulls && <span>!!</span>}
         </button>
 
         <button
           onClick={(event) => {
             event.preventDefault();
-            setGame(cricket(getPointing));
+            pick(GameName.Cricket);
           }}
         >
-          Cricket {getGame?.name === GameName.Cricket && <span>!!</span>}
+          Cricket {selected === GameName.Cricket && <span>!!</span>}
         </button>
         <button
           onClick={(event) => {
             event.preventDefault();
-            setGame(tactical(getPointing));
+            pick(GameName.Tactical);
           }}
         >
-          Tactical {getGame?.name === GameName.Tactical && <span>!!</span>}
+          Tactical {selected === GameName.Tactical && <span>!!</span>}
         </button>
         <button
           onClick={(event) => {
             event.preventDefault();
-            setGame(ohGames(Number(getLimit)));
+            pick(GameName.Oh1);
           }}
         >
-          Oh 1 {getGame?.name === GameName.Oh1 && <span>!!</span>}
+          Oh 1 {selected === GameName.Oh1 && <span>!!</span>}
         </button>
         <button
           onClick={(event) => {
             event.preventDefault();
-            setGame(cutThroat());
+            pick(GameName.CutThroat);
           }}
         >
-          Cut Throat {getGame?.name === GameName.CutThroat && <span>!!</span>}
+          Cut Throat {selected === GameName.CutThroat && <span>!!</span>}
         </button>
       </div>
-      {getGame && getGame.name === GameName.Cricket && (
+      {selected === GameName.Cricket && (
         <a target={"_blank"} href="https://en.wikipedia.org/wiki/Cricket_(darts)">
           The game of Cricket
         </a>
       )}
-      {getGame && getGame.name === GameName.Oh1 && (
+      {selected === GameName.Oh1 && (
         <a target={"_blank"} href="https://en.wikipedia.org/wiki/Darts#Games">
           The game of Darts
         </a>
       )}
-      {getGame && (
+      {selected && (
         <div className="options">
-          {getGame?.limit !== 0 && getGame.name !== GameName.Bulls && (
+          {showLimit(selected) && (
             <div>
-              <input maxLength={4} type="number" max={9999} min={3} value={getLimit} onChange={onLimitChange} />
+              <input
+                maxLength={4}
+                type="number"
+                max={9999}
+                min={3}
+                value={limit}
+                onChange={(e) => update({ limit: Number(e.target.value) })}
+              />
               limit
-              {hasError && <span>invalid value</span>}
+              {limitInvalid && <span>invalid value</span>}
             </div>
           )}
 
-          {![GameName.Bulls, GameName.Oh1, GameName.CutThroat].includes(getGame.name) && (
+          {showPointing(selected) && (
             <div>
               <label>
-                <input type="checkbox" disabled={singlePlayer} checked={pointing} onChange={handlePointingChange} />
+                <input
+                  type="checkbox"
+                  disabled={singlePlayer}
+                  checked={effectivePointing}
+                  onChange={(e) => update({ pointing: e.target.checked })}
+                />
                 pointing ?
               </label>
-              {hasError && <span>invalid value</span>}
             </div>
           )}
 
-          {getGame.name === GameName.Bulls && (
+          {showBulls(selected) && (
             <div>
               <input
                 maxLength={3}
                 type="number"
                 max={100}
                 min={3}
-                value={getNumberOfBulls}
-                onChange={onNumberOfBulls}
+                value={numberOfBulls}
+                onChange={(e) => update({ numberOfBulls: Number(e.target.value) })}
               />
               Number of Bulls
-              {hasError && <span>invalid value</span>}
+              {bullsInvalid && <span>invalid value</span>}
             </div>
           )}
 
-          {![GameName.Bulls, GameName.Cricket, GameName.Tactical, GameName.CutThroat].includes(getGame.name) && (
+          {showInOut(selected) && (
             <>
               <div>
-                <select onChange={onInChange} value={getIn}>
+                <select onChange={(e) => update({ checkIn: Number(e.target.value) as Multiple })} value={checkIn}>
                   <option value={Multiple.Single}>Single</option>
                   <option value={Multiple.Double}>Double</option>
                   <option value={Multiple.Triple}>Triple</option>
                 </select>{" "}
                 in
-                {hasError && <span>invalid value</span>}
               </div>
               <div>
-                <select onChange={onOutChange} value={getOut}>
+                <select onChange={(e) => update({ checkOut: Number(e.target.value) as Multiple })} value={checkOut}>
                   <option value={Multiple.Single}>Single</option>
                   <option value={Multiple.Double}>Double</option>
                   <option value={Multiple.Triple}>Triple</option>
                 </select>{" "}
                 out
-                {hasError && <span>invalid value</span>}
               </div>
             </>
           )}
