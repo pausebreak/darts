@@ -60,6 +60,6 @@ export type Game = {
 export type GameOperations = {
   validThrow(playerIndex: number, players: Player[], dart: Dart): boolean;
   didBust?(playerIndex: number, players: Player[], dart: Dart): boolean;
-  didWin(players: Player[], currentPlayerIndex: number): Player;
+  didWin(players: Player[], currentPlayerIndex: number): Player | undefined;
   stats?(players: Player[]): { scores: number[]; marks: number[] };
 };

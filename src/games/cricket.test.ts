@@ -109,6 +109,40 @@ describe("didWin", () => {
     expect(result).toBe(undefined);
   });
 
+  it("returns undefined in a pointing game when the player cleared but does not have the highest score", () => {
+    const b = cricket(true);
+    const scorer: Player = {
+      name: "scorer",
+      darts: [
+        [Mark.Fifteen, Multiple.Triple],
+        [Mark.Fifteen, Multiple.Triple],
+        [Mark.Fifteen, Multiple.Triple],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Miss, Multiple.Single],
+      ],
+    };
+    const clearer: Player = {
+      name: "clearer",
+      darts: [
+        [Mark.Sixteen, Multiple.Triple],
+        [Mark.Seventeen, Multiple.Triple],
+        [Mark.Eighteen, Multiple.Triple],
+        [Mark.Nineteen, Multiple.Triple],
+        [Mark.Twenty, Multiple.Triple],
+        [Mark.Bull, Multiple.Double],
+        [Mark.Bull, Multiple.Double],
+        [Mark.Fifteen, Multiple.Triple],
+      ],
+    };
+    const result = gameOperations(b).didWin([scorer, clearer], 1);
+
+    expect(result).toBe(undefined);
+  });
+
   it("can tell when a pointing game is over", () => {
     const b = cricket(true);
     const player: Player = {

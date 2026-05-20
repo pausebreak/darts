@@ -17,8 +17,6 @@ See: https://pausebreak.github.io/darts/ for a live demonstration.
 in somewhat of an order:
 
 - react tests ( held off on these until the interface settled )
-- stats
-- add technical cricket variant
 - color pallette
 - visual design
 
