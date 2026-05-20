@@ -89,7 +89,7 @@ export const gameOperations = (game: Game): GameOperations => {
     default:
       return {
         validThrow: () => false,
-        didWin: () => null,
+        didWin: () => undefined,
       };
   }
 };

@@ -101,6 +101,44 @@ describe("didWin", () => {
     expect(result).toBe(player);
   });
 
+  it("returns undefined when the player cleared but does not have the lowest score", () => {
+    const b = cutThroat();
+    const scorer: Player = {
+      name: "scorer",
+      darts: [
+        [Mark.Fifteen, Multiple.Triple],
+        [Mark.Fifteen, Multiple.Triple],
+        [Mark.Fifteen, Multiple.Triple],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Miss, Multiple.Single],
+        [Mark.Miss, Multiple.Single],
+      ],
+    };
+    const clearer: Player = {
+      name: "clearer",
+      darts: [
+        [Mark.Fifteen, Multiple.Triple],
+        [Mark.Sixteen, Multiple.Triple],
+        [Mark.Seventeen, Multiple.Triple],
+        [Mark.Eighteen, Multiple.Triple],
+        [Mark.Nineteen, Multiple.Triple],
+        [Mark.Twenty, Multiple.Triple],
+        [Mark.Bull, Multiple.Double],
+        [Mark.Bull, Multiple.Single],
+      ],
+    };
+    const bystander: Player = {
+      name: "bystander",
+      darts: [[Mark.Miss, Multiple.Single]],
+    };
+    const result = gameOperations(b).didWin([scorer, clearer, bystander], 1);
+
+    expect(result).toBe(undefined);
+  });
+
   it("can tell when a game is over", () => {
     const b = cutThroat();
     const player: Player = {
@@ -193,6 +231,37 @@ describe("stats", () => {
     const result = ops.stats([player, otherPlayer]);
 
     expect(result).toStrictEqual({ marks: [23, 17], scores: [0, 45] });
+  });
+
+  it("does not count overage marks once everyone has closed", () => {
+    const player1: Player = {
+      name: "p1",
+      darts: [
+        [Mark.Fifteen, Multiple.Triple],
+        [Mark.Fifteen, Multiple.Triple],
+        [Mark.Fifteen, Multiple.Single],
+      ],
+    };
+    const player2: Player = {
+      name: "p2",
+      darts: [
+        [Mark.Fifteen, Multiple.Triple],
+        [Mark.Fifteen, Multiple.Triple],
+        [Mark.Miss, Multiple.Single],
+      ],
+    };
+    const player3: Player = {
+      name: "p3",
+      darts: [
+        [Mark.Fifteen, Multiple.Triple],
+        [Mark.Fifteen, Multiple.Triple],
+        [Mark.Miss, Multiple.Single],
+      ],
+    };
+
+    const result = ops.stats([player1, player2, player3]);
+
+    expect(result).toStrictEqual({ marks: [7, 6, 3], scores: [0, 60, 105] });
   });
 
   it("correctly under marks multiple overages with scoring", () => {

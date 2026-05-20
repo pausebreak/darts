@@ -24,8 +24,8 @@ export type GameState = {
   goBack(): void;
   winner: Player;
   setWinner(player: Player): void;
-  playerBusted: Player;
-  setPlayerBusted(player: Player): void;
+  playerBusted: Player | null;
+  setPlayerBusted(player: Player | null): void;
   movePlayerLeft(playerIndex: number): void;
   movePlayerRight(playerIndex: number): void;
   voiceIndex: number;

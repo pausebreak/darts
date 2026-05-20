@@ -41,9 +41,9 @@ export const initializeSubscribers = (useStore: typeof machineUseStore) => {
                 applyNextPlayer(currentPlayerIndex, state);
               }
             });
-            // give oh1 games more time because you have to pause between
-            // darts and do math
           },
+          // give oh1 games more time because you have to pause between
+          // darts and do math
           game.name === GameName.Oh1 ? 34000 : 8000,
         );
       }
