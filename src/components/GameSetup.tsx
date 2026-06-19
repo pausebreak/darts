@@ -7,6 +7,7 @@ import { bulls } from "../games/bulls";
 import { cricket } from "../games/cricket";
 import { tactical } from "../games/tactical";
 import { ohGames } from "../games/oh1";
+import { shanghai } from "../games/shanghai";
 import { cutThroat } from "../games";
 import { Game, GameName, Player } from "../types";
 import "./GameSetup.css";
@@ -41,6 +42,8 @@ const buildGame = (state: GameChooserState, singlePlayer: boolean): Game | null 
       return cutThroat();
     case GameName.Oh1:
       return { ...ohGames(state.limit), checkIn: state.checkIn, checkOut: state.checkOut };
+    case GameName.Shanghai:
+      return shanghai(state.shanghaiShort);
   }
 };
 

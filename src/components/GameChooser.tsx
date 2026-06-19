@@ -10,6 +10,7 @@ export interface GameChooserState {
   numberOfBulls: number;
   checkIn: Multiple;
   checkOut: Multiple;
+  shanghaiShort: boolean;
 }
 
 export const initialChooserState: GameChooserState = {
@@ -19,6 +20,7 @@ export const initialChooserState: GameChooserState = {
   numberOfBulls: 25,
   checkIn: Multiple.Single,
   checkOut: Multiple.Single,
+  shanghaiShort: false,
 };
 
 export interface GameChooserProps {
@@ -31,9 +33,10 @@ const showLimit = (name: GameName) => name === GameName.Oh1;
 const showPointing = (name: GameName) => name === GameName.Cricket || name === GameName.Tactical;
 const showBulls = (name: GameName) => name === GameName.Bulls;
 const showInOut = (name: GameName) => name === GameName.Oh1;
+const showShanghaiVariant = (name: GameName) => name === GameName.Shanghai;
 
 export const GameChooser: React.FC<GameChooserProps> = ({ singlePlayer, state, onChange }) => {
-  const { selected, limit, pointing, numberOfBulls, checkIn, checkOut } = state;
+  const { selected, limit, pointing, numberOfBulls, checkIn, checkOut, shanghaiShort } = state;
   const update = (patch: Partial<GameChooserState>) => onChange({ ...state, ...patch });
 
   const effectivePointing = singlePlayer ? false : pointing;
@@ -85,6 +88,14 @@ export const GameChooser: React.FC<GameChooserProps> = ({ singlePlayer, state, o
           }}
         >
           Cut Throat {selected === GameName.CutThroat && <span>!!</span>}
+        </button>
+        <button
+          onClick={(event) => {
+            event.preventDefault();
+            pick(GameName.Shanghai);
+          }}
+        >
+          Shanghai {selected === GameName.Shanghai && <span>!!</span>}
         </button>
       </div>
       {selected === GameName.Cricket && (
@@ -140,6 +151,19 @@ export const GameChooser: React.FC<GameChooserProps> = ({ singlePlayer, state, o
               />
               Number of Bulls
               {bullsInvalid && <span>invalid value</span>}
+            </div>
+          )}
+
+          {showShanghaiVariant(selected) && (
+            <div>
+              <select
+                onChange={(e) => update({ shanghaiShort: e.target.value === "short" })}
+                value={shanghaiShort ? "short" : "full"}
+              >
+                <option value="full">1 - 20 (20 rounds)</option>
+                <option value="short">15 - 20 (6 rounds)</option>
+              </select>{" "}
+              numbers
             </div>
           )}
 

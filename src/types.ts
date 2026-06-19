@@ -43,6 +43,7 @@ export enum GameName {
   Cricket = "Cricket",
   CutThroat = "CutThroat",
   Oh1 = "Oh1",
+  Shanghai = "Shanghai",
   Tactical = "Tactical",
 }
 
@@ -60,6 +61,6 @@ export type Game = {
 export type GameOperations = {
   validThrow(playerIndex: number, players: Player[], dart: Dart): boolean;
   didBust?(playerIndex: number, players: Player[], dart: Dart): boolean;
-  didWin(players: Player[], currentPlayerIndex: number): Player | undefined;
+  didWin(players: Player[], currentPlayerIndex: number): Player | Player[] | undefined;
   stats?(players: Player[]): { scores: number[]; marks: number[] };
 };
