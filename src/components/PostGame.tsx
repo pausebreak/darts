@@ -21,12 +21,17 @@ export const PostGame = () => {
   const totalRounds = currentRound(players);
   const stats = gameOperations(game).stats?.(players);
   const roundsText = totalRounds > 1 ? "rounds" : "round";
+  const winners = Array.isArray(winner) ? winner : [winner];
+  const winnerNames = winners.map((w) => w.name).join(" and ");
+  const winnerText = winners.length > 1 ? "are the winners" : "is the winner";
 
   return (
     <>
-      <div className="winner">{winner.name} is the winner</div>
+      <div className="winner">
+        {winnerNames} {winnerText}
+      </div>
       <p>
-        In {totalRounds} {roundsText} {winner.name} won the game of {game.name}.
+        In {totalRounds} {roundsText} {winnerNames} won the game of {game.name}.
       </p>
       <div className="stats">
         {getPlayers.map((player, index) => {
@@ -55,7 +60,7 @@ export const PostGame = () => {
             }
           });
 
-          const cName = player.name === winner.name ? "playerStats win" : "playerStats";
+          const cName = winners.some((w) => w.name === player.name) ? "playerStats win" : "playerStats";
 
           return (
             <div className={cName} key={player.name}>
