@@ -3,7 +3,7 @@ import { act, render, screen } from "@testing-library/react";
 import { App } from "./App";
 import { useStore } from "../machine";
 import { resetStores } from "../../__mocks__/zustand";
-import { bulls, cricket, ohGames } from "../games";
+import { bulls, cricket, ohGames, shanghai } from "../games";
 import { tactical } from "../games/tactical";
 
 afterEach(resetStores);
@@ -52,6 +52,31 @@ describe("App", () => {
     render(<App />);
     const nextButton = screen.getByText(/Next/i);
     expect(nextButton).toBeTruthy();
+  });
+
+  test("shows the Shanghai game", () => {
+    const player = { name: "me", darts: [] };
+    const store = useStore.getState();
+    store.addPlayer(player);
+    store.setGame(shanghai());
+
+    render(<App />);
+    expect(screen.getByText(/Round 1 of 20/i)).toBeTruthy();
+    expect(screen.getByText(/Next/i)).toBeTruthy();
+  });
+
+  test("shows multiple winners on a tie", () => {
+    const me = { name: "me", darts: [] };
+    const you = { name: "you", darts: [] };
+    const store = useStore.getState();
+    store.addPlayer(me);
+    store.addPlayer(you);
+    store.setGame(shanghai(true));
+    store.setWinner([me, you]);
+
+    render(<App />);
+    const won = screen.getByText(/me and you are the winners/i);
+    expect(won).toBeTruthy();
   });
 
   test("shows game setup if no game set", () => {
