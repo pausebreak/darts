@@ -2,6 +2,7 @@ import { bullsOperations } from "./games/bulls";
 import { cricketOperations } from "./games/cricket";
 import { cutThroatOperations } from "./games/cutThroat";
 import { ohGamesOperations } from "./games/oh1";
+import { shanghaiOperations } from "./games/shanghai";
 import { tacticalOperations } from "./games/tactical";
 import { Game, Dart, GameOperations, GameName, Player, Mark } from "./types";
 
@@ -84,6 +85,8 @@ export const gameOperations = (game: Game): GameOperations => {
       return cricketOperations(game);
     case GameName.CutThroat:
       return cutThroatOperations(game);
+    case GameName.Shanghai:
+      return shanghaiOperations(game);
     case GameName.Tactical:
       return tacticalOperations(game);
     default:
@@ -98,4 +101,5 @@ export { bulls } from "./games/bulls";
 export { cricket } from "./games/cricket";
 export { ohGames } from "./games/oh1";
 export { cutThroat } from "./games/cutThroat";
+export { shanghai } from "./games/shanghai";
 export { tactical } from "./games/tactical";

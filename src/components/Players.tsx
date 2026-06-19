@@ -2,6 +2,7 @@ import React from "react";
 import { DartLabel } from "./DartLabel";
 import { useStore } from "../machine";
 import { dartValue } from "../games";
+import { GameName } from "../types";
 
 import "./Players.css";
 import { sayPhrase } from "../sound";
@@ -21,7 +22,9 @@ export const Players = () => {
       {players.map((player, playerIndex) => {
         const isCurrentPlayer = currentPlayerIndex === playerIndex;
         const playerClass = isCurrentPlayer ? "player current" : "player";
-        const total = game.limit - player.darts.reduce((acc, dart) => acc + dartValue(dart), 0);
+        const scored = player.darts.reduce((acc, dart) => acc + dartValue(dart), 0);
+        // Shanghai counts up from zero; the other pointing games count down to the limit
+        const total = game.name === GameName.Shanghai ? scored : game.limit - scored;
         const dartsThrown = player.darts.length;
         const remainder = dartsThrown % 3;
         const lastRoundThrows = player.darts.slice(-3);

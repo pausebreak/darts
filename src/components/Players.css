@@ -6,10 +6,18 @@
 }
 
 .player {
-  flex: 1;
+  flex: 0.15;
   white-space: nowrap;
   margin-bottom: 0.25em;
-  padding-top: 2.7em;
+  align-self: center;
+}
+
+.player .name {
+  font-size: 1.4em;
+}
+
+.player .total {
+  font-size: 3em;
 }
 
 .player.current {
