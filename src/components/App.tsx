@@ -4,6 +4,7 @@ import { useStore } from "../machine";
 import { GameName } from "../types";
 import { Players } from "./Players";
 import { TouchInput } from "./TouchInput";
+import { ShanghaiInput } from "./ShanghaiInput";
 import { GameInfo } from "./GameInfo";
 import { PostGame } from "./PostGame";
 import { TouchScoreBoard } from "./games/TouchScoreBoard";
@@ -22,6 +23,13 @@ const GameLayout = () => {
         <>
           <Players />
           <TouchInput />
+        </>
+      );
+    case GameName.Shanghai:
+      return (
+        <>
+          <Players />
+          <ShanghaiInput />
         </>
       );
     case GameName.Tactical:

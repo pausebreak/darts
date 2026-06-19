@@ -22,8 +22,8 @@ export type GameState = {
   setInvalidThrow(valid: boolean): void;
   addThrowToCurrentPlayer(_throw: Dart): void;
   goBack(): void;
-  winner: Player;
-  setWinner(player: Player): void;
+  winner: Player | Player[] | null;
+  setWinner(player: Player | Player[] | null): void;
   playerBusted: Player | null;
   setPlayerBusted(player: Player | null): void;
   movePlayerLeft(playerIndex: number): void;
