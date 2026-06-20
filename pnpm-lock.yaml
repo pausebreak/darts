@@ -15,8 +15,8 @@ importers:
         specifier: 2.2.4
         version: 2.2.4
       immer:
-        specifier: 11.0.1
-        version: 11.0.1
+        specifier: 11.1.8
+        version: 11.1.8
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -25,7 +25,7 @@ importers:
         version: 18.2.0(react@18.2.0)
       zustand:
         specifier: 4.5.7
-        version: 4.5.7(@types/react@18.0.15)(immer@11.0.1)(react@18.2.0)
+        version: 4.5.7(@types/react@18.0.15)(immer@11.1.8)(react@18.2.0)
     devDependencies:
       '@parcel/packager-ts':
         specifier: 2.16.4
@@ -1859,8 +1859,8 @@ packages:
     resolution: {integrity: sha512-Hs59xBNfUIunMFgWAbGX5cq6893IbWg4KnrjbYwX3tx0ztorVgTDA6B2sxf8ejHJ4wz8BqGUMYlnzNBer5NvGg==}
     engines: {node: '>= 4'}
 
-  immer@11.0.1:
-    resolution: {integrity: sha512-naDCyggtcBWANtIrjQEajhhBEuL9b0Zg4zmlWK2CzS6xCWSE39/vvf4LqnMjUAWHBhot4m9MHCM/Z+mfWhUkiA==}
+  immer@11.1.8:
+    resolution: {integrity: sha512-/tbkHMW7y10Lx6i1crLjD4/OhNkRG+Fo7byZHtah0547nIeXYcpIXaUh0IAQY6gO5459qpGGYapcEOHtFXkIuA==}
 
   import-local@3.2.0:
     resolution: {integrity: sha512-2SPlun1JUPWoM6t3F0dw0FkCF/jWY8kttcY4f599GLTSjh2OCuuhdTkJQsEcZzBqbXZGKMK2OqW1oZsjtf/gQA==}
@@ -5123,7 +5123,7 @@ snapshots:
 
   ignore@7.0.5: {}
 
-  immer@11.0.1: {}
+  immer@11.1.8: {}
 
   import-local@3.2.0:
     dependencies:
@@ -6372,10 +6372,10 @@ snapshots:
 
   yocto-queue@0.1.0: {}
 
-  zustand@4.5.7(@types/react@18.0.15)(immer@11.0.1)(react@18.2.0):
+  zustand@4.5.7(@types/react@18.0.15)(immer@11.1.8)(react@18.2.0):
     dependencies:
       use-sync-external-store: 1.6.0(react@18.2.0)
     optionalDependencies:
       '@types/react': 18.0.15
-      immer: 11.0.1
+      immer: 11.1.8
       react: 18.2.0
