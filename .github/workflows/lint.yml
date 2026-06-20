@@ -7,8 +7,8 @@ jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: pnpm/action-setup@v4
+      - uses: actions/checkout@v7.0.0
+      - uses: pnpm/action-setup@v5.0.0
       - name: prepare
         run: |
           pnpm install --frozen-lockfile > /dev/null 2>&1
