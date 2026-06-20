@@ -8,7 +8,7 @@ on:
       - "package.json"
       - "pnpm-lock.yaml"
       - "tsconfig.json"
-      - "workflows/generate-docs.yml"
+      - ".github/workflows/generate-docs.yml"
 permissions:
   contents: write
 jobs:
