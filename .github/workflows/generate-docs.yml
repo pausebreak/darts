@@ -8,6 +8,7 @@ on:
       - "package.json"
       - "pnpm-lock.yaml"
       - "tsconfig.json"
+      - "workflows/generate-docs.yml"
 permissions:
   contents: write
 jobs:
@@ -19,7 +20,7 @@ jobs:
           fetch-depth: 0
           ref: main
       - uses: pnpm/action-setup@v5.0.0
-      - name: prepare
+      - name: Build and Push Docs
         run: |
           git config user.email "github-actions[bot]"
           git config user.name "github-actions[bot]@users.noreply.github.com"
@@ -27,7 +28,7 @@ jobs:
           git merge main --no-edit -q
           pnpm install --frozen-lockfile > /dev/null 2>&1
           git rm docs/*
-          npm run build
+          pnpm run build
           cp src/static/* docs/.
           git add docs > /dev/null 2>&1
           git commit -q --no-verify --author="${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>" -m "CI push to /docs"
