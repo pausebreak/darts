@@ -20,7 +20,7 @@ export const initialChooserState: GameChooserState = {
   numberOfBulls: 25,
   checkIn: Multiple.Single,
   checkOut: Multiple.Single,
-  shanghaiShort: false,
+  shanghaiShort: true,
 };
 
 export interface GameChooserProps {
@@ -160,10 +160,10 @@ export const GameChooser: React.FC<GameChooserProps> = ({ singlePlayer, state, o
                 onChange={(e) => update({ shanghaiShort: e.target.value === "short" })}
                 value={shanghaiShort ? "short" : "full"}
               >
-                <option value="full">1 - 20 (20 rounds)</option>
                 <option value="short">15 - 20 (6 rounds)</option>
+                <option value="full">1 - 20 (20 rounds)</option>
               </select>{" "}
-              numbers
+              Rounds
             </div>
           )}
 
