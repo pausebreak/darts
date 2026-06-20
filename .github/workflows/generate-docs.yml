@@ -20,7 +20,7 @@ jobs:
           fetch-depth: 0
           ref: main
       - uses: pnpm/action-setup@v5.0.0
-      - name: prepare
+      - name: Build and Push Docs
         run: |
           git config user.email "github-actions[bot]"
           git config user.name "github-actions[bot]@users.noreply.github.com"
